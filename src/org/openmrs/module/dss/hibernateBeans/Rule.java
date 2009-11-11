@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.Map;
 
 import org.openmrs.Patient;
-import org.openmrs.module.dss.util.Util;
+import org.openmrs.module.chirdlutil.util.Util;
 
 /**
  * Holds information to store in the dss_rule table

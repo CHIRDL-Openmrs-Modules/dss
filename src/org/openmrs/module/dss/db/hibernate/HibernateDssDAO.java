@@ -14,7 +14,7 @@ import org.openmrs.api.context.Context;
 import org.openmrs.api.db.DAOException;
 import org.openmrs.module.dss.db.DssDAO;
 import org.openmrs.module.dss.hibernateBeans.Rule;
-import org.openmrs.module.dss.util.Util;
+import org.openmrs.module.chirdlutil.util.Util;
 
 /**
  * Hibernate implementations of Dss related database functions.

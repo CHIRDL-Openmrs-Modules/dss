@@ -50,9 +50,6 @@
 	<classpathentry kind="lib" path="lib-common/stax/stax-1.2.0.jar"/>
 	<classpathentry kind="lib" path="lib-common/stax/stax-api-1.0.1.jar"/>
 	<classpathentry kind="lib" path="lib-common/tomcat/servlet-api.jar"/>
-	<classpathentry kind="lib" path="lib/jibx-bind.jar"/>
-	<classpathentry kind="lib" path="lib/jibx-extras.jar"/>
-	<classpathentry kind="lib" path="lib/jibx-run.jar"/>
 	<classpathentry kind="lib" path="lib-common/spring-framework/spring-2.5.1.jar"/>
 	<classpathentry kind="lib" path="lib-common/spring-framework/spring-test.jar"/>
 	<classpathentry kind="lib" path="lib-common/spring-framework/spring-webmvc.jar"/>
@@ -62,5 +59,6 @@
 	<classpathentry kind="lib" path="lib-common/openmrs-api-1.5.0.10396-dev.jar"/>
 	<classpathentry kind="lib" path="lib-common/tests-openmrs-api-1.5.0.10396-dev.jar"/>
 	<classpathentry kind="lib" path="lib-common/web-openmrs-api-1.5.0.10396-dev.jar"/>
+	<classpathentry kind="lib" path="lib-common/chirdlutil-1.0.1.jar"/>
 	<classpathentry kind="output" path="build"/>
 </classpath>

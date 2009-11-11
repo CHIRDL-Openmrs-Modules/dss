@@ -19,8 +19,8 @@ import org.openmrs.module.dss.CompilingClassLoader;
 import org.openmrs.module.dss.db.DssDAO;
 import org.openmrs.module.dss.hibernateBeans.Rule;
 import org.openmrs.module.dss.service.DssService;
-import org.openmrs.module.dss.util.IOUtil;
-import org.openmrs.module.dss.util.Util;
+import org.openmrs.module.chirdlutil.util.IOUtil;
+import org.openmrs.module.chirdlutil.util.Util;
 import org.springframework.transaction.annotation.Transactional;
 
 /**

@@ -8,8 +8,8 @@ import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.dss.service.DssService;
-import org.openmrs.module.dss.util.IOUtil;
-import org.openmrs.module.dss.util.Util;
+import org.openmrs.module.chirdlutil.util.IOUtil;
+import org.openmrs.module.chirdlutil.util.Util;
 import org.openmrs.scheduler.tasks.AbstractTask;
 import org.openmrs.scheduler.TaskDefinition;
 
@@ -65,7 +65,7 @@ public class ClassLoaderTask extends AbstractTask
 		} catch (Exception e)
 		{
 			log.error(e.getMessage());
-			log.error(org.openmrs.module.dss.util.Util.getStackTrace(e));
+			log.error(org.openmrs.module.chirdlutil.util.Util.getStackTrace(e));
 		} finally
 		{
 			Context.closeSession();

@@ -25,8 +25,8 @@ import org.openmrs.logic.RuleClassLoader;
 import org.openmrs.module.ModuleClassLoader;
 import org.openmrs.module.ModuleFactory;
 import org.openmrs.module.dss.service.DssService;
-import org.openmrs.module.dss.util.IOUtil;
-import org.openmrs.module.dss.util.Util;
+import org.openmrs.module.chirdlutil.util.IOUtil;
+import org.openmrs.module.chirdlutil.util.Util;
 
 /**
  A CompilingClassLoader compiles your Java source on-the-fly. It

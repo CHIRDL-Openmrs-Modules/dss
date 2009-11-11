@@ -9,7 +9,7 @@ import org.openmrs.api.AdministrationService;
 import org.openmrs.api.context.Context;
 import org.openmrs.api.context.ContextAuthenticationException;
 import org.openmrs.module.Activator;
-import org.openmrs.module.dss.util.Util;
+import org.openmrs.module.chirdlutil.util.Util;
 
 /**
  * Purpose: Checks that module specific global properties have been set 

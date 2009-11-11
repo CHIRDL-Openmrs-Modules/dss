@@ -5,7 +5,7 @@ package org.openmrs.module.dss.test.util;
 
 import java.util.Calendar;
 
-import org.openmrs.module.dss.util.Util;
+import org.openmrs.module.chirdlutil.util.Util;
 
 import junit.framework.TestCase;
 
