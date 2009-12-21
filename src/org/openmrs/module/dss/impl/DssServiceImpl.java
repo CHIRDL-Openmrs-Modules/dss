@@ -257,7 +257,13 @@ public class DssServiceImpl implements DssService
 			throw new Exception("Could not load class for rule: " + rule);
 		}
 
-		Object obj = clas.newInstance();
+		Object obj = null;
+		try {
+	        obj = clas.newInstance();
+        }
+        catch (Exception e) {
+	        log.error("",e);
+        }
 
 		if (!(obj instanceof org.openmrs.logic.Rule))
 		{
@@ -265,7 +271,12 @@ public class DssServiceImpl implements DssService
 					+ ". The rule must implement the Rule interface.");
 		}
 
-		logicService.updateRule(rule, (org.openmrs.logic.Rule) obj);
+		try {
+	        logicService.updateRule(rule, (org.openmrs.logic.Rule) obj);
+        }
+        catch (Exception e) {
+	        log.error("",e);
+        }
 	}
 
 	public Rule getRule(int ruleId) throws APIException
