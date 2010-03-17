@@ -21,7 +21,6 @@ import org.openmrs.module.dss.hibernateBeans.Rule;
 import org.openmrs.module.dss.service.DssService;
 import org.openmrs.module.chirdlutil.util.IOUtil;
 import org.openmrs.module.chirdlutil.util.Util;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Defines implementations of services used by this module
@@ -29,7 +28,6 @@ import org.springframework.transaction.annotation.Transactional;
  * @author Tammy Dugan
  *
  */
-@Transactional
 public class DssServiceImpl implements DssService
 {
 

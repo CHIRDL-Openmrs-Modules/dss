@@ -8,6 +8,7 @@ import org.openmrs.api.APIException;
 import org.openmrs.logic.result.Result;
 import org.openmrs.module.dss.DssRule;
 import org.openmrs.module.dss.hibernateBeans.Rule;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Defines services used by this module
@@ -15,6 +16,7 @@ import org.openmrs.module.dss.hibernateBeans.Rule;
  * @author Tammy Dugan
  *
  */
+@Transactional
 public interface DssService
 {
 	/**
