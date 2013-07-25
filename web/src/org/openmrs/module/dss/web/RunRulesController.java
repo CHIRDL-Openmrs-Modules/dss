@@ -57,8 +57,8 @@ public class RunRulesController extends SimpleFormController
 			{
 				ruleList.add(currRule);
 			}
-			ArrayList<Result> results = dssService.runRules(patient, 
-					ruleList,"org.openmrs.module.atd.ruleLibrary.",null);
+			
+			ArrayList<Result> results = dssService.runRules(patient, ruleList);
 			if (results != null)
 			{
 				for (int i = 0; i < rules.size() && i < results.size(); i++)

@@ -84,8 +84,7 @@ public class RuleTesterController extends SimpleFormController
 							&& currRule.checkAgeRestrictions(patient))
 					{
 						currRule.setParameters(parameters);
-						Result result = dssService.runRule(patient, currRule,
-								null, null);
+						Result result = dssService.runRule(patient, currRule);
 						
 						if (result.size() < 2)
 						{

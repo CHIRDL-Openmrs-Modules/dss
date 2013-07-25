@@ -74,7 +74,7 @@
 		
 	</target>
 	
-	<target name="package-module" depends="compile-module" description="Packages module into jar file">
+	<target name="package-module" depends="compile-module,bind" description="Packages module into jar file">
 		<mkdir dir="dist" />
 		
 		<!-- Copy module metadata -->
@@ -126,6 +126,24 @@
 				<exclude name="test/**/*" />
 			</fileset>
 		</jar>
+	</target>
+	
+	<target name="bind"> 
+       <taskdef name="bind" classname="org.jibx.binding.ant.CompileTask">
+          <classpath refid="classpath" /> 
+       </taskdef>
+       <bind binding="${basedir}/binding.xml">
+          <classpath refid="classpath" /> 
+       </bind>
+	</target>
+	
+	<target name="codegen">
+        <java classname="org.jibx.schema.codegen.CodeGen"
+            classpathref="classpath">
+          <arg value="-t"/>
+          <arg value="src/org/openmrs/module/dss/xmlBeans"/>
+          <arg value="src/org/openmrs/module/dss/xmlBeans/*.xsd"/>
+        </java>
 	</target>
 	
 </project>

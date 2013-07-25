@@ -8,7 +8,6 @@ import org.openmrs.api.APIException;
 import org.openmrs.logic.result.Result;
 import org.openmrs.module.dss.DssRule;
 import org.openmrs.module.dss.hibernateBeans.Rule;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Defines services used by this module
@@ -16,42 +15,31 @@ import org.springframework.transaction.annotation.Transactional;
  * @author Tammy Dugan
  *
  */
-@Transactional
 public interface DssService
 {
 	/**
 	 * Runs a list of rules and returns a string result
 	 * @param p Patient to run the rules for
 	 * @param ruleList List of rules to run
-	 * @param defaultPackagePrefix package to look in for pre-compiled rules
-	 * @param rulePackagePrefix 
 	 * @return String result as a string
 	 */
-	public String runRulesAsString(Patient p, ArrayList<Rule> ruleList,
-			String defaultPackagePrefix,String rulePackagePrefix);
+	public String runRulesAsString(Patient p, List<Rule> ruleList);
 
 	/**
 	 * Runs a single rule and returns the result as an openmrs Result object
 	 * @param p Patient to run the rules for
 	 * @param rule single rule to evaluate
-	 * @param defaultPackagePrefix package to look in for pre-compiled rules
-	 * @param rulePackagePrefix 
 	 * @return String result as an openmrs Result object
 	 */
-	public Result runRule(Patient p, Rule rule, 
-			String defaultPackagePrefix,String rulePackagePrefix);
+	public Result runRule(Patient p, Rule rule);
 
 	/**
 	 * Runs a list of rules and returns an arraylist of openmrs Result objects
 	 * @param p Patient to run the rules for
 	 * @param ruleList list of rules to evaluate
-	 * @param defaultPackagePrefix package to look in for pre-compiled rules
-	 * @param rulePackagePrefix 
 	 * @return ArrayList of openmrs Result objects
 	 */
-	public ArrayList<Result> runRules(Patient p, ArrayList<Rule> ruleList,
-			String defaultPackagePrefix,
-			String rulePackagePrefix);
+	public ArrayList<Result> runRules(Patient p, List<Rule> ruleList);
 
 	/**
 	 * Looks up a rule from the dss_rule table by rule_id
@@ -95,25 +83,10 @@ public interface DssService
 	public List<Rule> getRules(Rule rule, boolean ignoreCase, boolean enableLike, String sortColumn);
 
 	/**
-	 * This method tries to load a class based on the rule name and a set of package names
-	 * First, it tries to load the rule from the rulePackagePrefix package. By default, this package
-	 * is where the rules that are compiled on the fly live. 
-	 * Second, it tries to load the rule from the defaultPackagePrefix package. By default, this package 
-	 * contains the default library of pre-compiled rules
-	 * Finally, it tries to load the rule with no package prefix
-	 * @param rule 
-	 * @param defaultPackagePrefix
-	 * @param rulePackagePrefix 
-	 * @throws Exception
-	 */
-	public void loadRule(String rule, String defaultPackagePrefix,
-			String rulePackagePrefix, boolean updateRule)
-		throws Exception;
-
-	/**
 	 * Loads a rule into the openmrs LogicService in preparation for executing it
 	 * @param rule name that the rule will be stored under in the openmrs LogicService
+	 * @return Rule object
 	 * @throws Exception
 	 */
-	public void loadRule(String rule, boolean updateRule) throws Exception;
+	public org.openmrs.logic.Rule loadRule(String rule, boolean updateRule) throws Exception;
 }

@@ -3,12 +3,14 @@ package org.openmrs.module.dss.db;
 import java.util.List;
 
 import org.openmrs.module.dss.hibernateBeans.Rule;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Dss related database functions
  * 
  * @author Tammy Dugan
  */
+@Transactional
 public interface DssDAO {
 
 	/**

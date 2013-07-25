@@ -51,13 +51,25 @@
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO scheduler_task_config
-   (`name`, `schedulable_class`, `start_time`, `start_time_pattern`, `repeat_interval`, `start_on_startup`, `started`, `created_by`, `date_created`)
+   (`name`, `schedulable_class`, `start_time`, `start_time_pattern`, `repeat_interval`, `start_on_startup`, `started`, `created_by`, `date_created`, `uuid`)
 select 'ClassLoaderTask','org.openmrs.module.dss.ClassLoaderTask',
- NOW(), 'MM/dd/yyyy HH:mm:ss', 300, 1, 0, 1, NOW()
+ NOW(), 'MM/dd/yyyy HH:mm:ss', 300, 1, 0, 1, NOW(), UUID()
  from 
 (select count(*) as cnt from scheduler_task_config where name='ClassLoaderTask') a
 where a.cnt=0;
 
 		</sql>
 	</diff>
+	<diff>
+        <version>1.0.3</version>
+        <author>Steve McKee</author>
+        <date>Sept 2nd 2011</date>
+        <description>
+            Convert the logic column of the dss_rule table to medium text.
+        </description>
+        <sql>
+            alter table dss_rule 
+            change logic logic mediumtext
+        </sql>
+    </diff>
 </sqldiff>
