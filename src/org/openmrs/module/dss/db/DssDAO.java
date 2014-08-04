@@ -27,9 +27,6 @@ public interface DssDAO {
 	 */
 	public Rule getRule(String tokenName);
 	
-	public List<Rule> getPrioritizedRules(String type);
-	
-	
 	public List<Rule> getNonPrioritizedRules(String type);
 		
 	/**
@@ -58,4 +55,13 @@ public interface DssDAO {
 	 * @param ruleId unique id of the rule to delete
 	 */
 	public void deleteRule(int ruleId);
+	
+	/**
+	 * Get prioritized rules based on type and start priority
+	 * 
+	 * @param type Only rules with this rule type will be returned.
+	 * @param startPriority Only rules with a priority equal to or greater than this will be returned.
+	 * @return
+	 */
+	public List<Rule> getPrioritizedRules(String type, Integer startPriority);
 }

@@ -291,8 +291,15 @@ public class DssServiceImpl implements DssService
 
 	public List<Rule> getPrioritizedRules(String type) throws DAOException
 	{
-		return getDssDAO().getPrioritizedRules(type);
+		return getDssDAO().getPrioritizedRules(type, 0);
 	}
+	
+	/**
+	 * @see org.openmrs.module.dss.service.DssService#getPrioritizedRules(java.lang.String, java.lang.Integer)
+	 */
+    public List<Rule> getPrioritizedRules(String type, Integer startPriority) {
+	    return getDssDAO().getPrioritizedRules(type, startPriority);
+    }
 	
 	
 	public List<Rule> getNonPrioritizedRules(String type) throws DAOException

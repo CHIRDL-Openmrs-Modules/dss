@@ -89,4 +89,13 @@ public interface DssService
 	 * @throws Exception
 	 */
 	public org.openmrs.logic.Rule loadRule(String rule, boolean updateRule) throws Exception;
+	
+	/**
+	 * Get prioritized rules based on type and start priority
+	 * 
+	 * @param type Only rules with this rule type will be returned.
+	 * @param startPriority Only rules with a priority equal to or greater than this will be returned.
+	 * @return
+	 */
+	public List<Rule> getPrioritizedRules(String type, Integer startPriority);
 }

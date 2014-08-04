@@ -113,10 +113,13 @@ public class HibernateDssDAO implements DssDAO
 		}
 		return null;
 	}
-
-	public List<Rule> getPrioritizedRules(String type) throws DAOException
-	{
-		try
+	
+	/**
+	 * @see org.openmrs.module.dss.db.DssDAO#getPrioritizedRules(java.lang.String, java.lang.Integer)
+	 */
+    public List<Rule> getPrioritizedRules(String type, Integer startPriority) 
+    {
+    	try
 		{
 			AdministrationService adminService = Context
 					.getAdministrationService();
@@ -128,11 +131,20 @@ public class HibernateDssDAO implements DssDAO
 			}
 
 			String sql = "select * from dss_rule where rule_type=? and "
-					+ "priority >=0 and priority<1000 and "
+					+ "priority >=? and priority<1000 and "
 					+ "version='1.0' order by priority " + sortOrder;
 			SQLQuery qry = this.sessionFactory.getCurrentSession()
 					.createSQLQuery(sql);
 			qry.setString(0, type);
+			if (startPriority != null) 
+			{
+				qry.setInteger(1, startPriority);
+			} 
+			else 
+			{
+				qry.setInteger(1, 0);
+			}
+			
 			qry.addEntity(Rule.class);
 			return qry.list();
 		} catch (Exception e)
@@ -140,8 +152,8 @@ public class HibernateDssDAO implements DssDAO
 			this.log.error(Util.getStackTrace(e));
 		}
 		return null;
-	}
-
+    }
+    
 	public List<Rule> getNonPrioritizedRules(String type) throws DAOException
 	{
 		try

@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.openmrs.Patient;
-import org.openmrs.api.AdministrationService;
 import org.openmrs.api.context.Context;
 import org.openmrs.logic.result.Result;
 import org.openmrs.module.dss.hibernateBeans.Rule;
@@ -45,18 +44,49 @@ public class DssManager
 	 * @param override true if the dssElements should be re-populated
 	 * @param parameters parameters to be passed to rule evaluation
 	 */
-	public void populateDssElements(String type, boolean override,
+	public void populateDssElements(String type, boolean override, Map<String, Object> parameters)
+	{
+		int maxDssElements = getMaxDssElementsByType(type);
+		populateDssElements(type, override, null, maxDssElements, parameters);
+	}
+	
+	/**
+	 * Runs rules of the given type in order of priority until a specified number
+	 * of non-null results are obtained.
+	 * @param type rule type
+	 * @param startPriority The rule priority to start with
+	 * @param maxElements The maximum number of non-null results to return.
+	 * @param parameters parameters to be passed to rule evaluation
+	 */
+	public void getPrioritizedDssElements(String type, Integer startPriority, int maxElements, 
+	                                      Map<String, Object> parameters)
+	{
+		populateDssElements(type, false, startPriority, maxElements, parameters);
+	}
+	
+	/**
+	 * Runs rules of the given type in order of priority until a specified number
+	 * of non-null results are obtained.
+	 * @param type rule type
+	 * @param override true if the dssElements should be re-populated
+	 * @param startPriority The rule priority to start with
+	 * @param maxElements The maximum number of non-null results to return.
+	 * @param parameters parameters to be passed to rule evaluation
+	 */
+	private void populateDssElements(String type, boolean override, Integer startPriority, int maxElements,
 			Map<String, Object> parameters)
 	{
 		if(this.dssElementsByType == null)
 		{
 			this.dssElementsByType = new HashMap<String,ArrayList<DssElement>>();
 		}
+		
 		ArrayList<DssElement> dssElements = this.dssElementsByType.get(type);
 		if(!(override||dssElements==null))
 		{
 			return;
 		}
+		
 		dssElements = new ArrayList<DssElement>();
 		this.dssElementsByType.put(type, dssElements);
 		DssService dssService = Context
@@ -64,25 +94,20 @@ public class DssManager
 		List<Rule> rules = null;
 		if(type == null)
 		{
-			rules = dssService.getPrioritizedRules("");
-		}else
+			rules = dssService.getPrioritizedRules("", startPriority);
+		} else
 		{
-			rules = dssService.getPrioritizedRules(type);
+			rules = dssService.getPrioritizedRules(type, startPriority);
 		}
+		
 		Iterator<Rule> iter = rules.iterator();
-		Rule currRule = null;
-		ArrayList<Rule> ruleList = null;
-		DssElement currDssElement = null;
-		ArrayList<Result> results = null;
-		Result currResult = null;
-		int maxDssElements = getMaxDssElementsByType(type);
 		
 		//Run rules until there are maxDssElements non-null results
-		while (dssElements.size() < maxDssElements && iter.hasNext()) {
-			ruleList = new ArrayList<Rule>();
+		while (dssElements.size() < maxElements && iter.hasNext()) {
+			Rule currRule = iter.next();
+			ArrayList<Rule> ruleList = new ArrayList<Rule>();
 			
 			//get rules that meet the age restrictions
-			currRule = iter.next();
 			parameters.put("promptPosition", Integer.toString(dssElements.size() + 1));
 			currRule.setParameters(parameters);
 			
@@ -92,14 +117,14 @@ public class DssManager
 				continue;//skip to the beginning of the loop if the age restrictions are not met
 			}
 			
-			results = dssService.runRules(this.patient, ruleList);
+			ArrayList<Result> results = dssService.runRules(this.patient, ruleList);
 			
 			//only add results that are non-null
 			
 			currRule = ruleList.get(0);
-			currResult = results.get(0);
+			Result currResult = results.get(0);
 			if (currResult != null && !currResult.isNull()) {
-				currDssElement = new DssElement(currResult, currRule.getRuleId());
+				DssElement currDssElement = new DssElement(currResult, currRule.getRuleId());
 				dssElements.add(currDssElement);
 			}
 		}
