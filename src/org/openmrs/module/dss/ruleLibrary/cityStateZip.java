@@ -85,14 +85,17 @@ public class cityStateZip implements Rule
 		PatientService patientService = Context.getPatientService();
 		Patient patient = patientService.getPatient(patientId);
 		PersonAddress address = patient.getPersonAddress();
-		String city = Util.toProperCase(address.getCityVillage());
-		String state = address.getStateProvince();
-		String zip = address.getPostalCode();
-		
 		if(address != null)
 		{
-			return new Result(city+", "+state+"  "+zip);
+			String city = Util.toProperCase(address.getCityVillage());
+			String state = address.getStateProvince();
+			String zip = address.getPostalCode();
+			if (city != null && state != null && zip != null) 
+			{
+				return new Result(city + ", " + state + "  " + zip);
+			}
 		}
+		
 		return Result.emptyResult();
 	}
 }
