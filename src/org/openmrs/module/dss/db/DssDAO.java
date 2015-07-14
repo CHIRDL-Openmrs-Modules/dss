@@ -3,6 +3,8 @@ package org.openmrs.module.dss.db;
 import java.util.List;
 
 import org.openmrs.module.dss.hibernateBeans.Rule;
+import org.openmrs.module.dss.hibernateBeans.RuleAttribute;
+import org.openmrs.module.dss.hibernateBeans.RuleAttributeValue;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -64,4 +66,10 @@ public interface DssDAO {
 	 * @return
 	 */
 	public List<Rule> getPrioritizedRules(String type, Integer startPriority);
+
+	public RuleAttribute getRuleAttribute(String ruleAttributeName);
+	
+	public RuleAttributeValue getRuleAttributeValue(Integer ruleId, String ruleAttributeName); 
+	
+	public RuleAttributeValue saveRuleAttributeValue(RuleAttributeValue value) ;
 }

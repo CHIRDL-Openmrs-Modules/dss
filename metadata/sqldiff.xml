@@ -72,4 +72,47 @@ where a.cnt=0;
             change logic logic mediumtext
         </sql>
     </diff>
+    <diff>
+        <version>1.0.4</version>
+        <author>Tammy Dugan</author>
+        <date>July 8th 2015</date>
+        <description>
+            Add dss_rule_attribute and dss_rule_attribute_value tables.
+            Create associated_answer attribute and module attributes.
+        </description>
+        <sql>
+CREATE TABLE `dss_rule_attribute` (
+  `rule_attribute_id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`rule_attribute_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+CREATE TABLE `dss_rule_attribute_value` (
+  `rule_attribute_value_id` int(11) NOT NULL AUTO_INCREMENT,
+  `rule_id` int(11) NOT NULL,
+  `value` varchar(255) NOT NULL,
+  `rule_attribute_id` int(11) NOT NULL,
+  `location_tag_id` int(11) NOT NULL DEFAULT '1',
+  `location_id` int(11) NOT NULL DEFAULT '1',
+   creation_time datetime NOT NULL,
+   last_modified datetime default NULL,
+  PRIMARY KEY (`rule_attribute_value_id`),
+  KEY `rule_value_fk_rule` (`rule_id`),
+  KEY `rule_value_fk_attr` (`rule_attribute_id`),
+  KEY `rule_value_fk_loc_tag` (`location_tag_id`),
+  KEY `rule_value_fk_loc` (`location_id`),
+  CONSTRAINT `rule_value_fk_attr` FOREIGN KEY (`rule_attribute_id`) REFERENCES `dss_rule_attribute` (`rule_attribute_id`),
+  CONSTRAINT `rule_value_fk_rule` FOREIGN KEY (`rule_id`) REFERENCES `dss_rule` (`rule_id`),
+  CONSTRAINT `rule_value_fk_loc` FOREIGN KEY (`location_id`) REFERENCES `location` (`location_id`),
+  CONSTRAINT `rule_value_fk_loc_tag` FOREIGN KEY (`location_tag_id`) REFERENCES `location_tag` (`location_tag_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+insert into `dss_rule_attribute`(`name`,`description`) 
+values ('associated_answer','Associates rule with answer written by rule');
+
+insert into `dss_rule_attribute`(`name`,`description`) 
+values ('module','Indicates which module rule is part of');
+        </sql>
+    </diff>
 </sqldiff>

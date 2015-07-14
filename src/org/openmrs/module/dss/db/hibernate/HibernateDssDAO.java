@@ -14,6 +14,8 @@ import org.openmrs.api.context.Context;
 import org.openmrs.api.db.DAOException;
 import org.openmrs.module.dss.db.DssDAO;
 import org.openmrs.module.dss.hibernateBeans.Rule;
+import org.openmrs.module.dss.hibernateBeans.RuleAttribute;
+import org.openmrs.module.dss.hibernateBeans.RuleAttributeValue;
 import org.openmrs.module.chirdlutil.util.Util;
 
 /**
@@ -112,6 +114,58 @@ public class HibernateDssDAO implements DssDAO
 			this.log.error(Util.getStackTrace(e));
 		}
 		return null;
+	}
+	
+	public RuleAttribute getRuleAttribute(String ruleAttributeName) {
+		try {
+			String sql = "select * from dss_rule_attribute where name=?";
+			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
+			qry.setString(0, ruleAttributeName);
+			qry.addEntity(RuleAttribute.class);
+			
+			List<RuleAttribute> list = qry.list();
+			
+			if (list != null && list.size() > 0) {
+				return list.get(0);
+			}
+		}
+		catch (Exception e) {
+			log.error("Error in method getRuleAttribute", e);
+		}
+		return null;
+	}
+	
+	public RuleAttributeValue getRuleAttributeValue(Integer ruleId, String ruleAttributeName) {
+		try {
+			RuleAttribute ruleAttribute = this.getRuleAttribute(ruleAttributeName);
+			
+			if (ruleAttribute != null) {
+				Integer ruleAttributeId = ruleAttribute.getRuleAttributeId();
+				
+				String sql = "select * from dss_rule_attribute_value where rule_id=? and rule_attribute_id=?";
+				SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
+				
+				qry.setInteger(0, ruleId);
+				qry.setInteger(1, ruleAttributeId);
+				qry.addEntity(RuleAttributeValue.class);
+				
+				List<RuleAttributeValue> list = qry.list();
+				
+				if (list != null && list.size() > 0) {
+					return list.get(0);
+				}
+				
+			}
+		}
+		catch (Exception e) {
+			log.error("Error in method getRuleAttributeValue", e);
+		}
+		return null;
+	}
+	
+	public RuleAttributeValue saveRuleAttributeValue(RuleAttributeValue value) {
+		sessionFactory.getCurrentSession().saveOrUpdate(value);
+		return value;
 	}
 	
 	/**

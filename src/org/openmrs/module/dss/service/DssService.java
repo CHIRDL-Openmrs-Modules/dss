@@ -8,6 +8,8 @@ import org.openmrs.api.APIException;
 import org.openmrs.logic.result.Result;
 import org.openmrs.module.dss.DssRule;
 import org.openmrs.module.dss.hibernateBeans.Rule;
+import org.openmrs.module.dss.hibernateBeans.RuleAttribute;
+import org.openmrs.module.dss.hibernateBeans.RuleAttributeValue;
 
 /**
  * Defines services used by this module
@@ -98,4 +100,11 @@ public interface DssService
 	 * @return
 	 */
 	public List<Rule> getPrioritizedRules(String type, Integer startPriority);
+
+	public RuleAttribute getRuleAttribute(String ruleAttributeName);
+	
+	public RuleAttributeValue getRuleAttributeValue(Integer ruleId, String ruleAttributeName);
+	
+	public RuleAttributeValue saveRuleAttributeValue(RuleAttributeValue value);
+	
 }

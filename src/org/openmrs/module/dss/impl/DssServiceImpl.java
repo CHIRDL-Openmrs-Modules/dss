@@ -24,6 +24,8 @@ import org.openmrs.module.dss.DssRule;
 import org.openmrs.module.dss.DssRuleProvider;
 import org.openmrs.module.dss.db.DssDAO;
 import org.openmrs.module.dss.hibernateBeans.Rule;
+import org.openmrs.module.dss.hibernateBeans.RuleAttribute;
+import org.openmrs.module.dss.hibernateBeans.RuleAttributeValue;
 import org.openmrs.module.dss.service.DssService;
 
 /**
@@ -292,6 +294,19 @@ public class DssServiceImpl implements DssService
 	public List<Rule> getPrioritizedRules(String type) throws DAOException
 	{
 		return getDssDAO().getPrioritizedRules(type, 0);
+	}
+	
+	public RuleAttribute getRuleAttribute(String ruleAttributeName){
+   		return getDssDAO().getRuleAttribute(ruleAttributeName);
+    }
+	
+	public RuleAttributeValue getRuleAttributeValue(Integer ruleId, String ruleAttributeName){
+		return getDssDAO().getRuleAttributeValue(ruleId, ruleAttributeName);
+	}
+	
+	public RuleAttributeValue saveRuleAttributeValue(RuleAttributeValue value){
+
+		return getDssDAO().saveRuleAttributeValue(value);
 	}
 	
 	/**
