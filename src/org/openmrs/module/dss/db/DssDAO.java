@@ -69,6 +69,8 @@ public interface DssDAO {
 
 	public RuleAttribute getRuleAttribute(String ruleAttributeName);
 	
+	public RuleAttribute getRuleAttribute(int ruleAttributeId);
+	
 	public RuleAttributeValue getRuleAttributeValue(Integer ruleId, String ruleAttributeName); 
 	
 	public RuleAttributeValue saveRuleAttributeValue(RuleAttributeValue value) ;

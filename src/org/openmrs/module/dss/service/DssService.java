@@ -51,6 +51,8 @@ public interface DssService
 	 */
 	public Rule getRule(int ruleId) throws APIException;
 
+	public Rule getRule(String tokenName) throws APIException;
+	
 	/**
 	 * Adds a new rule to the dss_rule table
 	 * @param classFilename name of the compiled class file that contains the 
@@ -102,6 +104,8 @@ public interface DssService
 	public List<Rule> getPrioritizedRules(String type, Integer startPriority);
 
 	public RuleAttribute getRuleAttribute(String ruleAttributeName);
+	
+	public RuleAttribute getRuleAttribute(Integer ruleAttributeId);
 	
 	public RuleAttributeValue getRuleAttributeValue(Integer ruleId, String ruleAttributeName);
 	

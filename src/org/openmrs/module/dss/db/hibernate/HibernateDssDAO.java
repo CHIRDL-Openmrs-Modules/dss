@@ -116,6 +116,23 @@ public class HibernateDssDAO implements DssDAO
 		return null;
 	}
 	
+	public RuleAttribute getRuleAttribute(int ruleAttributeId)
+	{
+		try
+		{
+			String sql = "select * from dss_rule_attribute where rule_attribute_id=?";
+			SQLQuery qry = this.sessionFactory.getCurrentSession()
+					.createSQLQuery(sql);
+			qry.setInteger(0, ruleAttributeId);
+			qry.addEntity(RuleAttribute.class);
+			return (RuleAttribute) qry.uniqueResult();
+		} catch (Exception e)
+		{
+			this.log.error(Util.getStackTrace(e));
+		}
+		return null;
+	}
+	
 	public RuleAttribute getRuleAttribute(String ruleAttributeName) {
 		try {
 			String sql = "select * from dss_rule_attribute where name=?";

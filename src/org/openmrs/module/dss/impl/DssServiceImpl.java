@@ -290,6 +290,11 @@ public class DssServiceImpl implements DssService
 	{
 		return getDssDAO().getRule(ruleId);
 	}
+	
+	public Rule getRule(String tokenName) throws APIException
+	{
+		return getDssDAO().getRule(tokenName);
+	}
 
 	public List<Rule> getPrioritizedRules(String type) throws DAOException
 	{
@@ -298,6 +303,10 @@ public class DssServiceImpl implements DssService
 	
 	public RuleAttribute getRuleAttribute(String ruleAttributeName){
    		return getDssDAO().getRuleAttribute(ruleAttributeName);
+    }
+	
+	public RuleAttribute getRuleAttribute(Integer ruleAttributeId){
+   		return getDssDAO().getRuleAttribute(ruleAttributeId);
     }
 	
 	public RuleAttributeValue getRuleAttributeValue(Integer ruleId, String ruleAttributeName){

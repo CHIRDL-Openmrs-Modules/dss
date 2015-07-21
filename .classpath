@@ -84,5 +84,6 @@
 	<classpathentry kind="lib" path="lib-common/jibx/wstx-asl.jar"/>
 	<classpathentry kind="lib" path="lib-common/jibx/xmlpull_1_1_4.jar"/>
 	<classpathentry kind="lib" path="lib-common/jibx/xpp3.jar"/>
+	<classpathentry kind="lib" path="/chirdlutil/lib/opencsv-2.3.jar"/>
 	<classpathentry kind="output" path="build"/>
 </classpath>
