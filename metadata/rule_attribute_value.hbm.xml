@@ -16,8 +16,8 @@
 		<property name="value" type="java.lang.String" column="value"/>
 		<property name="ruleAttributeId" type="java.lang.Integer" column="rule_attribute_id"/>
 		<property name="creationTime" type="java.util.Date" column="creation_time"/>
-		<property name="location_tag_id" type="java.lang.Integer" column="locationTagId"/>
-		<property name="location_id" type="java.lang.Integer" column="locationId"/>
+		<property name="locationTagId" type="java.lang.Integer" column="location_tag_id"/>
+		<property name="locationId" type="java.lang.Integer" column="location_id"/>
 		<property name="lastModified" type="java.util.Date" column="last_modified"/>
 		
 	</class>
