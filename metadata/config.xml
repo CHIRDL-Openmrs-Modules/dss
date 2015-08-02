@@ -116,6 +116,8 @@
 	
 	<mappingFiles>
 		rule.hbm.xml
+		rule_attribute.hbm.xml
+		rule_attribute_value.hbm.xml
 	</mappingFiles>
 	
 </module>
