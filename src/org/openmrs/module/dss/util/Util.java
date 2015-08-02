@@ -13,43 +13,25 @@
  */
 package org.openmrs.module.dss.util;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Writer;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
-import java.util.UUID;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openmrs.Concept;
-import org.openmrs.ConceptAnswer;
-import org.openmrs.ConceptClass;
-import org.openmrs.ConceptDatatype;
-import org.openmrs.ConceptDescription;
-import org.openmrs.ConceptName;
-import org.openmrs.ConceptNumeric;
 import org.openmrs.Location;
 import org.openmrs.LocationTag;
-import org.openmrs.api.ConceptService;
 import org.openmrs.api.LocationService;
 import org.openmrs.api.context.Context;
-import org.openmrs.api.context.UserContext;
-import org.openmrs.module.chirdlutilbackports.service.ChirdlUtilBackportsService;
-import org.openmrs.module.dss.DssRule;
 import org.openmrs.module.dss.hibernateBeans.Rule;
 import org.openmrs.module.dss.hibernateBeans.RuleAttribute;
 import org.openmrs.module.dss.hibernateBeans.RuleAttributeValue;
 import org.openmrs.module.dss.service.DssService;
 
 import au.com.bytecode.opencsv.CSVReader;
-import au.com.bytecode.opencsv.CSVWriter;
 import au.com.bytecode.opencsv.bean.CsvToBean;
 import au.com.bytecode.opencsv.bean.HeaderColumnNameTranslateMappingStrategy;
 
@@ -97,12 +79,19 @@ public class Util {
 	 * @param ruleAttributeValuedList data source
 	 * @return a list of new created RuleAttributeValue objects
 	 */
-	public static List<RuleAttributeValue> getRuleAttributeValues(List<RuleAttributeValueDescriptor> ruleAttributeValuedList) {
+	public static List<RuleAttributeValue> getRuleAttributeValues(InputStream input) {
 		List<RuleAttributeValue> ruleAttributeValueList = new ArrayList<RuleAttributeValue>();
 		LocationService locationService = Context.getLocationService();
 		DssService dssService = Context.getService(DssService.class);
-		if (ruleAttributeValuedList != null) {
-			for (RuleAttributeValueDescriptor ruleAttributeValueDescriptor : ruleAttributeValuedList) {
+		List<RuleAttributeValueDescriptor> ruleAttributeValueDescriptors = null;
+        try {
+	        ruleAttributeValueDescriptors = getRuleAttributeValueDescriptorFromCSV(input);
+        }
+        catch (Exception e) {
+	        log.error("Could not parse rule attribute descriptors", e);
+        }
+		if (ruleAttributeValueDescriptors != null) {
+			for (RuleAttributeValueDescriptor ruleAttributeValueDescriptor : ruleAttributeValueDescriptors) {
 				/*
 				 * create RuleAttributeValue object by
 				 * RuleAttributeVlaueDescriptor
@@ -132,41 +121,4 @@ public class Util {
 		return ruleAttributeValueList;
 	}
 
-	/**
-	 * read the csv file and parse the information of it to a list of RuleAttributeValue objects
-	 * @param input an InputStream Object
-	 * @return a list of RuleAttributeValue objects
-	 * @throws Exception 
-	 */
-	public static List<RuleAttributeValue> getRuleAttributeValues(InputStream input) throws Exception{
-		List<RuleAttributeValue> ruleAttributeValueList = new ArrayList<RuleAttributeValue>();
-		List<RuleAttributeValueDescriptor> ruleAttributeValuedList = null;
-		LocationService locationService = Context.getLocationService();
-		DssService dssService = Context.getService(DssService.class);
-		try {
-			ruleAttributeValuedList = getRuleAttributeValueDescriptorFromCSV(input);
-			
-			if (ruleAttributeValuedList != null) {
-				for(RuleAttributeValueDescriptor ruleAttributeValued: ruleAttributeValuedList){
-					/*create RuleAttributeValue object by RuleAttributeVlaueDescriptor*/
-					RuleAttributeValue ruleAttributeValue = new RuleAttributeValue();
-					Integer ruleId = dssService.getRule(ruleAttributeValued.getRuleName()).getRuleId();
-					Integer locationId = locationService.getLocation(ruleAttributeValued.getLocationName()).getId();
-					Integer locationTagId = locationService.getLocationTagByName(ruleAttributeValued.getLocationTagName()).getId();
-					Integer ruleAttributeId = dssService.getRuleAttribute(ruleAttributeValued.getAttributeName()).getRuleAttributeId();
-					ruleAttributeValue.setRuleId(ruleId);
-					ruleAttributeValue.setRuleAttributeId(ruleAttributeId);
-					ruleAttributeValue.setLocationId(locationId);
-					ruleAttributeValue.setLocationTagId(locationTagId);
-					ruleAttributeValue.setValue(ruleAttributeValued.getAttributeValue());
-					ruleAttributeValueList.add(ruleAttributeValue);
-				}
-			}
-		}
-		catch (Exception e) {
-			log.error(e);
-			throw e;
-		}
-		return ruleAttributeValueList;
-	}
 }
