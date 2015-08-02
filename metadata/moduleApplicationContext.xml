@@ -11,7 +11,8 @@
 				<prop key="/module/@MODULE_ID@/runRules.form">runRules</prop>
 				<prop key="/module/@MODULE_ID@/searchRules.form">searchRules</prop>
 				<prop key="/module/@MODULE_ID@/deleteRules.form">deleteRules</prop>
-				<prop key="/module/@MODULE_ID@/ruleTester.form">ruleTester</prop>	
+				<prop key="/module/@MODULE_ID@/ruleTester.form">ruleTester</prop>
+				<prop key="/module/@MODULE_ID@/importRuleAttributeValues.form">importRuleAttributeValues</prop>	
 			</props>
 		</property>
 	</bean>
@@ -39,10 +40,10 @@
 		<property name="successView"><value>ruleTester.form</value></property>
 	</bean>
 	
-	<bean id="importRuleAttributes" class="@MODULE_PACKAGE@.web.ImportRuleAttributeValuesController">
+	<bean id="importRuleAttributeValues" class="org.openmrs.module.dss.web.ImportRuleAttributeValuesController">
         <property name="commandName"><value>importRuleAttributeValuesObject</value></property>
         <property name="formView"><value>/module/@MODULE_ID@/importRuleAttributeValues</value></property>
-        <property name="successView"><value>operationSuccess.form</value></property>
+        <property name="successView"><value>importRuleAttributeValues.form</value></property>
     </bean>
 	
     <bean parent="serviceContext">

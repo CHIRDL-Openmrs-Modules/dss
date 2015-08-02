@@ -16,6 +16,7 @@ package org.openmrs.module.dss.util;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -114,6 +115,7 @@ public class Util {
 				ruleAttributeValue.setLocationId(locationId);
 				ruleAttributeValue.setLocationTagId(locationTagId);
 				ruleAttributeValue.setValue(ruleAttributeValueDescriptor.getAttributeValue());
+				ruleAttributeValue.setCreationTime(Calendar.getInstance().getTime());
 				ruleAttributeValueList.add(ruleAttributeValue);
 			}
 		}
