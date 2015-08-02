@@ -39,9 +39,9 @@
 		<property name="successView"><value>ruleTester.form</value></property>
 	</bean>
 	
-	<bean id="importRuleAttributes" class="@MODULE_PACKAGE@.web.ImportRuleAttributesController">
-        <property name="commandName"><value>importRuleAttributesObject</value></property>
-        <property name="formView"><value>/module/@MODULE_ID@/importRuleAttributes</value></property>
+	<bean id="importRuleAttributes" class="@MODULE_PACKAGE@.web.ImportRuleAttributeValuesController">
+        <property name="commandName"><value>importRuleAttributeValuesObject</value></property>
+        <property name="formView"><value>/module/@MODULE_ID@/importRuleAttributeValues</value></property>
         <property name="successView"><value>operationSuccess.form</value></property>
     </bean>
 	
