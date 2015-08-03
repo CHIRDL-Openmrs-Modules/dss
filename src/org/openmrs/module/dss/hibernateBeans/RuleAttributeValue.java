@@ -17,8 +17,6 @@ public class RuleAttributeValue implements java.io.Serializable
 	private String value = null;
 	private Date creationTime = null;
 	private Date lastModified = null;
-	private Integer locationId = null;
-	private Integer locationTagId = null;
 	
     /**
      * @return the ruleAttributeValueId
@@ -102,33 +100,5 @@ public class RuleAttributeValue implements java.io.Serializable
      */
     public void setLastModified(Date lastModified) {
     	this.lastModified = lastModified;
-    }
-	
-    /**
-     * @return the locationId
-     */
-    public Integer getLocationId() {
-    	return locationId;
-    }
-	
-    /**
-     * @param locationId the locationId to set
-     */
-    public void setLocationId(Integer locationId) {
-    	this.locationId = locationId;
-    }
-	
-    /**
-     * @return the locationTagId
-     */
-    public Integer getLocationTagId() {
-    	return locationTagId;
-    }
-	
-    /**
-     * @param locationTagId the locationTagId to set
-     */
-    public void setLocationTagId(Integer locationTagId) {
-    	this.locationTagId = locationTagId;
     }
 }

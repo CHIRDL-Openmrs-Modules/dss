@@ -7,8 +7,6 @@ package org.openmrs.module.dss.util;
  */
 public class RuleAttributeValueDescriptor {
 	private String ruleName;
-	private String locationName;
-	private String locationTagName;
 	private String attributeName;
 	private String attributeValue;
 	
@@ -22,17 +20,13 @@ public class RuleAttributeValueDescriptor {
 	
 	/**
 	 * Constructor method
-	 * create an RuleAttributeValueDescriptor with rule name, location name, location tag name, attribute name, attribute value
+	 * create an RuleAttributeValueDescriptor with rule name, attribute name, attribute value
 	 * @param ruleName rule name
-	 * @param locationName location name
-	 * @param locationTagName location tag name
 	 * @param attributeName attribute name
 	 * @param attributeValue attribute value
 	 */
-	public RuleAttributeValueDescriptor(String ruleName, String locationName, String locationTagName, String attributeName, String attributeValue) {
+	public RuleAttributeValueDescriptor(String ruleName, String attributeName, String attributeValue) {
 		this.ruleName = ruleName;
-		this.locationName = locationName;
-		this.locationTagName = locationTagName;
 		this.attributeName = attributeName;
 		this.attributeValue = attributeValue;
 	}
@@ -52,19 +46,7 @@ public class RuleAttributeValueDescriptor {
     public void setRuleName(String ruleName) {
     	this.ruleName = ruleName;
     }
-
-	public String getLocationName() {
-		return locationName;
-	}
-	public void setLocationName(String locationName) {
-		this.locationName = locationName;
-	}
-	public String getLocationTagName() {
-		return locationTagName;
-	}
-	public void setLocationTagName(String locationTagName) {
-		this.locationTagName = locationTagName;
-	}
+    
 	public String getAttributeName() {
 		return attributeName;
 	}
@@ -85,8 +67,6 @@ public class RuleAttributeValueDescriptor {
 		result = prime * result + ((attributeName == null) ? 0 : attributeName.hashCode());
 		result = prime * result + ((attributeValue == null) ? 0 : attributeValue.hashCode());
 		result = prime * result + ((ruleName == null) ? 0 : ruleName.hashCode());
-		result = prime * result + ((locationName == null) ? 0 : locationName.hashCode());
-		result = prime * result + ((locationTagName == null) ? 0 : locationTagName.hashCode());
 		return result;
 	}
 
@@ -114,22 +94,13 @@ public class RuleAttributeValueDescriptor {
 				return false;
 		} else if (!ruleName.equals(other.ruleName))
 			return false;
-		if (locationName == null) {
-			if (other.locationName != null)
-				return false;
-		} else if (!locationName.equals(other.locationName))
-			return false;
-		if (locationTagName == null) {
-			if (other.locationTagName != null)
-				return false;
-		} else if (!locationTagName.equals(other.locationTagName))
-			return false;
+	
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "RuleAttributeValueDescriptor [ruleName=" + ruleName + ", locationName=" + locationName + ", locationTagName=" + locationTagName + ", attributeName=" + attributeName + ", attributeValue=" + attributeValue + "]";
+		return "RuleAttributeValueDescriptor [ruleName=" + ruleName +  ", attributeName=" + attributeName + ", attributeValue=" + attributeValue + "]";
 	}
 	
 	

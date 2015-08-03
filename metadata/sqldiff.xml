@@ -93,19 +93,13 @@ CREATE TABLE `dss_rule_attribute_value` (
   `rule_id` int(11) NOT NULL,
   `value` varchar(255) NOT NULL,
   `rule_attribute_id` int(11) NOT NULL,
-  `location_tag_id` int(11) NOT NULL DEFAULT '1',
-  `location_id` int(11) NOT NULL DEFAULT '1',
    creation_time datetime NOT NULL,
    last_modified datetime default NULL,
   PRIMARY KEY (`rule_attribute_value_id`),
   KEY `rule_value_fk_rule` (`rule_id`),
   KEY `rule_value_fk_attr` (`rule_attribute_id`),
-  KEY `rule_value_fk_loc_tag` (`location_tag_id`),
-  KEY `rule_value_fk_loc` (`location_id`),
   CONSTRAINT `rule_value_fk_attr` FOREIGN KEY (`rule_attribute_id`) REFERENCES `dss_rule_attribute` (`rule_attribute_id`),
-  CONSTRAINT `rule_value_fk_rule` FOREIGN KEY (`rule_id`) REFERENCES `dss_rule` (`rule_id`),
-  CONSTRAINT `rule_value_fk_loc` FOREIGN KEY (`location_id`) REFERENCES `location` (`location_id`),
-  CONSTRAINT `rule_value_fk_loc_tag` FOREIGN KEY (`location_tag_id`) REFERENCES `location_tag` (`location_tag_id`)
+  CONSTRAINT `rule_value_fk_rule` FOREIGN KEY (`rule_id`) REFERENCES `dss_rule` (`rule_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 insert into `dss_rule_attribute`(`name`,`description`) 

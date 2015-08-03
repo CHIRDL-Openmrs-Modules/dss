@@ -24,10 +24,13 @@
 		   
 		    <tr style="padding: 5px">
 		        <td style="padding: 0px 0px 10px 0px">Rule Attribute Value csv file:</td>
-		        <td style="padding: 0px 0px 10px 0px">(File headings: rule_name,location_name,location_tag_name,attribute_name,attribute_value)</td>
 		        <td style="padding: 0px 0px 10px 0px">
 		            <input type="file" name="dataFile" value="${dataFile}">
 		        </td>         
+		    </tr>
+		    <tr>
+		    <td colspan="2" style="padding: 0px 0px 10px 0px">(File headings: rule_name,attribute_name,attribute_value)</td>
+		    
 		    </tr>
 		    <c:if test="${failedFileUpload == 'true'}">
 			    <tr style="padding: 5px">
