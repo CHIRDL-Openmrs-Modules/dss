@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.dss.hibernateBeans.RuleAttribute;
 import org.openmrs.module.dss.hibernateBeans.RuleAttributeValue;
 import org.openmrs.module.dss.service.DssService;
 import org.openmrs.module.dss.util.Util;
@@ -72,7 +73,17 @@ public class ImportRuleAttributeValuesController extends SimpleFormController {
 					List<RuleAttributeValue> ruleAttributeValues = Util.getRuleAttributeValues(dataFile.getInputStream());
 					DssService dssService = Context.getService(DssService.class);
 					for (RuleAttributeValue ruleAttributeValue : ruleAttributeValues) {
-						dssService.saveRuleAttributeValue(ruleAttributeValue);
+						RuleAttribute ruleAttribute = dssService.getRuleAttribute(ruleAttributeValue.getRuleAttributeId());
+						if (ruleAttribute != null) {
+							String attributeName = ruleAttribute.getName();
+							RuleAttributeValue existingAttributeValue = dssService.getRuleAttributeValue(
+							    ruleAttributeValue.getRuleId(), attributeName);
+							if (existingAttributeValue != null) {
+								existingAttributeValue.setValue(ruleAttributeValue.getValue());
+								ruleAttributeValue = existingAttributeValue;
+							}
+							dssService.saveRuleAttributeValue(ruleAttributeValue);
+						}
 					}
 					
 				} else {
