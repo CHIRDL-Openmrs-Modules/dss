@@ -49,9 +49,11 @@ public class Util {
 	 */
 	public static List<RuleAttributeValueDescriptor> getRuleAttributeValueDescriptorFromCSV(InputStream input) throws Exception{
 		List<RuleAttributeValueDescriptor> ruleAttributeValuedList = null;
+		InputStreamReader inStreamReader = null;
+		CSVReader reader = null;
 		try{
-			InputStreamReader inStreamReader = new InputStreamReader(input);
-			CSVReader reader = new CSVReader(inStreamReader, ',');
+			inStreamReader = new InputStreamReader(input);
+			reader = new CSVReader(inStreamReader, ',');
 			HeaderColumnNameTranslateMappingStrategy<RuleAttributeValueDescriptor> strat = new HeaderColumnNameTranslateMappingStrategy<RuleAttributeValueDescriptor>();
 			Map<String, String> map = new HashMap<String, String>();
 			map.put("rule_name", "ruleName");
@@ -66,6 +68,13 @@ public class Util {
 			log.error(e);
 			e.printStackTrace();
 			throw e;
+		}finally{
+			if(inStreamReader != null){
+				inStreamReader.close();
+			}
+			if(reader != null){
+				reader.close();
+			}
 		}
 		return ruleAttributeValuedList;
 	}

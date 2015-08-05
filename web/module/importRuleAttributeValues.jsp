@@ -17,7 +17,7 @@
     // -->
 </script>
 <html>
-    <body OnLoad="document.input.formName.focus();">
+    <body OnLoad="document.input.dataFile.focus();">
 		<p><h3>Import Rule Attribute Values:</h3></p>
 		<form name="input" action="importRuleAttributeValues.form" method="post" enctype="multipart/form-data">
 		<table>

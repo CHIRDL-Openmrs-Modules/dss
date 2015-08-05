@@ -98,6 +98,7 @@ public class ImportRuleAttributeValuesController extends SimpleFormController {
 			return new ModelAndView(view, map);
 		}
 		
+		map.put("operationType", "Import rule attribute values");
 		view = getSuccessView();
 		return new ModelAndView(new RedirectView(view), map);
 	}
