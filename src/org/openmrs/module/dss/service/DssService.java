@@ -109,6 +109,10 @@ public interface DssService
 	
 	public RuleAttributeValue getRuleAttributeValue(Integer ruleId, String ruleAttributeName);
 	
+	public List<RuleAttributeValue> getRuleAttributeValues(Integer ruleId, String ruleAttributeName);
+	
+	public List<RuleAttributeValue> getRuleAttributeValues(Integer ruleId, Integer ruleAttributeId);
+	
 	public RuleAttributeValue saveRuleAttributeValue(RuleAttributeValue value);
 	
 }

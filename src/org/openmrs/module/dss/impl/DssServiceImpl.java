@@ -313,6 +313,13 @@ public class DssServiceImpl implements DssService
 		return getDssDAO().getRuleAttributeValue(ruleId, ruleAttributeName);
 	}
 	
+	public List<RuleAttributeValue> getRuleAttributeValues(Integer ruleId, String ruleAttributeName){
+		return getDssDAO().getRuleAttributeValues(ruleId, ruleAttributeName);
+	}
+	
+	public List<RuleAttributeValue> getRuleAttributeValues(Integer ruleId, Integer ruleAttributeId){
+		return getDssDAO().getRuleAttributeValues(ruleId, ruleAttributeId);
+	}
 	public RuleAttributeValue saveRuleAttributeValue(RuleAttributeValue value){
 
 		return getDssDAO().saveRuleAttributeValue(value);

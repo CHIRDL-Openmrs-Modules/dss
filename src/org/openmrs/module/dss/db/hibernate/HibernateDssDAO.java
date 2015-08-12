@@ -152,25 +152,14 @@ public class HibernateDssDAO implements DssDAO
 		return null;
 	}
 	
-	public RuleAttributeValue getRuleAttributeValue(Integer ruleId, String ruleAttributeName) {
+	public List<RuleAttributeValue> getRuleAttributeValues(Integer ruleId, String ruleAttributeName) {
 		try {
 			RuleAttribute ruleAttribute = this.getRuleAttribute(ruleAttributeName);
 			
 			if (ruleAttribute != null) {
 				Integer ruleAttributeId = ruleAttribute.getRuleAttributeId();
 				
-				String sql = "select * from dss_rule_attribute_value where rule_id=? and rule_attribute_id=?";
-				SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
-				
-				qry.setInteger(0, ruleId);
-				qry.setInteger(1, ruleAttributeId);
-				qry.addEntity(RuleAttributeValue.class);
-				
-				List<RuleAttributeValue> list = qry.list();
-				
-				if (list != null && list.size() > 0) {
-					return list.get(0);
-				}
+				return getRuleAttributeValues(ruleId,ruleAttributeId);
 				
 			}
 		}
@@ -180,6 +169,34 @@ public class HibernateDssDAO implements DssDAO
 		return null;
 	}
 	
+	public List<RuleAttributeValue> getRuleAttributeValues(Integer ruleId, Integer ruleAttributeId) {
+		try {
+			
+			String sql = "select * from dss_rule_attribute_value where rule_id=? and rule_attribute_id=?";
+			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
+			
+			qry.setInteger(0, ruleId);
+			qry.setInteger(1, ruleAttributeId);
+			qry.addEntity(RuleAttributeValue.class);
+			
+			List<RuleAttributeValue> list = qry.list();
+			return list;
+			
+		}
+		catch (Exception e) {
+			log.error("Error in method getRuleAttributeValue", e);
+		}
+		return null;
+	}
+	
+	public RuleAttributeValue getRuleAttributeValue(Integer ruleId, String ruleAttributeName) {
+		List<RuleAttributeValue> list = getRuleAttributeValues(ruleId, ruleAttributeName);
+		if (list != null && list.size() > 0) {
+			return list.get(0);
+		}
+		return null;
+	}
+
 	public RuleAttributeValue saveRuleAttributeValue(RuleAttributeValue value) {
 		sessionFactory.getCurrentSession().saveOrUpdate(value);
 		return value;

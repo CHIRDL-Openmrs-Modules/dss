@@ -39,7 +39,6 @@ public class ImportRuleAttributeValuesController extends SimpleFormController {
 	@Override
 	protected Map referenceData(HttpServletRequest request) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-
 		
 		return map;
 	}
@@ -49,6 +48,7 @@ public class ImportRuleAttributeValuesController extends SimpleFormController {
 	                                             BindException errors) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		String view = getFormView();
+		Map<Integer, Integer> updatedRules = new HashMap<Integer, Integer>(); //map to keep track of whether a rule attribute value has been updated
 		
 		try {
 			// Load the Teleform file.
@@ -68,21 +68,36 @@ public class ImportRuleAttributeValuesController extends SimpleFormController {
 						map.put("incorrectExtension", true);
 						return new ModelAndView(view, map);
 					}
-					
-					//filename
-					List<RuleAttributeValue> ruleAttributeValues = Util.getRuleAttributeValues(dataFile.getInputStream());
 					DssService dssService = Context.getService(DssService.class);
-					for (RuleAttributeValue ruleAttributeValue : ruleAttributeValues) {
-						RuleAttribute ruleAttribute = dssService.getRuleAttribute(ruleAttributeValue.getRuleAttributeId());
+					
+					List<RuleAttributeValue> ruleAttributeValuesFromFile = Util.getRuleAttributeValues(dataFile
+					        .getInputStream());
+					for (RuleAttributeValue fileRuleAttributeValue : ruleAttributeValuesFromFile) {
+						RuleAttribute ruleAttribute = dssService.getRuleAttribute(fileRuleAttributeValue.getRuleAttributeId());
 						if (ruleAttribute != null) {
-							String attributeName = ruleAttribute.getName();
-							RuleAttributeValue existingAttributeValue = dssService.getRuleAttributeValue(
-							    ruleAttributeValue.getRuleId(), attributeName);
-							if (existingAttributeValue != null) {
-								existingAttributeValue.setValue(ruleAttributeValue.getValue());
-								ruleAttributeValue = existingAttributeValue;
+							Integer ruleId = fileRuleAttributeValue.getRuleId();
+							List<RuleAttributeValue> databaseRuleAttributeValues = dssService.getRuleAttributeValues(ruleId,
+								fileRuleAttributeValue.getRuleAttributeId());
+							
+							Integer numDatabaseAttributes = databaseRuleAttributeValues.size();
+														
+							//figure out which copy of the attribute this is
+							Integer resultNum = updatedRules.get(ruleId);
+							if (resultNum == null) {
+								resultNum = 0;
 							}
-							dssService.saveRuleAttributeValue(ruleAttributeValue);
+							
+							resultNum++;
+							
+							//If there is a corresponding value for the rule attribute value in the database,
+							//update it instead of creating a new row
+							if (resultNum <= numDatabaseAttributes) {
+								RuleAttributeValue existingAttributeValue = databaseRuleAttributeValues.get(resultNum-1);
+								existingAttributeValue.setValue(fileRuleAttributeValue.getValue());
+								fileRuleAttributeValue = existingAttributeValue;
+							}
+							updatedRules.put(fileRuleAttributeValue.getRuleId(), resultNum);
+							dssService.saveRuleAttributeValue(fileRuleAttributeValue);
 						}
 					}
 					
