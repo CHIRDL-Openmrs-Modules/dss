@@ -14,7 +14,7 @@ import org.springframework.web.servlet.view.RedirectView;
 /**
  * 
  * @author wang417
- * Controller for operationSuccess.form
+ * Controller for dssOperationSuccess.form
  */
 public class OperationSuccessController extends SimpleFormController {
 	

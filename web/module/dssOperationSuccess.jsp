@@ -7,7 +7,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-        <form name="input" action="/openmrs/module/dss/operationSuccess.form" method="post" enctype="multipart/form-data">
+        <form name="input" action="/openmrs/module/dss/dssOperationSuccess.form" method="post" enctype="multipart/form-data">
         <table>
             <tr style="padding: 5px">
                 <td style="padding: 0px 0px 10px 0px">${operationType} successful</td>
