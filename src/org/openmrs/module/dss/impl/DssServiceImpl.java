@@ -301,25 +301,50 @@ public class DssServiceImpl implements DssService
 		return getDssDAO().getPrioritizedRules(type, 0);
 	}
 	
+	/**
+	 * Looks up a rule attribute by name
+	 * @see org.openmrs.module.dss.service.DssService#getRuleAttribute(java.lang.String)
+	 */
 	public RuleAttribute getRuleAttribute(String ruleAttributeName){
    		return getDssDAO().getRuleAttribute(ruleAttributeName);
     }
 	
+	/**
+	 * Looks up a rule attribute by primary key
+	 * @see org.openmrs.module.dss.service.DssService#getRuleAttribute(java.lang.Integer)
+	 */
 	public RuleAttribute getRuleAttribute(Integer ruleAttributeId){
    		return getDssDAO().getRuleAttribute(ruleAttributeId);
     }
 	
+	/**
+	 * returns the first rule attribute value matched by rule id and rule attribute name
+	 * @see org.openmrs.module.dss.service.DssService#getRuleAttributeValue(java.lang.Integer, java.lang.String)
+	 */
 	public RuleAttributeValue getRuleAttributeValue(Integer ruleId, String ruleAttributeName){
 		return getDssDAO().getRuleAttributeValue(ruleId, ruleAttributeName);
 	}
 	
+	/**
+	 * returns all rule attribute values for a given rule id and rule attribute name
+	 * @see org.openmrs.module.dss.service.DssService#getRuleAttributeValues(java.lang.Integer, java.lang.String)
+	 */
 	public List<RuleAttributeValue> getRuleAttributeValues(Integer ruleId, String ruleAttributeName){
 		return getDssDAO().getRuleAttributeValues(ruleId, ruleAttributeName);
 	}
 	
+	/**
+	 * Returns list of rule attribute values for a given rule id and rule attribute id
+	 * @see org.openmrs.module.dss.service.DssService#getRuleAttributeValues(java.lang.Integer, java.lang.Integer)
+	 */
 	public List<RuleAttributeValue> getRuleAttributeValues(Integer ruleId, Integer ruleAttributeId){
 		return getDssDAO().getRuleAttributeValues(ruleId, ruleAttributeId);
 	}
+	
+	/**
+	 * Saves or updates rule attribute value changes to the database
+	 * @see org.openmrs.module.dss.service.DssService#saveRuleAttributeValue(org.openmrs.module.dss.hibernateBeans.RuleAttributeValue)
+	 */
 	public RuleAttributeValue saveRuleAttributeValue(RuleAttributeValue value){
 
 		return getDssDAO().saveRuleAttributeValue(value);
@@ -348,6 +373,10 @@ public class DssServiceImpl implements DssService
 		getDssDAO().deleteRule(ruleId);
 	}
 	
+	/**
+	 * Looks up rule attribute value by value
+	 * @see org.openmrs.module.dss.service.DssService#getRuleAttributeByValue(java.lang.String)
+	 */
 	public RuleAttributeValue getRuleAttributeByValue(String value){
 		return getDssDAO().getRuleAttributeByValue(value);
 	}

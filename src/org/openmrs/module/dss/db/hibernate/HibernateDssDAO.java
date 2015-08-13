@@ -118,10 +118,18 @@ public class HibernateDssDAO implements DssDAO
 		return null;
 	}
 	
+	/**
+	 * Looks up a rule attribute by primary key
+	 * @see org.openmrs.module.dss.db.DssDAO#getRuleAttribute(int)
+	 */
 	public RuleAttribute getRuleAttribute(int ruleAttributeId) {
 		return (RuleAttribute) sessionFactory.getCurrentSession().get(RuleAttribute.class, ruleAttributeId);
 	}
 	
+	/**
+	 * Looks up a rule attribute by name
+	 * @see org.openmrs.module.dss.db.DssDAO#getRuleAttribute(java.lang.String)
+	 */
 	public RuleAttribute getRuleAttribute(String ruleAttributeName) {
 		Criteria crit = sessionFactory.getCurrentSession().createCriteria(RuleAttribute.class); 
 
@@ -130,6 +138,10 @@ public class HibernateDssDAO implements DssDAO
 		return (RuleAttribute) crit.uniqueResult();
 	}
 	
+	/**
+	 * returns all rule attribute values for a given rule id and rule attribute name
+	 * @see org.openmrs.module.dss.db.DssDAO#getRuleAttributeValues(java.lang.Integer, java.lang.String)
+	 */
 	public List<RuleAttributeValue> getRuleAttributeValues(Integer ruleId, String ruleAttributeName) {
 		try {
 			RuleAttribute ruleAttribute = this.getRuleAttribute(ruleAttributeName);
@@ -147,6 +159,10 @@ public class HibernateDssDAO implements DssDAO
 		return null;
 	}
 	
+	/**
+	 * Looks up rule attribute value by value
+	 * @see org.openmrs.module.dss.db.DssDAO#getRuleAttributeByValue(java.lang.String)
+	 */
 	public RuleAttributeValue getRuleAttributeByValue(String value){
 		Criteria crit = sessionFactory.getCurrentSession().createCriteria(RuleAttribute.class); 
 
@@ -155,6 +171,10 @@ public class HibernateDssDAO implements DssDAO
 		return (RuleAttributeValue) crit.uniqueResult();
 	}
 	
+	/**
+	 * Returns list of rule attribute values for a given rule id and rule attribute id
+	 * @see org.openmrs.module.dss.db.DssDAO#getRuleAttributeValues(java.lang.Integer, java.lang.Integer)
+	 */
 	public List<RuleAttributeValue> getRuleAttributeValues(Integer ruleId, Integer ruleAttributeId) {
 		
 		Criteria crit = sessionFactory.getCurrentSession().createCriteria(RuleAttributeValue.class);
@@ -164,6 +184,10 @@ public class HibernateDssDAO implements DssDAO
 		return crit.list();
 	}
 	
+	/**
+	 * returns the first rule attribute value matched by rule id and rule attribute name
+	 * @see org.openmrs.module.dss.db.DssDAO#getRuleAttributeValue(java.lang.Integer, java.lang.String)
+	 */
 	public RuleAttributeValue getRuleAttributeValue(Integer ruleId, String ruleAttributeName) {
 		List<RuleAttributeValue> list = getRuleAttributeValues(ruleId, ruleAttributeName);
 		if (list != null && list.size() > 0) {
@@ -172,6 +196,10 @@ public class HibernateDssDAO implements DssDAO
 		return null;
 	}
 
+	/**
+	 * Saves or updates rule attribute value changes to the database
+	 * @see org.openmrs.module.dss.db.DssDAO#saveRuleAttributeValue(org.openmrs.module.dss.hibernateBeans.RuleAttributeValue)
+	 */
 	public RuleAttributeValue saveRuleAttributeValue(RuleAttributeValue value) {
 		sessionFactory.getCurrentSession().saveOrUpdate(value);
 		return value;

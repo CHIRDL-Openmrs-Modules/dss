@@ -36,4 +36,5 @@
 		<property name="ageMin" type="java.lang.Integer" column="age_min" />
 		<property name="ageMax" type="java.lang.Integer" column="age_max" />
 	</class>
+	
 </hibernate-mapping>
