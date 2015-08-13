@@ -101,4 +101,47 @@ public class RuleAttributeValue implements java.io.Serializable
     public void setLastModified(Date lastModified) {
     	this.lastModified = lastModified;
     }
+    
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((ruleAttributeId == null) ? 0 : ruleAttributeId.hashCode());
+		result = prime * result + ((ruleAttributeValueId == null) ? 0 : ruleAttributeValueId.hashCode());
+		result = prime * result + ((ruleId == null) ? 0 : ruleId.hashCode());
+		result = prime * result + ((value == null) ? 0 : value.hashCode());
+		result = prime * result + ((creationTime == null) ? 0 : creationTime.hashCode());
+		result = prime * result + ((lastModified == null) ? 0 : lastModified.hashCode());
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obs)
+	{
+		if (obs == null || !(obs instanceof RuleAttributeValue))
+		{
+			return false;
+		}
+
+		RuleAttributeValue ruleAttributeValue = (RuleAttributeValue) obs;
+
+		if (this.ruleAttributeId.equals(ruleAttributeValue.getRuleAttributeId()))
+		{
+			if (this.ruleId.equals(ruleAttributeValue.getRuleId()))
+			{
+				if(this.value.equals(ruleAttributeValue.getValue())){
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	@Override
+	public String toString() {
+		return "RuleAttributeValue [ruleAttributeId=" + ruleAttributeId + ", ruleId="+ruleId+ ", ruleAttributeValueId=" + ruleAttributeValueId  + ", value=" + value + ", creationTime="+creationTime+ ", lastModified="+ lastModified+"]";
+	}
 }
