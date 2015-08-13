@@ -3,6 +3,8 @@ package org.openmrs.module.dss.db;
 import java.util.List;
 
 import org.openmrs.module.dss.hibernateBeans.Rule;
+import org.openmrs.module.dss.hibernateBeans.RuleAttribute;
+import org.openmrs.module.dss.hibernateBeans.RuleAttributeValue;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -64,4 +66,70 @@ public interface DssDAO {
 	 * @return
 	 */
 	public List<Rule> getPrioritizedRules(String type, Integer startPriority);
+
+	/**
+	 * 
+	 * Looks up a rule attribute by name
+	 * 
+	 * @param ruleAttributeName
+	 * @return
+	 */
+	public RuleAttribute getRuleAttribute(String ruleAttributeName);
+
+	/**
+	 * 
+	 * Looks up a rule attribute by primary key
+	 * 
+	 * @param ruleAttributeId
+	 * @return
+	 */
+	public RuleAttribute getRuleAttribute(int ruleAttributeId);
+	
+	/**
+	 * 
+	 * returns the first rule attribute value matched by rule id and rule attribute name
+	 * 
+	 * @param ruleId
+	 * @param ruleAttributeName
+	 * @return
+	 */
+	public RuleAttributeValue getRuleAttributeValue(Integer ruleId, String ruleAttributeName); 
+	
+	/**
+	 * 
+	 * returns all rule attribute values for a given rule id and rule attribute name
+	 * 
+	 * @param ruleId
+	 * @param ruleAttributeName
+	 * @return
+	 */
+	public List<RuleAttributeValue> getRuleAttributeValues(Integer ruleId, String ruleAttributeName); 
+	
+	/**
+	 * 
+	 * Returns list of rule attribute values for a given rule id and rule attribute id
+	 * 
+	 * @param ruleId
+	 * @param ruleAttributeId
+	 * @return
+	 */
+	public List<RuleAttributeValue> getRuleAttributeValues(Integer ruleId, Integer ruleAttributeId);
+	
+	/**
+	 * 
+	 * Saves or updates rule attribute value changes to the database
+	 * 
+	 * @param value
+	 * @return
+	 */
+	public RuleAttributeValue saveRuleAttributeValue(RuleAttributeValue value) ;
+	
+	/**
+	 * 
+	 * Looks up rule attribute value by value
+	 * 
+	 * @param value
+	 * @return
+	 */
+	public RuleAttributeValue getRuleAttributeByValue(String value);
 }
