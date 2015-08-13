@@ -4,9 +4,11 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.Criteria;
 import org.hibernate.SQLQuery;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Example;
+import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.openmrs.api.AdministrationService;
@@ -116,40 +118,16 @@ public class HibernateDssDAO implements DssDAO
 		return null;
 	}
 	
-	public RuleAttribute getRuleAttribute(int ruleAttributeId)
-	{
-		try
-		{
-			String sql = "select * from dss_rule_attribute where rule_attribute_id=?";
-			SQLQuery qry = this.sessionFactory.getCurrentSession()
-					.createSQLQuery(sql);
-			qry.setInteger(0, ruleAttributeId);
-			qry.addEntity(RuleAttribute.class);
-			return (RuleAttribute) qry.uniqueResult();
-		} catch (Exception e)
-		{
-			this.log.error(Util.getStackTrace(e));
-		}
-		return null;
+	public RuleAttribute getRuleAttribute(int ruleAttributeId) {
+		return (RuleAttribute) sessionFactory.getCurrentSession().get(RuleAttribute.class, ruleAttributeId);
 	}
 	
 	public RuleAttribute getRuleAttribute(String ruleAttributeName) {
-		try {
-			String sql = "select * from dss_rule_attribute where name=?";
-			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
-			qry.setString(0, ruleAttributeName);
-			qry.addEntity(RuleAttribute.class);
-			
-			List<RuleAttribute> list = qry.list();
-			
-			if (list != null && list.size() > 0) {
-				return list.get(0);
-			}
-		}
-		catch (Exception e) {
-			log.error("Error in method getRuleAttribute", e);
-		}
-		return null;
+		Criteria crit = sessionFactory.getCurrentSession().createCriteria(RuleAttribute.class); 
+
+		crit.add(Expression.eq("name", ruleAttributeName)); 
+
+		return (RuleAttribute) crit.uniqueResult();
 	}
 	
 	public List<RuleAttributeValue> getRuleAttributeValues(Integer ruleId, String ruleAttributeName) {
@@ -169,24 +147,21 @@ public class HibernateDssDAO implements DssDAO
 		return null;
 	}
 	
+	public RuleAttributeValue getRuleAttributeByValue(String value){
+		Criteria crit = sessionFactory.getCurrentSession().createCriteria(RuleAttribute.class); 
+
+		crit.add(Expression.eq("value", value)); 
+
+		return (RuleAttributeValue) crit.uniqueResult();
+	}
+	
 	public List<RuleAttributeValue> getRuleAttributeValues(Integer ruleId, Integer ruleAttributeId) {
-		try {
-			
-			String sql = "select * from dss_rule_attribute_value where rule_id=? and rule_attribute_id=?";
-			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql);
-			
-			qry.setInteger(0, ruleId);
-			qry.setInteger(1, ruleAttributeId);
-			qry.addEntity(RuleAttributeValue.class);
-			
-			List<RuleAttributeValue> list = qry.list();
-			return list;
-			
-		}
-		catch (Exception e) {
-			log.error("Error in method getRuleAttributeValue", e);
-		}
-		return null;
+		
+		Criteria crit = sessionFactory.getCurrentSession().createCriteria(RuleAttributeValue.class);
+		crit.add(Expression.eq("ruleId", ruleId)); 
+		crit.add(Expression.eq("ruleAttributeId", ruleAttributeId)); 
+
+		return crit.list();
 	}
 	
 	public RuleAttributeValue getRuleAttributeValue(Integer ruleId, String ruleAttributeName) {

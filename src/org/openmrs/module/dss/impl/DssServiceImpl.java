@@ -348,6 +348,10 @@ public class DssServiceImpl implements DssService
 		getDssDAO().deleteRule(ruleId);
 	}
 	
+	public RuleAttributeValue getRuleAttributeByValue(String value){
+		return getDssDAO().getRuleAttributeByValue(value);
+	}
+	
 	public Rule addRule(String classFilename,DssRule rule) throws APIException
 	{
 		String tokenName = IOUtil.getFilenameWithoutExtension(classFilename);

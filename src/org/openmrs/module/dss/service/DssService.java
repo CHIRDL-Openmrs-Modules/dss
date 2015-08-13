@@ -115,4 +115,6 @@ public interface DssService
 	
 	public RuleAttributeValue saveRuleAttributeValue(RuleAttributeValue value);
 	
+	public RuleAttributeValue getRuleAttributeByValue(String value);
+	
 }

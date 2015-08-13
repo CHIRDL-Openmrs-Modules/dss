@@ -78,4 +78,6 @@ public interface DssDAO {
 	public List<RuleAttributeValue> getRuleAttributeValues(Integer ruleId, Integer ruleAttributeId);
 	
 	public RuleAttributeValue saveRuleAttributeValue(RuleAttributeValue value) ;
+	
+	public RuleAttributeValue getRuleAttributeByValue(String value);
 }
