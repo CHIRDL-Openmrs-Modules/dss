@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.openmrs.api.context.Context;
+import org.openmrs.module.dss.hibernateBeans.RuleAttribute;
 import org.openmrs.module.dss.hibernateBeans.RuleAttributeValue;
 import org.openmrs.module.dss.service.DssService;
 
@@ -126,31 +127,39 @@ public class Node {
 		return text.toString();
 	}
 	
-	public void traverseDepthFirst() {
+	public void traverseDepthFirst(String ruleAttributeName) {
 		Integer size = size();
 		
 		for (int j = 0; j < size; j++) {
-			this.children.get(j).traverseDepthFirst();
+			this.children.get(j).traverseDepthFirst(ruleAttributeName);
 		}
 		
 		//This code will be adapted to print if-then statements for the rules
 		//A rule will only be created if the given attribute has a mapping in the rule attribute value
 		//table
 		//create a map to gather statements for the same attribute, then prompt
-		//TODO Only generate if-then logic if node exist in attribute value table
 		System.out.println("----Node named: " + name() + " = " + value() + "----------");
 		
 		String ruleAttributeLookupValue = name() + " = " + value();
-		ruleAttributeLookupValue = ruleAttributeLookupValue.substring(0,ruleAttributeLookupValue.indexOf(":"));
+		
+		if(ruleAttributeLookupValue.contains(":")){
+			ruleAttributeLookupValue = ruleAttributeLookupValue.substring(0,ruleAttributeLookupValue.indexOf(":"));
+		}
 		DssService dssService = Context.getService(DssService.class);
-		RuleAttributeValue ruleAttributeValue = dssService.getRuleAttributeByValue(ruleAttributeLookupValue);
-		if(ruleAttributeValue !=null){
-			System.out.println("rule id is: "+ruleAttributeValue.getRuleId());
-			System.out.println(buildIfStatement());
-		}else{
+		RuleAttribute ruleAttribute = dssService.getRuleAttribute(ruleAttributeName);
+		Integer ruleAttributeId = ruleAttribute.getRuleAttributeId();
+		List<RuleAttributeValue> ruleAttributeValues = dssService.getRuleAttributesByValue(ruleAttributeId,ruleAttributeLookupValue);
+		
+		if (ruleAttributeValues != null && ruleAttributeValues.size() > 0) {
+			for (RuleAttributeValue ruleAttributeValue : ruleAttributeValues) {
+				System.out.println("rule id is: " + ruleAttributeValue.getRuleId());
+				System.out.println(buildIfStatement());
+			}
+		} else {
 			System.out.println("No mlm for this one");
 		}
 		System.out.println("--------------");
+	
 		
 	}
 	

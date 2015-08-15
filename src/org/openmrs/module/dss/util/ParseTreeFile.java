@@ -30,7 +30,7 @@ public class ParseTreeFile {
 	 * 
 	 * @param args
 	 */
-	public static void main(String[] args) {
+	public static void parseTree(){
 		
 		String treeFile = "C:\\Users\\tmdugan\\git\\Obesity_Prediction\\src\\util\\resources\\ID3_small_model.txt";
 		final String DELIMITER = "|  ";
@@ -92,8 +92,7 @@ public class ParseTreeFile {
 			}
 			catch (Exception e) {}
 		}
-		
-		tree.getRoot().traverseDepthFirst();
+		tree.getRoot().traverseDepthFirst("associated_answer");
 		
 		String fileName = "C:\\Users\\tmdugan\\git\\Obesity_Prediction\\src\\util\\resources\\output_test.txt";
 		FileWriter fileWriter = null;
