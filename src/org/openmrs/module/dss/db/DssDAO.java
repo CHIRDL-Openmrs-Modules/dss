@@ -125,11 +125,11 @@ public interface DssDAO {
 	public RuleAttributeValue saveRuleAttributeValue(RuleAttributeValue value) ;
 	
 	/**
+	 * Returns a list of rule attribute values for a given rule attribute id and value
 	 * 
-	 * Looks up rule attribute value by value
-	 * 
+	 * @param ruleAttributeId
 	 * @param value
 	 * @return
 	 */
-	public RuleAttributeValue getRuleAttributeByValue(String value);
+	public List<RuleAttributeValue> getRuleAttributesByValue(Integer ruleAttributeId,String value);
 }

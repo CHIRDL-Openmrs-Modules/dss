@@ -13,6 +13,7 @@
 				<prop key="/module/@MODULE_ID@/deleteRules.form">deleteRules</prop>
 				<prop key="/module/@MODULE_ID@/ruleTester.form">ruleTester</prop>
 				<prop key="/module/@MODULE_ID@/importRuleAttributeValues.form">importRuleAttributeValues</prop>	
+				<prop key="/module/@MODULE_ID@/importTreeFile.form">importTreeFile</prop>	
 				<prop key="/module/@MODULE_ID@/dssOperationSuccess.form">dssOperationSuccess</prop>			    
 			</props>
 		</property>
@@ -44,6 +45,11 @@
 	<bean id="importRuleAttributeValues" class="org.openmrs.module.dss.web.ImportRuleAttributeValuesController">
         <property name="commandName"><value>importRuleAttributeValuesObject</value></property>
         <property name="formView"><value>/module/@MODULE_ID@/importRuleAttributeValues</value></property>
+        <property name="successView"><value>dssOperationSuccess.form</value></property>
+    </bean>
+    <bean id="importTreeFile" class="org.openmrs.module.dss.web.ImportTreeFileController">
+        <property name="commandName"><value>importTreeFileObject</value></property>
+        <property name="formView"><value>/module/@MODULE_ID@/importTreeFile</value></property>
         <property name="successView"><value>dssOperationSuccess.form</value></property>
     </bean>
     <bean id="dssOperationSuccess" class="@MODULE_PACKAGE@.web.OperationSuccessController">

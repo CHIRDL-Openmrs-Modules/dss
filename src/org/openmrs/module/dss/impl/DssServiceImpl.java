@@ -374,11 +374,15 @@ public class DssServiceImpl implements DssService
 	}
 	
 	/**
-	 * Looks up rule attribute value by value
-	 * @see org.openmrs.module.dss.service.DssService#getRuleAttributeByValue(java.lang.String)
+	 * 
+	 * Returns a list of rule attribute values for a given rule attribute id and value
+	 * 
+	 * @param ruleAttributeId
+	 * @param value
+	 * @return
 	 */
-	public RuleAttributeValue getRuleAttributeByValue(String value){
-		return getDssDAO().getRuleAttributeByValue(value);
+	public List<RuleAttributeValue> getRuleAttributesByValue(Integer ruleAttributeId,String value){
+		return getDssDAO().getRuleAttributesByValue(ruleAttributeId, value);
 	}
 	
 	public Rule addRule(String classFilename,DssRule rule) throws APIException

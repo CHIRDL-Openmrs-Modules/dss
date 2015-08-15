@@ -160,15 +160,15 @@ public class HibernateDssDAO implements DssDAO
 	}
 	
 	/**
-	 * Looks up rule attribute value by value
-	 * @see org.openmrs.module.dss.db.DssDAO#getRuleAttributeByValue(java.lang.String)
+	 * Returns a list of rule attribute values for a given rule attribute id and value
+	 * @see org.openmrs.module.dss.db.DssDAO#getRuleAttributesByValue(java.lang.Integer, java.lang.String)
 	 */
-	public RuleAttributeValue getRuleAttributeByValue(String value){
-		Criteria crit = sessionFactory.getCurrentSession().createCriteria(RuleAttribute.class); 
+	public List<RuleAttributeValue> getRuleAttributesByValue(Integer ruleAttributeId,String value){
+		Criteria crit = sessionFactory.getCurrentSession().createCriteria(RuleAttributeValue.class); 
 
 		crit.add(Expression.eq("value", value)); 
 
-		return (RuleAttributeValue) crit.uniqueResult();
+		return crit.list();
 	}
 	
 	/**
