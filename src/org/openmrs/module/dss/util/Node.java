@@ -1,7 +1,10 @@
 package org.openmrs.module.dss.util;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.openmrs.api.context.Context;
 import org.openmrs.module.dss.hibernateBeans.RuleAttribute;
@@ -127,42 +130,43 @@ public class Node {
 		return text.toString();
 	}
 	
-	public void traverseDepthFirst(String ruleAttributeName) {
+	public void traverseDepthFirst(String ruleAttributeName, HashMap<Integer, Set<String>> ruleLogicMap) {
 		Integer size = size();
 		
 		for (int j = 0; j < size; j++) {
-			this.children.get(j).traverseDepthFirst(ruleAttributeName);
+			this.children.get(j).traverseDepthFirst(ruleAttributeName, ruleLogicMap);
 		}
 		
 		//This code will be adapted to print if-then statements for the rules
 		//A rule will only be created if the given attribute has a mapping in the rule attribute value
 		//table
 		//create a map to gather statements for the same attribute, then prompt
-		System.out.println("----Node named: " + name() + " = " + value() + "----------");
 		
 		String ruleAttributeLookupValue = name() + " = " + value();
 		
-		if(ruleAttributeLookupValue.contains(":")){
-			ruleAttributeLookupValue = ruleAttributeLookupValue.substring(0,ruleAttributeLookupValue.indexOf(":"));
+		if (ruleAttributeLookupValue.contains(":")) {
+			ruleAttributeLookupValue = ruleAttributeLookupValue.substring(0, ruleAttributeLookupValue.indexOf(":"));
 		}
 		DssService dssService = Context.getService(DssService.class);
 		RuleAttribute ruleAttribute = dssService.getRuleAttribute(ruleAttributeName);
 		Integer ruleAttributeId = ruleAttribute.getRuleAttributeId();
-		List<RuleAttributeValue> ruleAttributeValues = dssService.getRuleAttributesByValue(ruleAttributeId,ruleAttributeLookupValue);
+		List<RuleAttributeValue> ruleAttributeValues = dssService.getRuleAttributesByValue(ruleAttributeId,
+		    ruleAttributeLookupValue);
 		
 		if (ruleAttributeValues != null && ruleAttributeValues.size() > 0) {
 			for (RuleAttributeValue ruleAttributeValue : ruleAttributeValues) {
-				System.out.println("rule id is: " + ruleAttributeValue.getRuleId());
-				System.out.println(buildIfStatement());
+				Integer ruleId = ruleAttributeValue.getRuleId();
+				Set<String> ifStatements = ruleLogicMap.get(ruleId);
+				if (ifStatements == null) {
+					ifStatements = new HashSet<String>();
+				}
+				ifStatements.add(buildIfStatement());
+				ruleLogicMap.put(ruleId, ifStatements);
 			}
-		} else {
-			System.out.println("No mlm for this one");
 		}
-		System.out.println("--------------");
-	
 		
 	}
-	
+
 	private String buildIfStatement() {
 		Node currParent = this.parent;
 		StringBuffer buffer = new StringBuffer();

@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Set;
 import java.util.StringTokenizer;
 
 /**
@@ -92,7 +94,19 @@ public class ParseTreeFile {
 			}
 			catch (Exception e) {}
 		}
-		tree.getRoot().traverseDepthFirst("associated_answer");
+		
+		HashMap<Integer, Set<String>> ruleLogicMap = new HashMap<Integer, Set<String>>(); 
+		
+		tree.getRoot().traverseDepthFirst("associated_answer",ruleLogicMap);
+		
+		for(Integer ruleId:ruleLogicMap.keySet()){
+			Set<String> ifStatements = ruleLogicMap.get(ruleId);
+			System.out.println("---------ruleId: "+ruleId+"------------");
+			for(String ifStatement:ifStatements){
+				System.out.println(ifStatement);
+			}
+			System.out.println("-------------------------------");
+		}
 		
 		String fileName = "C:\\Users\\tmdugan\\git\\Obesity_Prediction\\src\\util\\resources\\output_test.txt";
 		FileWriter fileWriter = null;
