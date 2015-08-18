@@ -551,7 +551,12 @@ public class Rule implements java.io.Serializable
 		{
 			if (getAgeMax() > ageInYears)
 			{
-	
+				return true;
+			}
+		}
+
+		return false;
+	}
 	/**
 	 * Auto generated method comment
 	 * 
