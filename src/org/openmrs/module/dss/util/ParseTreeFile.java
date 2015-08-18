@@ -67,6 +67,10 @@ public class ParseTreeFile {
 					value = tokenizer.nextToken().trim();
 				}
 				
+				if(value.equals("MISSING")){
+					value = "null";
+				}
+				
 				Node node = new Node(attribute, value);
 				
 				if (level > prevLevel) {
