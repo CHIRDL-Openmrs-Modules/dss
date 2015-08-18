@@ -130,18 +130,11 @@ public class Node {
 		return text.toString();
 	}
 	
-	public void traverseDepthFirst(String ruleAttributeName, HashMap<Integer, Set<String>> ruleLogicMap,
-	                               HashMap<Integer, Set<String>> ruleVariableMap) {
-		Integer size = size();
+	public void traverseBreadthFirst(String ruleAttributeName, HashMap<Integer, Set<String>> ruleLogicMap,
+	                                 HashMap<Integer, Set<String>> ruleVariableMap) {
 		
-		for (int j = 0; j < size; j++) {
-			this.children.get(j).traverseDepthFirst(ruleAttributeName, ruleLogicMap,ruleVariableMap);
-		}
-		
-		//This code will be adapted to print if-then statements for the rules
-		//A rule will only be created if the given attribute has a mapping in the rule attribute value
-		//table
-		//create a map to gather statements for the same attribute, then prompt
+		//A rule will only be created if the given attribute has a mapping in the rule attribute value table (ie it has an associated PSF question)
+		//The maps gather if statements and variables that will be contained in the same rule
 		
 		String ruleAttributeLookupValue = name() + " = " + value();
 		
@@ -169,6 +162,11 @@ public class Node {
 				ruleLogicMap.put(ruleId, ifStatements);
 				ruleVariableMap.put(ruleId, variables);
 			}
+		}
+		Integer size = size();
+		
+		for (int j = 0; j < size; j++) {
+			this.children.get(j).traverseBreadthFirst(ruleAttributeName, ruleLogicMap, ruleVariableMap);
 		}
 		
 	}

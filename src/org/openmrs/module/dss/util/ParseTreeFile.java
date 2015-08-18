@@ -105,7 +105,7 @@ public class ParseTreeFile {
 		HashMap<Integer, Set<String>> ruleLogicMap = new HashMap<Integer, Set<String>>();
 		HashMap<Integer, Set<String>> ruleVariableMap = new HashMap<Integer, Set<String>>();
 		
-		tree.getRoot().traverseDepthFirst("associated_answer", ruleLogicMap, ruleVariableMap);
+		tree.getRoot().traverseBreadthFirst("associated_answer", ruleLogicMap, ruleVariableMap);
 		Integer priority = 1;
 		
 		for (Integer ruleId : ruleLogicMap.keySet()) {
@@ -133,18 +133,20 @@ public class ParseTreeFile {
 				data += variable + " := read Last {" + variable + " from CHICA};\n";
 			}
 			rule.setData(data);
+			String outputDirectory = "C:\\Users\\tmdugan\\git\\Obesity_Prediction\\src\\util\\resources\\";
+			String filename = outputDirectory + rule.getTokenName() + ".mlm";
+			writeFile(filename, rule);
 			
-			System.out.println("---------ruleId: " + ruleId + "------------");
-			System.out.println(rule.getMLMString());
-			System.out.println("-------------------------------");
 			priority++;
 		}
 		
-		String fileName = "C:\\Users\\tmdugan\\git\\Obesity_Prediction\\src\\util\\resources\\output_test.txt";
+	}
+	
+	private static void writeFile(String filename, Rule rule) {
 		FileWriter fileWriter = null;
 		try {
-			fileWriter = new FileWriter(fileName);
-			fileWriter.write(tree.getRoot().toString());
+			fileWriter = new FileWriter(filename);
+			fileWriter.write(rule.getMLMString());
 		}
 		catch (IOException e) {
 			
