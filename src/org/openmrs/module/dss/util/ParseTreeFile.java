@@ -4,9 +4,15 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.StringTokenizer;
+
+import org.openmrs.api.context.Context;
+import org.openmrs.module.dss.hibernateBeans.Rule;
+import org.openmrs.module.dss.service.DssService;
 
 /**
  * The contents of this file are subject to the OpenMRS Public License
@@ -32,7 +38,7 @@ public class ParseTreeFile {
 	 * 
 	 * @param args
 	 */
-	public static void parseTree(){
+	public static void parseTree() {
 		
 		String treeFile = "C:\\Users\\tmdugan\\git\\Obesity_Prediction\\src\\util\\resources\\ID3_small_model.txt";
 		final String DELIMITER = "|  ";
@@ -41,6 +47,7 @@ public class ParseTreeFile {
 		BufferedReader reader = null;
 		int prevLevel = -1;
 		Node parentNode = root;
+		DssService dssService = Context.getService(DssService.class);
 		try {
 			reader = new BufferedReader(new FileReader(treeFile));
 			
@@ -74,7 +81,7 @@ public class ParseTreeFile {
 						parentNode = parentNode.getParent();
 						if (parentNode != null) {
 							parentNode.addChild(node);
-						} 
+						}
 					}
 				}
 				
@@ -95,17 +102,42 @@ public class ParseTreeFile {
 			catch (Exception e) {}
 		}
 		
-		HashMap<Integer, Set<String>> ruleLogicMap = new HashMap<Integer, Set<String>>(); 
+		HashMap<Integer, Set<String>> ruleLogicMap = new HashMap<Integer, Set<String>>();
+		HashMap<Integer, Set<String>> ruleVariableMap = new HashMap<Integer, Set<String>>();
 		
-		tree.getRoot().traverseDepthFirst("associated_answer",ruleLogicMap);
+		tree.getRoot().traverseDepthFirst("associated_answer", ruleLogicMap, ruleVariableMap);
+		Integer priority = 1;
 		
-		for(Integer ruleId:ruleLogicMap.keySet()){
+		for (Integer ruleId : ruleLogicMap.keySet()) {
+			Rule rule = setupRule();
+			rule.setRuleId(ruleId);
+			rule.setPriority(priority);
+			rule.setTokenName("obesityScreener" + priority);
 			Set<String> ifStatements = ruleLogicMap.get(ruleId);
-			System.out.println("---------ruleId: "+ruleId+"------------");
-			for(String ifStatement:ifStatements){
-				System.out.println(ifStatement);
+			Set<String> variables = ruleVariableMap.get(ruleId);
+			String logic = "If (mode = PRODUCE) then \n";
+			Rule psfRule = dssService.getRule(ruleId);
+			logic += "psfResult:= call " + psfRule.getTokenName() + ";\n";
+
+			for (String ifStatement : ifStatements) {
+				logic += ifStatement + "\n";
 			}
+			logic += "endif\n";
+			rule.setLogic(logic);
+			
+			String data = "mode:=read {mode from Parameters};\n";
+			
+			for (String variable : variables) {
+				//not sure if this is quite accurate
+				//model used most common attribute but this is pulling most recent
+				data += variable + " := read Last {" + variable + " from CHICA};\n";
+			}
+			rule.setData(data);
+			
+			System.out.println("---------ruleId: " + ruleId + "------------");
+			System.out.println(rule.getMLMString());
 			System.out.println("-------------------------------");
+			priority++;
 		}
 		
 		String fileName = "C:\\Users\\tmdugan\\git\\Obesity_Prediction\\src\\util\\resources\\output_test.txt";
@@ -128,6 +160,28 @@ public class ParseTreeFile {
 				}
 			}
 		}
+	}
+	
+	private static Rule setupRule() {
+		Rule rule = new Rule();
+		rule.setAgeMax(21);
+		rule.setAgeMaxUnits("years");
+		rule.setAgeMin(2);
+		rule.setAgeMinUnits("years");
+		rule.setAuthor("Tammy Dugan");
+		rule.setCitations("http://dx.doi.org/10.4338/ACI-2015-03-RA-0036");
+		rule.setPurpose("PSF question to collect data for obesity prediction");
+		rule.setExplanation("This rule set collects information to predict childhood obesity");
+		rule.setVersion(1.0);
+		rule.setSpecialist("Pediatrics");
+		rule.setKeywords("PSF, obesity");
+		rule.setInstitution("Indiana University School of Medicine");
+		rule.setTitle("Obesity screening question");
+		rule.setAction("write (\"|| psfResult ||\");\n");
+		SimpleDateFormat formater = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		String ruleCreationDate = formater.format(new Date());
+		rule.setRuleCreationDate(ruleCreationDate);
+		return rule;
 	}
 	
 }

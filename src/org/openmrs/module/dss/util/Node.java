@@ -130,11 +130,12 @@ public class Node {
 		return text.toString();
 	}
 	
-	public void traverseDepthFirst(String ruleAttributeName, HashMap<Integer, Set<String>> ruleLogicMap) {
+	public void traverseDepthFirst(String ruleAttributeName, HashMap<Integer, Set<String>> ruleLogicMap,
+	                               HashMap<Integer, Set<String>> ruleVariableMap) {
 		Integer size = size();
 		
 		for (int j = 0; j < size; j++) {
-			this.children.get(j).traverseDepthFirst(ruleAttributeName, ruleLogicMap);
+			this.children.get(j).traverseDepthFirst(ruleAttributeName, ruleLogicMap,ruleVariableMap);
 		}
 		
 		//This code will be adapted to print if-then statements for the rules
@@ -157,17 +158,22 @@ public class Node {
 			for (RuleAttributeValue ruleAttributeValue : ruleAttributeValues) {
 				Integer ruleId = ruleAttributeValue.getRuleId();
 				Set<String> ifStatements = ruleLogicMap.get(ruleId);
+				Set<String> variables = ruleVariableMap.get(ruleId);
 				if (ifStatements == null) {
 					ifStatements = new HashSet<String>();
 				}
-				ifStatements.add(buildIfStatement());
+				if (variables == null) {
+					variables = new HashSet<String>();
+				}
+				ifStatements.add(buildIfStatement(variables));
 				ruleLogicMap.put(ruleId, ifStatements);
+				ruleVariableMap.put(ruleId, variables);
 			}
 		}
 		
 	}
 
-	private String buildIfStatement() {
+	private String buildIfStatement(Set<String> variables) {
 		Node currParent = this.parent;
 		StringBuffer buffer = new StringBuffer();
 		
@@ -177,6 +183,7 @@ public class Node {
 			}else{
 				buffer.append("If");
 			}
+			variables.add(currParent.name());
 			buffer.append("("+currParent.name()+" = "+currParent.value()+")");
 			currParent = currParent.getParent();
 		}

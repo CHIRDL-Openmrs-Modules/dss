@@ -551,10 +551,96 @@ public class Rule implements java.io.Serializable
 		{
 			if (getAgeMax() > ageInYears)
 			{
-				return true;
-			}
+	
+	/**
+	 * Auto generated method comment
+	 * 
+	 * @return
+	 */
+	public String getMLMString() {
+		
+		String title = this.title;
+		if (title == null) {
+			title = "";
 		}
-
-		return false;
+		String institution = this.institution;
+		if (institution == null) {
+			institution = "";
+		}
+		String author = this.author;
+		if (author == null) {
+			author = "";
+		}
+		String specialist = this.specialist;
+		if (specialist == null) {
+			specialist = "";
+		}
+		String ruleCreationDate = this.ruleCreationDate;
+		if (ruleCreationDate == null) {
+			ruleCreationDate = "";
+		}
+		String purpose = this.purpose;
+		if (purpose == null) {
+			purpose = "";
+		}
+		String explanation = this.explanation;
+		if (explanation == null) {
+			explanation = "";
+		}
+		String keywords = this.keywords;
+		if (keywords == null) {
+			keywords = "";
+		}
+		String citations = this.citations;
+		if (citations == null) {
+			citations = "";
+		}
+		String links = this.links;
+		if (links == null) {
+			links = "";
+		}
+		
+		String maintenance = "Maintenance:\n";
+		maintenance += "Title: " + title + ";;\n";
+		maintenance += "Filename:	" + this.tokenName + ";;\n";
+		maintenance += "Version: " + this.version + ";;\n";
+		maintenance += "Institution: " + institution + ";;\n";
+		maintenance += "Author: " + author + ";;\n";
+		maintenance += "Specialist: " + specialist + ";;\n";
+		maintenance += "Date: " + ruleCreationDate + ";;\n";
+		maintenance += "Validation: ;;\n";
+		String mlm = maintenance;
+		String library = "Library:\n";
+		library += "Purpose: " + purpose + ";;\n";
+		library += "Explanation: " + explanation + ";;\n";
+		library += "Keywords: " + keywords + ";;\n";
+		library += "Citations: " + citations + ";;\n";
+		library += "Links: " + links + ";;\n";
+		
+		mlm += library;
+		String knowledge = "Knowledge:\n";
+		knowledge += "Type: data_driven;;\n";
+		knowledge += "Data:\n\n";
+		knowledge += this.data;
+		knowledge +="\n\n;;\n";
+		if (this.priority != null) {
+			knowledge += "Priority: ";
+			knowledge += this.priority;
+			knowledge += ";;\n";
+		}
+		
+		knowledge += "Evoke: ;;\n";
+		knowledge += "Logic:\n\n";
+		knowledge += this.logic;
+		knowledge +="\n\n;;\n";
+		knowledge += "Action:\n\n";
+		knowledge += this.action;
+		knowledge +="\n\n;;\n";
+		mlm += knowledge;
+		
+		mlm += "Age_Min: " + this.ageMin + " " + this.ageMinUnits + ";;\n";
+		mlm += "Age_Max: " + this.ageMax + " " + this.ageMaxUnits + ";;\n";
+		mlm += "end:\n";
+		return mlm;
 	}
 }
