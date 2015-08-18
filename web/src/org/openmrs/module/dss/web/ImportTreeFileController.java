@@ -50,26 +50,30 @@ public class ImportTreeFileController extends SimpleFormController {
 		Map<String, Object> map = new HashMap<String, Object>();
 		String view = getFormView();
 		Map<Integer, Integer> updatedRules = new HashMap<Integer, Integer>(); //map to keep track of whether a rule attribute value has been updated
-		
+		MultipartFile dataFile = null;
+		String outputDirectoryName = "C:\\Users\\tmdugan\\git\\Obesity_Prediction\\src\\util\\resources\\";
+
 		try {
 			// Load the file.
 			if (request instanceof MultipartHttpServletRequest) {
 				MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
-				MultipartFile dataFile = multipartRequest.getFile("dataFile");
+				dataFile = multipartRequest.getFile("dataFile");
 				if (dataFile != null && !dataFile.isEmpty()) {
 					String filename = dataFile.getOriginalFilename();
 					int index = filename.lastIndexOf(".");
 					if (index < 0) {
 						map.put("incorrectExtension", true);
 						return new ModelAndView(view, map);
-					}
-					
-					ParseTreeFile.parseTree();
-					
+					}					
 				} else {
 					map.put("missingFile", true);
 					return new ModelAndView(view, map);
 				}
+			}
+
+			
+			if(dataFile != null&&outputDirectoryName != null){
+				ParseTreeFile.parseTree(dataFile.getInputStream(), outputDirectoryName);
 			}
 		}
 		catch (Exception e) {

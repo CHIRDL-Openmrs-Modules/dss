@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -38,9 +40,8 @@ public class ParseTreeFile {
 	 * 
 	 * @param args
 	 */
-	public static void parseTree() {
+	public static void parseTree(InputStream input,String outputDirectory) {
 		
-		String treeFile = "C:\\Users\\tmdugan\\git\\Obesity_Prediction\\src\\util\\resources\\ID3_small_model.txt";
 		final String DELIMITER = "|  ";
 		Node root = new Node();
 		Tree tree = new Tree(root);
@@ -49,7 +50,7 @@ public class ParseTreeFile {
 		Node parentNode = root;
 		DssService dssService = Context.getService(DssService.class);
 		try {
-			reader = new BufferedReader(new FileReader(treeFile));
+			reader = new BufferedReader(new InputStreamReader(input));
 			
 			String line = reader.readLine();
 			while (line != null) {
@@ -133,7 +134,6 @@ public class ParseTreeFile {
 				data += variable + " := read Last {" + variable + " from CHICA};\n";
 			}
 			rule.setData(data);
-			String outputDirectory = "C:\\Users\\tmdugan\\git\\Obesity_Prediction\\src\\util\\resources\\";
 			String filename = outputDirectory + rule.getTokenName() + ".mlm";
 			writeFile(filename, rule);
 			
