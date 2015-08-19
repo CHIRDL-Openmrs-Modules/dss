@@ -131,7 +131,8 @@ public class Node {
 	}
 	
 	public void traverseBreadthFirst(String ruleAttributeName, HashMap<Integer, Set<String>> ruleLogicMap,
-	                                 HashMap<Integer, Set<String>> ruleVariableMap) {
+	                                 HashMap<Integer, Set<String>> ruleVariableMap,HashMap<String, Set<String>> leafLogicMap,
+	                                 HashMap<String, Set<String>> leafVariableMap) {
 		
 		//A rule will only be created if the given attribute has a mapping in the rule attribute value table (ie it has an associated PSF question)
 		//The maps gather if statements and variables that will be contained in the same rule
@@ -158,7 +159,7 @@ public class Node {
 				if (variables == null) {
 					variables = new HashSet<String>();
 				}
-				ifStatements.add(buildIfStatement(variables));
+				ifStatements.add(buildIfStatement(variables)+" then conclude true;");
 				ruleLogicMap.put(ruleId, ifStatements);
 				ruleVariableMap.put(ruleId, variables);
 			}
@@ -166,7 +167,26 @@ public class Node {
 		Integer size = size();
 		
 		for (int j = 0; j < size; j++) {
-			this.children.get(j).traverseBreadthFirst(ruleAttributeName, ruleLogicMap, ruleVariableMap);
+			this.children.get(j).traverseBreadthFirst(ruleAttributeName, ruleLogicMap, ruleVariableMap,leafLogicMap,leafVariableMap);
+		}
+		
+		//This is a leaf node
+		//Create a rule for each possible value of OBESITY
+		if (this.children.size() == 0) {
+			String obesityClassifier = this.value.substring(this.value.indexOf(":") + 1, this.value.length()).trim();
+
+			Set<String> ifStatements = leafLogicMap.get(obesityClassifier);
+			Set<String> variables = leafVariableMap.get(obesityClassifier);
+			if (ifStatements == null) {
+				ifStatements = new HashSet<String>();
+			}
+			if (variables == null) {
+				variables = new HashSet<String>();
+			}
+			ifStatements.add(buildIfStatement(variables) + " then\n CALL storeObs With \"obesity_classification\",\""
+			        + obesityClassifier + "\";\nendif;");
+			leafLogicMap.put(obesityClassifier, ifStatements);
+			leafVariableMap.put(obesityClassifier, variables);
 		}
 		
 	}
@@ -182,12 +202,15 @@ public class Node {
 				buffer.append("If");
 			}
 			variables.add(currParent.name());
-			buffer.append("("+currParent.name()+" = "+currParent.value()+")");
+			String variableName = currParent.name().replace("-", "");
+			variableName = variableName.replace("/", "");
+			if(variableName.equals("gender")){
+				variableName = "Gender";
+			}
+			buffer.append("("+variableName+" = "+currParent.value()+")");
 			currParent = currParent.getParent();
 		}
-		if(buffer.length()>0){
-			buffer.append(" then conclude true;");
-		}
+		
 		return buffer.toString();
 	}
 }

@@ -1,7 +1,6 @@
 package org.openmrs.module.dss.util;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -40,7 +39,7 @@ public class ParseTreeFile {
 	 * 
 	 * @param args
 	 */
-	public static void parseTree(InputStream input,String outputDirectory) {
+	public static void parseTree(InputStream input, String outputDirectory) {
 		
 		final String DELIMITER = "|  ";
 		Node root = new Node();
@@ -67,7 +66,7 @@ public class ParseTreeFile {
 					value = tokenizer.nextToken().trim();
 				}
 				
-				if(value.equals("MISSING")){
+				if (value.equals("MISSING")) {
 					value = "null";
 				}
 				
@@ -109,10 +108,14 @@ public class ParseTreeFile {
 		
 		HashMap<Integer, Set<String>> ruleLogicMap = new HashMap<Integer, Set<String>>();
 		HashMap<Integer, Set<String>> ruleVariableMap = new HashMap<Integer, Set<String>>();
+		HashMap<String, Set<String>> leafLogicMap = new HashMap<String, Set<String>>();
+		HashMap<String, Set<String>> leafVariableMap = new HashMap<String, Set<String>>();
 		
-		tree.getRoot().traverseBreadthFirst("associated_answer", ruleLogicMap, ruleVariableMap);
+		tree.getRoot().traverseBreadthFirst("associated_answer", ruleLogicMap, ruleVariableMap, leafLogicMap,
+		    leafVariableMap);
 		Integer priority = 1;
 		
+		//Create the rules for the questions
 		for (Integer ruleId : ruleLogicMap.keySet()) {
 			Rule rule = setupRule();
 			rule.setRuleId(ruleId);
@@ -123,7 +126,7 @@ public class ParseTreeFile {
 			String logic = "If (mode = PRODUCE) then \n";
 			Rule psfRule = dssService.getRule(ruleId);
 			logic += "psfResult:= call " + psfRule.getTokenName() + ";\n";
-
+			
 			for (String ifStatement : ifStatements) {
 				logic += ifStatement + "\n";
 			}
@@ -131,17 +134,65 @@ public class ParseTreeFile {
 			rule.setLogic(logic);
 			
 			String data = "mode:=read {mode from Parameters};\n";
+			data += "If (mode = PRODUCE) then\n";
 			
 			for (String variable : variables) {
 				//not sure if this is quite accurate
 				//model used most common attribute but this is pulling most recent
-				data += variable + " := read Last {" + variable + " from CHICA};\n";
+				if(!variable.equals("gender")){
+					String variableName = variable.replace("-", "");
+					variableName = variableName.replace("/", "");
+					data += variableName + " := read Last {" + variableName + " from CHICA};\n";
+				}
 			}
+			data += "endif\n";
 			rule.setData(data);
 			String filename = outputDirectory + rule.getTokenName() + ".mlm";
 			writeFile(filename, rule);
 			
 			priority++;
+		}
+		
+		Integer counter = 1;
+		
+		//Create the scoring rules
+		for (String obesityClassifer : leafLogicMap.keySet()) {
+			Rule rule = setupRule();
+			rule.setAction(null);
+			rule.setTokenName("obesityScoring" + counter);
+			rule.setPurpose("Scoring rule for obesity prediction screener");
+			rule.setExplanation("This rule set determines obesity prediction classification.");
+			rule.setKeywords("obesity");
+			rule.setTitle("Obesity scoring rule");
+			
+			Set<String> ifStatements = leafLogicMap.get(obesityClassifer);
+			Set<String> variables = leafVariableMap.get(obesityClassifer);
+			String logic = "If (mode = CONSUME) then \n";
+			
+			for (String ifStatement : ifStatements) {
+				logic += ifStatement + "\n";
+			}
+			logic += "endif\n";
+			rule.setLogic(logic);
+			
+			String data = "mode:=read {mode from Parameters};\n";
+			data += "If (mode = PRODUCE) then\n";
+			
+			for (String variable : variables) {
+				//not sure if this is quite accurate
+				//model used most common attribute but this is pulling most recent
+				if(!variable.equals("gender")){
+					String variableName = variable.replace("-", "");
+					variableName = variableName.replace("/", "");
+					data += variableName + " := read Last {" + variableName + " from CHICA};\n";
+				}
+			}
+			data += "endif\n";
+			
+			rule.setData(data);
+			String filename = outputDirectory + rule.getTokenName() + ".mlm";
+			writeFile(filename, rule);
+			counter++;
 		}
 		
 	}

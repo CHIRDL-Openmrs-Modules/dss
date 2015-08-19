@@ -51,7 +51,7 @@ public class ImportTreeFileController extends SimpleFormController {
 		String view = getFormView();
 		Map<Integer, Integer> updatedRules = new HashMap<Integer, Integer>(); //map to keep track of whether a rule attribute value has been updated
 		MultipartFile dataFile = null;
-		String outputDirectoryName = "C:\\Users\\tmdugan\\git\\Obesity_Prediction\\src\\util\\resources\\";
+		String outputDirectoryName = "C:\\Users\\tmdugan\\git\\Obesity_Prediction\\src\\util\\resources\\generated_mlms\\";
 
 		try {
 			// Load the file.

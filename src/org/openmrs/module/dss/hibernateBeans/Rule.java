@@ -628,12 +628,13 @@ public class Rule implements java.io.Serializable
 		knowledge += "Data:\n\n";
 		knowledge += this.data;
 		knowledge +="\n\n;;\n";
-		if (this.priority != null) {
-			knowledge += "Priority: ";
-			knowledge += this.priority;
-			knowledge += ";;\n";
-		}
 		
+		knowledge += "Priority: ";
+		if(priority != null){
+			knowledge += this.priority;
+		}
+		knowledge += ";;\n";
+
 		knowledge += "Evoke: ;;\n";
 		knowledge += "Logic:\n\n";
 		knowledge += this.logic;
