@@ -202,15 +202,23 @@ public class Node {
 				buffer.append("If");
 			}
 			variables.add(currParent.name());
-			String variableName = currParent.name().replace("-", "");
-			variableName = variableName.replace("/", "");
-			if(variableName.equals("gender")){
-				variableName = "Gender";
-			}
-			buffer.append("("+variableName+" = "+currParent.value()+")");
+			String variableName = formatVariableName(currParent.name());
+			buffer.append("("+variableName+" = \""+currParent.value()+"\")");
 			currParent = currParent.getParent();
 		}
 		
 		return buffer.toString();
+	}
+	
+	public static String formatVariableName(String name){
+		String variableName = name.replace("-", "");
+		variableName = variableName.replace("/", "");
+		if(variableName.equals("gender")){
+			variableName = "Gender";
+		}
+		
+		variableName = variableName.replace(" ", "_");
+		
+		return variableName;
 	}
 }

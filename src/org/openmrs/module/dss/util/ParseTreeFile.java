@@ -140,8 +140,7 @@ public class ParseTreeFile {
 				//not sure if this is quite accurate
 				//model used most common attribute but this is pulling most recent
 				if(!variable.equals("gender")){
-					String variableName = variable.replace("-", "");
-					variableName = variableName.replace("/", "");
+					String variableName = Node.formatVariableName(variable);
 					data += variableName + " := read Last {" + variableName + " from CHICA};\n";
 				}
 			}
@@ -176,14 +175,13 @@ public class ParseTreeFile {
 			rule.setLogic(logic);
 			
 			String data = "mode:=read {mode from Parameters};\n";
-			data += "If (mode = PRODUCE) then\n";
+			data += "If (mode = CONSUME) then\n";
 			
 			for (String variable : variables) {
 				//not sure if this is quite accurate
 				//model used most common attribute but this is pulling most recent
 				if(!variable.equals("gender")){
-					String variableName = variable.replace("-", "");
-					variableName = variableName.replace("/", "");
+					String variableName = Node.formatVariableName(variable);
 					data += variableName + " := read Last {" + variableName + " from CHICA};\n";
 				}
 			}

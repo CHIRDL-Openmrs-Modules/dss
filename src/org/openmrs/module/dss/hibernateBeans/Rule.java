@@ -640,7 +640,9 @@ public class Rule implements java.io.Serializable
 		knowledge += this.logic;
 		knowledge +="\n\n;;\n";
 		knowledge += "Action:\n\n";
-		knowledge += this.action;
+		if(this.action != null){
+			knowledge += this.action;
+		}
 		knowledge +="\n\n;;\n";
 		mlm += knowledge;
 		
