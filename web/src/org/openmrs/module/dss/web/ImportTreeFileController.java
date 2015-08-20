@@ -1,7 +1,6 @@
 package org.openmrs.module.dss.web;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -9,12 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openmrs.api.context.Context;
-import org.openmrs.module.dss.hibernateBeans.RuleAttribute;
-import org.openmrs.module.dss.hibernateBeans.RuleAttributeValue;
-import org.openmrs.module.dss.service.DssService;
 import org.openmrs.module.dss.util.ParseTreeFile;
-import org.openmrs.module.dss.util.Util;
 import org.springframework.validation.BindException;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -49,7 +43,6 @@ public class ImportTreeFileController extends SimpleFormController {
 	                                             BindException errors) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		String view = getFormView();
-		Map<Integer, Integer> updatedRules = new HashMap<Integer, Integer>(); //map to keep track of whether a rule attribute value has been updated
 		MultipartFile dataFile = null;
 		String outputDirectoryName = "C:\\Users\\tmdugan\\git\\Obesity_Prediction\\src\\util\\resources\\generated_mlms\\";
 
@@ -82,7 +75,7 @@ public class ImportTreeFileController extends SimpleFormController {
 			return new ModelAndView(view, map);
 		}
 		
-		map.put("operationType", "Import rule attribute values");
+		map.put("operationType", "Import WEKA Tree");
 		view = getSuccessView();
 		return new ModelAndView(new RedirectView(view), map);
 	}
