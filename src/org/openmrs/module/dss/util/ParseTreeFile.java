@@ -126,7 +126,7 @@ public class ParseTreeFile {
 			String logic = "If (mode = PRODUCE) then \n";
 			Rule psfRule = dssService.getRule(ruleId);
 			logic += "psfResult:= call " + psfRule.getTokenName() + ";\n";
-			
+			logic += "race:= call getRace;\n";
 			for (String ifStatement : ifStatements) {
 				logic += ifStatement + "\n";
 			}
@@ -139,7 +139,7 @@ public class ParseTreeFile {
 			for (String variable : variables) {
 				//not sure if this is quite accurate
 				//model used most common attribute but this is pulling most recent
-				if(!variable.equals("gender")){
+				if (!variable.equals("gender") && !variable.equals("race")) {
 					String variableName = Node.formatVariableName(variable);
 					data += variableName + " := read Last {" + variableName + " from CHICA};\n";
 				}
@@ -155,7 +155,16 @@ public class ParseTreeFile {
 		Integer counter = 1;
 		
 		//Create the scoring rules
+		//The scoring rules need to be split into different files because
+		//they generate java files that are too large to compile
+		final int NUM_IF_STATEMENTS = 40;
+		
+		//we don't need scoring rules for null
+		leafLogicMap.remove("null");
+		
 		for (String obesityClassifer : leafLogicMap.keySet()) {
+			int ifIndex = 0;
+
 			Rule rule = setupRule();
 			rule.setAction(null);
 			rule.setTokenName("obesityScoring" + counter);
@@ -166,13 +175,7 @@ public class ParseTreeFile {
 			
 			Set<String> ifStatements = leafLogicMap.get(obesityClassifer);
 			Set<String> variables = leafVariableMap.get(obesityClassifer);
-			String logic = "If (mode = CONSUME) then \n";
-			
-			for (String ifStatement : ifStatements) {
-				logic += ifStatement + "\n";
-			}
-			logic += "endif\n";
-			rule.setLogic(logic);
+			Object[] ifStatementArray = ifStatements.toArray();
 			
 			String data = "mode:=read {mode from Parameters};\n";
 			data += "If (mode = CONSUME) then\n";
@@ -180,7 +183,7 @@ public class ParseTreeFile {
 			for (String variable : variables) {
 				//not sure if this is quite accurate
 				//model used most common attribute but this is pulling most recent
-				if(!variable.equals("gender")){
+				if (!variable.equals("gender") && !variable.equals("race")) {
 					String variableName = Node.formatVariableName(variable);
 					data += variableName + " := read Last {" + variableName + " from CHICA};\n";
 				}
@@ -188,9 +191,24 @@ public class ParseTreeFile {
 			data += "endif\n";
 			
 			rule.setData(data);
-			String filename = outputDirectory + rule.getTokenName() + ".mlm";
-			writeFile(filename, rule);
-			counter++;
+			
+			//break up the file by number of if statements
+			while (ifIndex < ifStatementArray.length) {
+				rule.setTokenName("obesityScoring" + counter);
+				String logic = "If (mode = CONSUME) then \n";
+				logic += "race:= call getRace;\n";
+				
+				for (int i = 0; i < NUM_IF_STATEMENTS && ifIndex < ifStatementArray.length; i++, ifIndex++) {
+					String ifStatement = (String) ifStatementArray[ifIndex];
+					logic += ifStatement + "\n";
+				}
+				logic += "endif\n";
+				rule.setLogic(logic);
+				
+				String filename = outputDirectory + rule.getTokenName() + ".mlm";
+				writeFile(filename, rule);
+				counter++;
+			}
 		}
 		
 	}
