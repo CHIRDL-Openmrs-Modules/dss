@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Set;
@@ -111,6 +112,29 @@ public class ParseTreeFile {
 		HashMap<String, Set<String>> leafLogicMap = new HashMap<String, Set<String>>();
 		HashMap<String, Set<String>> leafVariableMap = new HashMap<String, Set<String>>();
 		HashMap<Integer, Set<String>> ruleAttributeMap = new HashMap<Integer, Set<String>>();
+		ArrayList<String> noDataVariables = new ArrayList<String>();
+		noDataVariables.add("gender");
+		noDataVariables.add("race");
+		noDataVariables.add("OBESE_BEFORE_2mo");
+		noDataVariables.add("OBESE_BEFORE_6mo");
+		noDataVariables.add("OBESE_BEFORE_12mo");
+		noDataVariables.add("OBESE_BEFORE_18mo");
+		noDataVariables.add("OBESE_BEFORE_24mo");
+		noDataVariables.add("OVERWEIGHT_BEFORE_2mo");
+		noDataVariables.add("OVERWEIGHT_BEFORE_6mo");
+		noDataVariables.add("OVERWEIGHT_BEFORE_12mo");
+		noDataVariables.add("OVERWEIGHT_BEFORE_18mo");
+		noDataVariables.add("OVERWEIGHT_BEFORE_24mo");
+		noDataVariables.add("VERY_TALL_BEFORE_2mo");
+		noDataVariables.add("VERY_TALL_BEFORE_6mo");
+		noDataVariables.add("VERY_TALL_BEFORE_12mo");
+		noDataVariables.add("VERY_TALL_BEFORE_18mo");
+		noDataVariables.add("VERY_TALL_BEFORE_24mo");
+		noDataVariables.add("TALL_BEFORE_2mo");
+		noDataVariables.add("TALL_BEFORE_6mo");
+		noDataVariables.add("TALL_BEFORE_12mo");
+		noDataVariables.add("TALL_BEFORE_18mo");
+		noDataVariables.add("TALL_BEFORE_24mo");
 		
 		tree.getRoot().traverseBreadthFirst("associated_answer", ruleLogicMap, ruleVariableMap, leafLogicMap,
 		    leafVariableMap,ruleAttributeMap);
@@ -129,6 +153,39 @@ public class ParseTreeFile {
 			Rule psfRule = dssService.getRule(ruleId);
 			logic += "psfResult:= call " + psfRule.getTokenName() + ";\n";
 			logic += "race:= call getRace;\n";
+			
+			for (String noDataVariable : noDataVariables) {
+				if (variables.contains(noDataVariable)) {
+					if (!noDataVariable.equalsIgnoreCase("race") && !noDataVariable.equalsIgnoreCase("gender")) {
+						logic += noDataVariable + ":= call getObsByConceptAgeThreshold with ";
+						
+						if (noDataVariable.contains("OBESE")) {
+							logic += "\"WTCENTILE\", \"95\"";
+						} else if (noDataVariable.contains("OVERWEIGHT")) {
+							logic += "\"WTCENTILE\", \"85\"";
+						} else if (noDataVariable.contains("VERY_TALL")) {
+							logic += "\"HTCENTILE\", \"95\"";
+						} else if (noDataVariable.contains("TALL")) {
+							logic += "\"HTCENTILE\", \"85\"";
+						}
+						
+						if (noDataVariable.contains("2mo")) {
+							logic += ", \"2\", \"mo\"";
+						} else if (noDataVariable.contains("6mo")) {
+							logic += ", \"6\", \"mo\"";
+						} else if (noDataVariable.contains("12mo")) {
+							logic += ", \"12\", \"mo\"";
+						} else if (noDataVariable.contains("18mo")) {
+							logic += ", \"18\", \"mo\"";
+						} else if (noDataVariable.contains("24mo")) {
+							logic += ", \"24\", \"mo\"";
+						}
+						
+						logic += ";\n";
+					}
+				}
+			}
+			
 			for(String attribute:attributes){
 				logic += "If NOT("+Node.formatVariableName(attribute)+" = NULL) then conclude false;\n";
 			}
@@ -142,10 +199,9 @@ public class ParseTreeFile {
 			data += "If (mode = PRODUCE) then\n";
 			
 			for (String variable : variables) {
-				//not sure if this is quite accurate
-				//model used most common attribute but this is pulling most recent
-				if (!variable.equals("gender") && !variable.equals("race")) {
-					String variableName = Node.formatVariableName(variable);
+				String variableName = Node.formatVariableName(variable);
+				
+				if (!noDataVariables.contains(variableName)) {
 					data += variableName + " := read Last {" + variableName + " from CHICA};\n";
 				}
 			}
