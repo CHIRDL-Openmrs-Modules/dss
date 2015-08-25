@@ -120,8 +120,8 @@ public class Node {
 		for (int i = 0; i < level; i++) {
 			text.append("|  ");
 		}
-		if (name() != null) {
-			text.append(name() + " = " + value());
+		if (this.name != null) {
+			text.append(this.name + " = " + this.value);
 		}
 		for (int j = 0; j < size; j++) {
 			text.append(this.children.get(j).toString(level + 1));
@@ -132,12 +132,12 @@ public class Node {
 	
 	public void traverseBreadthFirst(String ruleAttributeName, HashMap<Integer, Set<String>> ruleLogicMap,
 	                                 HashMap<Integer, Set<String>> ruleVariableMap,HashMap<String, Set<String>> leafLogicMap,
-	                                 HashMap<String, Set<String>> leafVariableMap) {
+	                                 HashMap<String, Set<String>> leafVariableMap,HashMap<Integer, Set<String>> ruleAttributeMap) {
 		
 		//A rule will only be created if the given attribute has a mapping in the rule attribute value table (ie it has an associated PSF question)
 		//The maps gather if statements and variables that will be contained in the same rule
 		
-		String ruleAttributeLookupValue = name() + " = " + value();
+		String ruleAttributeLookupValue = this.name + " = " + this.value;
 		
 		if (ruleAttributeLookupValue.contains(":")) {
 			ruleAttributeLookupValue = ruleAttributeLookupValue.substring(0, ruleAttributeLookupValue.indexOf(":"));
@@ -153,21 +153,27 @@ public class Node {
 				Integer ruleId = ruleAttributeValue.getRuleId();
 				Set<String> ifStatements = ruleLogicMap.get(ruleId);
 				Set<String> variables = ruleVariableMap.get(ruleId);
+				Set<String> attributes = ruleAttributeMap.get(ruleId);
 				if (ifStatements == null) {
 					ifStatements = new HashSet<String>();
 				}
 				if (variables == null) {
 					variables = new HashSet<String>();
 				}
+				if (attributes == null) {
+					attributes = new HashSet<String>();
+				}
 				ifStatements.add(buildIfStatement(variables)+" then conclude true;");
+				attributes.add(this.name);
 				ruleLogicMap.put(ruleId, ifStatements);
 				ruleVariableMap.put(ruleId, variables);
+				ruleAttributeMap.put(ruleId,attributes);
 			}
 		}
 		Integer size = size();
 		
 		for (int j = 0; j < size; j++) {
-			this.children.get(j).traverseBreadthFirst(ruleAttributeName, ruleLogicMap, ruleVariableMap,leafLogicMap,leafVariableMap);
+			this.children.get(j).traverseBreadthFirst(ruleAttributeName, ruleLogicMap, ruleVariableMap,leafLogicMap,leafVariableMap,ruleAttributeMap);
 		}
 		
 		//This is a leaf node
@@ -203,10 +209,15 @@ public class Node {
 			}
 			variables.add(currParent.name());
 			String variableName = formatVariableName(currParent.name());
-			buffer.append("("+variableName+" = \""+currParent.value()+"\")");
+			String parentValue = currParent.value();
+			if(!parentValue.equalsIgnoreCase("null")){
+				parentValue= "\""+parentValue+"\"";
+			}
+			buffer.append("("+variableName+" = "+parentValue+")");
 			currParent = currParent.getParent();
 		}
 		
+		variables.add(this.name);
 		return buffer.toString();
 	}
 	

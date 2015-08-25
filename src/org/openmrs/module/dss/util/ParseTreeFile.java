@@ -110,9 +110,10 @@ public class ParseTreeFile {
 		HashMap<Integer, Set<String>> ruleVariableMap = new HashMap<Integer, Set<String>>();
 		HashMap<String, Set<String>> leafLogicMap = new HashMap<String, Set<String>>();
 		HashMap<String, Set<String>> leafVariableMap = new HashMap<String, Set<String>>();
+		HashMap<Integer, Set<String>> ruleAttributeMap = new HashMap<Integer, Set<String>>();
 		
 		tree.getRoot().traverseBreadthFirst("associated_answer", ruleLogicMap, ruleVariableMap, leafLogicMap,
-		    leafVariableMap);
+		    leafVariableMap,ruleAttributeMap);
 		Integer priority = 1;
 		
 		//Create the rules for the questions
@@ -123,10 +124,14 @@ public class ParseTreeFile {
 			rule.setTokenName("obesityScreener" + priority);
 			Set<String> ifStatements = ruleLogicMap.get(ruleId);
 			Set<String> variables = ruleVariableMap.get(ruleId);
+			Set<String> attributes = ruleAttributeMap.get(ruleId);
 			String logic = "If (mode = PRODUCE) then \n";
 			Rule psfRule = dssService.getRule(ruleId);
 			logic += "psfResult:= call " + psfRule.getTokenName() + ";\n";
 			logic += "race:= call getRace;\n";
+			for(String attribute:attributes){
+				logic += "If NOT("+Node.formatVariableName(attribute)+" = NULL) then conclude false;\n";
+			}
 			for (String ifStatement : ifStatements) {
 				logic += ifStatement + "\n";
 			}
