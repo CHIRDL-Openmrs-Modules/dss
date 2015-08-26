@@ -9,10 +9,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 
 import org.openmrs.api.context.Context;
+import org.openmrs.logic.result.Result;
 import org.openmrs.module.dss.hibernateBeans.Rule;
 import org.openmrs.module.dss.service.DssService;
 
@@ -42,13 +44,175 @@ public class ParseTreeFile {
 	 */
 	public static void parseTree(InputStream input, String outputDirectory) {
 		
-		final String DELIMITER = "|  ";
 		Node root = new Node();
-		Tree tree = new Tree(root);
+		buildTree(input, root);
+		
+		DssService dssService = Context.getService(DssService.class);
+		
+		HashMap<Integer, Set<String>> ruleLogicMap = new HashMap<Integer, Set<String>>();
+		HashMap<Integer, Set<String>> ruleVariableMap = new HashMap<Integer, Set<String>>();
+		HashMap<String, Set<String>> leafLogicMap = new HashMap<String, Set<String>>();
+		HashMap<String, Set<String>> leafVariableMap = new HashMap<String, Set<String>>();
+		HashMap<Integer, Set<String>> ruleAttributeMap = new HashMap<Integer, Set<String>>();
+		ArrayList<String> noDataVariables = new ArrayList<String>();
+		noDataVariables.add("gender");
+		noDataVariables.add("race");
+		noDataVariables.add("OBESE_BEFORE_2mo");
+		noDataVariables.add("OBESE_BEFORE_6mo");
+		noDataVariables.add("OBESE_BEFORE_12mo");
+		noDataVariables.add("OBESE_BEFORE_18mo");
+		noDataVariables.add("OBESE_BEFORE_24mo");
+		noDataVariables.add("OVERWEIGHT_BEFORE_2mo");
+		noDataVariables.add("OVERWEIGHT_BEFORE_6mo");
+		noDataVariables.add("OVERWEIGHT_BEFORE_12mo");
+		noDataVariables.add("OVERWEIGHT_BEFORE_18mo");
+		noDataVariables.add("OVERWEIGHT_BEFORE_24mo");
+		noDataVariables.add("VERY_TALL_BEFORE_2mo");
+		noDataVariables.add("VERY_TALL_BEFORE_6mo");
+		noDataVariables.add("VERY_TALL_BEFORE_12mo");
+		noDataVariables.add("VERY_TALL_BEFORE_18mo");
+		noDataVariables.add("VERY_TALL_BEFORE_24mo");
+		noDataVariables.add("TALL_BEFORE_2mo");
+		noDataVariables.add("TALL_BEFORE_6mo");
+		noDataVariables.add("TALL_BEFORE_12mo");
+		noDataVariables.add("TALL_BEFORE_18mo");
+		noDataVariables.add("TALL_BEFORE_24mo");
+		
+		root.traverseBreadthFirst("associated_answer", ruleLogicMap, ruleVariableMap, leafLogicMap, leafVariableMap,
+		    ruleAttributeMap);
+		
+		Integer priority = 1;
+		
+		//Create the rules for the questions
+		for (Integer ruleId : ruleLogicMap.keySet()) {
+			Rule rule = setupRule();
+			rule.setRuleId(ruleId);
+			rule.setPriority(priority);
+			rule.setTokenName("obesityScreener" + priority);
+			Set<String> ifStatements = ruleLogicMap.get(ruleId);
+			Set<String> variables = ruleVariableMap.get(ruleId);
+			Set<String> attributes = ruleAttributeMap.get(ruleId);
+			String logic = "If (mode = PRODUCE) then \n";
+			Rule psfRule = dssService.getRule(ruleId);
+			
+			logic += "psfResult:= call " + psfRule.getTokenName() + ";\n";
+			logic = readVariables(logic, variables, noDataVariables);
+			for (String attribute : attributes) {
+				logic += "If NOT(" + Node.formatVariableName(attribute) + " = NULL) then conclude false;\n";
+			}
+			for (String ifStatement : ifStatements) {
+				logic += ifStatement + "\n";
+			}
+			logic += "endif\n";
+			rule.setLogic(logic);
+			
+			String filename = outputDirectory + rule.getTokenName() + ".mlm";
+			writeFile(filename, rule);
+			
+			priority++;
+		}
+		
+		Integer counter = 1;
+		
+		//Create the scoring rules
+		//The scoring rules need to be split into different files because
+		//they generate java files that are too large to compile
+		final int NUM_IF_STATEMENTS = 40;
+		
+		//we don't need scoring rules for null
+		leafLogicMap.remove("null");
+		
+		for (String obesityClassifer : leafLogicMap.keySet()) {
+			int ifIndex = 0;
+			
+			Rule rule = setupRule();
+			rule.setAction(null);
+			rule.setTokenName("obesityScoring" + counter);
+			rule.setPurpose("Scoring rule for obesity prediction screener");
+			rule.setExplanation("This rule set determines obesity prediction classification.");
+			rule.setKeywords("obesity");
+			rule.setTitle("Obesity scoring rule");
+			
+			Set<String> ifStatements = leafLogicMap.get(obesityClassifer);
+			Set<String> variables = leafVariableMap.get(obesityClassifer);
+			Object[] ifStatementArray = ifStatements.toArray();
+			
+			//break up the file by number of if statements
+			while (ifIndex < ifStatementArray.length) {
+				rule.setTokenName("obesityScoring" + counter);
+				String logic = "If (mode = CONSUME) then \n";
+				logic = readVariables(logic, variables, noDataVariables);
+				for (int i = 0; i < NUM_IF_STATEMENTS && ifIndex < ifStatementArray.length; i++, ifIndex++) {
+					String ifStatement = (String) ifStatementArray[ifIndex];
+					logic += ifStatement + "\n";
+				}
+				logic += "endif\n";
+				rule.setLogic(logic);
+				
+				String filename = outputDirectory + rule.getTokenName() + ".mlm";
+				writeFile(filename, rule);
+				counter++;
+			}
+		}
+		
+	}
+	
+	/**
+	 * Auto generated method comment
+	 * 
+	 * @return
+	 */
+	private static String readVariables(String oldLogic, Set<String> variables, ArrayList<String> noDataVariables) {
+		String logic = oldLogic;
+		
+		logic += "race:= call getRace;\n";
+		
+		for (String variable : variables) {
+			String variableName = Node.formatVariableName(variable);
+			if (!variableName.equalsIgnoreCase("race") && !variableName.equalsIgnoreCase("gender")) {
+				if (noDataVariables.contains(variableName)) {
+					
+					logic += variableName + ":= call getObsByConceptAgeThreshold with ";
+					
+					if (variableName.contains("OBESE")) {
+						logic += "\"WTCENTILE\", \"95\"";
+					} else if (variableName.contains("OVERWEIGHT")) {
+						logic += "\"WTCENTILE\", \"85\"";
+					} else if (variableName.contains("VERY_TALL")) {
+						logic += "\"HTCENTILE\", \"95\"";
+					} else if (variableName.contains("TALL")) {
+						logic += "\"HTCENTILE\", \"85\"";
+					}
+					
+					if (variableName.contains("12mo")) {
+						logic += ", \"12\", \"" + org.openmrs.module.chirdlutil.util.Util.MONTH_ABBR + "\"";
+					} else if (variableName.contains("6mo")) {
+						logic += ", \"6\", \"" + org.openmrs.module.chirdlutil.util.Util.MONTH_ABBR + "\"";
+					} else if (variableName.contains("2mo")) {
+						logic += ", \"2\", \"" + org.openmrs.module.chirdlutil.util.Util.MONTH_ABBR + "\"";
+					} else if (variableName.contains("18mo")) {
+						logic += ", \"18\", \"" + org.openmrs.module.chirdlutil.util.Util.MONTH_ABBR + "\"";
+					} else if (variableName.contains("24mo")) {
+						logic += ", \"24\", \"" + org.openmrs.module.chirdlutil.util.Util.MONTH_ABBR + "\"";
+					}
+					
+					logic += ";\n";
+					
+				} else {
+					logic += variableName + ":= call getMostCommonObs with \"" + variableName + "\", \"2\", \""
+					        + org.openmrs.module.chirdlutil.util.Util.YEAR_ABBR + "\";\n";
+				}
+			}
+		}
+		return logic;
+	}
+	
+	private static void buildTree(InputStream input, Node root) {
 		BufferedReader reader = null;
+		final String DELIMITER = "|  ";
 		int prevLevel = -1;
 		Node parentNode = root;
-		DssService dssService = Context.getService(DssService.class);
+		
 		try {
 			reader = new BufferedReader(new InputStreamReader(input));
 			
@@ -106,172 +270,6 @@ public class ParseTreeFile {
 			}
 			catch (Exception e) {}
 		}
-		
-		HashMap<Integer, Set<String>> ruleLogicMap = new HashMap<Integer, Set<String>>();
-		HashMap<Integer, Set<String>> ruleVariableMap = new HashMap<Integer, Set<String>>();
-		HashMap<String, Set<String>> leafLogicMap = new HashMap<String, Set<String>>();
-		HashMap<String, Set<String>> leafVariableMap = new HashMap<String, Set<String>>();
-		HashMap<Integer, Set<String>> ruleAttributeMap = new HashMap<Integer, Set<String>>();
-		ArrayList<String> noDataVariables = new ArrayList<String>();
-		noDataVariables.add("gender");
-		noDataVariables.add("race");
-		noDataVariables.add("OBESE_BEFORE_2mo");
-		noDataVariables.add("OBESE_BEFORE_6mo");
-		noDataVariables.add("OBESE_BEFORE_12mo");
-		noDataVariables.add("OBESE_BEFORE_18mo");
-		noDataVariables.add("OBESE_BEFORE_24mo");
-		noDataVariables.add("OVERWEIGHT_BEFORE_2mo");
-		noDataVariables.add("OVERWEIGHT_BEFORE_6mo");
-		noDataVariables.add("OVERWEIGHT_BEFORE_12mo");
-		noDataVariables.add("OVERWEIGHT_BEFORE_18mo");
-		noDataVariables.add("OVERWEIGHT_BEFORE_24mo");
-		noDataVariables.add("VERY_TALL_BEFORE_2mo");
-		noDataVariables.add("VERY_TALL_BEFORE_6mo");
-		noDataVariables.add("VERY_TALL_BEFORE_12mo");
-		noDataVariables.add("VERY_TALL_BEFORE_18mo");
-		noDataVariables.add("VERY_TALL_BEFORE_24mo");
-		noDataVariables.add("TALL_BEFORE_2mo");
-		noDataVariables.add("TALL_BEFORE_6mo");
-		noDataVariables.add("TALL_BEFORE_12mo");
-		noDataVariables.add("TALL_BEFORE_18mo");
-		noDataVariables.add("TALL_BEFORE_24mo");
-		
-		tree.getRoot().traverseBreadthFirst("associated_answer", ruleLogicMap, ruleVariableMap, leafLogicMap,
-		    leafVariableMap,ruleAttributeMap);
-		Integer priority = 1;
-		
-		//Create the rules for the questions
-		for (Integer ruleId : ruleLogicMap.keySet()) {
-			Rule rule = setupRule();
-			rule.setRuleId(ruleId);
-			rule.setPriority(priority);
-			rule.setTokenName("obesityScreener" + priority);
-			Set<String> ifStatements = ruleLogicMap.get(ruleId);
-			Set<String> variables = ruleVariableMap.get(ruleId);
-			Set<String> attributes = ruleAttributeMap.get(ruleId);
-			String logic = "If (mode = PRODUCE) then \n";
-			Rule psfRule = dssService.getRule(ruleId);
-			logic += "psfResult:= call " + psfRule.getTokenName() + ";\n";
-			logic += "race:= call getRace;\n";
-			
-			for (String noDataVariable : noDataVariables) {
-				if (variables.contains(noDataVariable)) {
-					if (!noDataVariable.equalsIgnoreCase("race") && !noDataVariable.equalsIgnoreCase("gender")) {
-						logic += noDataVariable + ":= call getObsByConceptAgeThreshold with ";
-						
-						if (noDataVariable.contains("OBESE")) {
-							logic += "\"WTCENTILE\", \"95\"";
-						} else if (noDataVariable.contains("OVERWEIGHT")) {
-							logic += "\"WTCENTILE\", \"85\"";
-						} else if (noDataVariable.contains("VERY_TALL")) {
-							logic += "\"HTCENTILE\", \"95\"";
-						} else if (noDataVariable.contains("TALL")) {
-							logic += "\"HTCENTILE\", \"85\"";
-						}
-						
-						if (noDataVariable.contains("2mo")) {
-							logic += ", \"2\", \"mo\"";
-						} else if (noDataVariable.contains("6mo")) {
-							logic += ", \"6\", \"mo\"";
-						} else if (noDataVariable.contains("12mo")) {
-							logic += ", \"12\", \"mo\"";
-						} else if (noDataVariable.contains("18mo")) {
-							logic += ", \"18\", \"mo\"";
-						} else if (noDataVariable.contains("24mo")) {
-							logic += ", \"24\", \"mo\"";
-						}
-						
-						logic += ";\n";
-					}
-				}
-			}
-			
-			for(String attribute:attributes){
-				logic += "If NOT("+Node.formatVariableName(attribute)+" = NULL) then conclude false;\n";
-			}
-			for (String ifStatement : ifStatements) {
-				logic += ifStatement + "\n";
-			}
-			logic += "endif\n";
-			rule.setLogic(logic);
-			
-			String data = "mode:=read {mode from Parameters};\n";
-			data += "If (mode = PRODUCE) then\n";
-			
-			for (String variable : variables) {
-				String variableName = Node.formatVariableName(variable);
-				
-				if (!noDataVariables.contains(variableName)) {
-					data += variableName + " := read Last {" + variableName + " from CHICA};\n";
-				}
-			}
-			data += "endif\n";
-			rule.setData(data);
-			String filename = outputDirectory + rule.getTokenName() + ".mlm";
-			writeFile(filename, rule);
-			
-			priority++;
-		}
-		
-		Integer counter = 1;
-		
-		//Create the scoring rules
-		//The scoring rules need to be split into different files because
-		//they generate java files that are too large to compile
-		final int NUM_IF_STATEMENTS = 40;
-		
-		//we don't need scoring rules for null
-		leafLogicMap.remove("null");
-		
-		for (String obesityClassifer : leafLogicMap.keySet()) {
-			int ifIndex = 0;
-
-			Rule rule = setupRule();
-			rule.setAction(null);
-			rule.setTokenName("obesityScoring" + counter);
-			rule.setPurpose("Scoring rule for obesity prediction screener");
-			rule.setExplanation("This rule set determines obesity prediction classification.");
-			rule.setKeywords("obesity");
-			rule.setTitle("Obesity scoring rule");
-			
-			Set<String> ifStatements = leafLogicMap.get(obesityClassifer);
-			Set<String> variables = leafVariableMap.get(obesityClassifer);
-			Object[] ifStatementArray = ifStatements.toArray();
-			
-			String data = "mode:=read {mode from Parameters};\n";
-			data += "If (mode = CONSUME) then\n";
-			
-			for (String variable : variables) {
-				//not sure if this is quite accurate
-				//model used most common attribute but this is pulling most recent
-				if (!variable.equals("gender") && !variable.equals("race")) {
-					String variableName = Node.formatVariableName(variable);
-					data += variableName + " := read Last {" + variableName + " from CHICA};\n";
-				}
-			}
-			data += "endif\n";
-			
-			rule.setData(data);
-			
-			//break up the file by number of if statements
-			while (ifIndex < ifStatementArray.length) {
-				rule.setTokenName("obesityScoring" + counter);
-				String logic = "If (mode = CONSUME) then \n";
-				logic += "race:= call getRace;\n";
-				
-				for (int i = 0; i < NUM_IF_STATEMENTS && ifIndex < ifStatementArray.length; i++, ifIndex++) {
-					String ifStatement = (String) ifStatementArray[ifIndex];
-					logic += ifStatement + "\n";
-				}
-				logic += "endif\n";
-				rule.setLogic(logic);
-				
-				String filename = outputDirectory + rule.getTokenName() + ".mlm";
-				writeFile(filename, rule);
-				counter++;
-			}
-		}
-		
 	}
 	
 	private static void writeFile(String filename, Rule rule) {
@@ -312,10 +310,49 @@ public class ParseTreeFile {
 		rule.setInstitution("Indiana University School of Medicine");
 		rule.setTitle("Obesity screening question");
 		rule.setAction("write (\"|| psfResult ||\");\n");
+		String data = "mode:=read {mode from Parameters};\n";
+		rule.setData(data);
+		
 		SimpleDateFormat formater = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 		String ruleCreationDate = formater.format(new Date());
 		rule.setRuleCreationDate(ruleCreationDate);
 		return rule;
 	}
 	
+	private void updateParameters(Map<String, Object> parameters, HashMap<String, String> userVarMap,
+	                              HashMap<String, Result> resultLookup, String parameterName, String parameterValue) {
+		int varLen = 0;
+		String variable = null;
+		varLen = parameterValue.length();
+		Object value = userVarMap.get(parameterValue);
+		if (value != null) {
+			parameters.put(parameterName, value);
+		}
+		// It must be a result value or date
+		else if (parameterValue.endsWith("_value")) {
+			variable = parameterValue.substring(0, varLen - 6); // -6 for _value
+			if (resultLookup.get(variable) != null) {
+				value = resultLookup.get(variable).toString();
+			}
+		} else if (parameterValue.endsWith("_date")) {
+			variable = parameterValue.substring(0, varLen - 5); // -5 for _date
+			if (resultLookup.get(variable) != null) {
+				value = resultLookup.get(variable).getResultDate().toString();
+			}
+		} else if (parameterValue.endsWith("_object")) {
+			variable = parameterValue.substring(0, varLen - 7); // -7 for _object
+			if (resultLookup.get(variable) != null) {
+				value = resultLookup.get(variable);
+			}
+		} else {
+			if (resultLookup.get(parameterValue) != null) {
+				value = resultLookup.get(parameterValue).toString();
+			}
+		}
+		if (value != null) {
+			parameters.put(parameterName, value);
+		} else {
+			parameters.put(parameterName, parameterValue);
+		}
+	}
 }
