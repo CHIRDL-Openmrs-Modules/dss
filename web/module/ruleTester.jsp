@@ -16,6 +16,10 @@ selected
 >${rule.tokenName}</option>
 </c:forEach>
 </select>
+or enter a rule name to execute:
+<input type="text" name="nonMLMRulename" value="${nonMLMRulename}"/><br />
+<p>Rule parameters (comma delimited)</p>
+<input type="text" name="parameters" value="${parameters}"/>
 <p>
 Please enter the patient's mrn:
 </p>

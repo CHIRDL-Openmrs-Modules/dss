@@ -74,7 +74,7 @@ public class getMostCommonObs implements Rule {
 		}
 		
 		String conceptName = (String) parameters.get("param1");
-		Integer ageThreshold = (Integer) parameters.get("param2");
+		Integer ageThreshold = Integer.parseInt((String) parameters.get("param2"));
 		String ageUnits = (String) parameters.get("param3");
 		
 		PatientService patientService = Context.getPatientService();
@@ -110,7 +110,7 @@ public class getMostCommonObs implements Rule {
 		HashMap<String, Integer> answerCounts = new HashMap<String, Integer>();
 		
 		for (Result currResult : ruleResult) {
-			String answerName = currResult.getResultObject().toString();
+			String answerName = currResult.toString();
 			Integer counts = answerCounts.get(answerName);
 			if (counts == null) {
 				counts = 0;
@@ -128,6 +128,10 @@ public class getMostCommonObs implements Rule {
 				maxValue = count;
 				ruleResult = new Result(answerName);
 			}
+		}
+		
+		if(ruleResult == null){
+			return Result.emptyResult();
 		}
 		
 		return ruleResult;
