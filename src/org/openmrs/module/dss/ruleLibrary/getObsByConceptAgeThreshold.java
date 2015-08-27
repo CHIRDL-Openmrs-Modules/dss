@@ -79,8 +79,8 @@ public class getObsByConceptAgeThreshold implements Rule
 		
 		//=concept_name and age_at_obs < val_in_units and concept_name >=threshold
 		String conceptName = (String) parameters.get("param1");
-		Integer conceptThreshold =  (Integer) parameters.get("param2");
-		Integer ageThreshold = (Integer) parameters.get("param3");
+		Integer conceptThreshold =  Integer.parseInt((String) parameters.get("param2"));
+		Integer ageThreshold = Integer.parseInt((String) parameters.get("param3"));
 		String ageUnits = (String) parameters.get("param4");
 		
 		PatientService patientService = Context.getPatientService();
