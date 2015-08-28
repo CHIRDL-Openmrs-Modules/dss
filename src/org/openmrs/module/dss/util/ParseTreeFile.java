@@ -5,6 +5,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -12,7 +13,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.context.Context;
 import org.openmrs.logic.result.Result;
 import org.openmrs.module.dss.hibernateBeans.Rule;
@@ -37,12 +42,14 @@ import org.openmrs.module.dss.service.DssService;
  */
 public class ParseTreeFile {
 	
+	protected final static Log log = LogFactory.getLog(ParseTreeFile.class);
+	
 	/**
 	 * Auto generated method comment
 	 * 
 	 * @param args
 	 */
-	public static void parseTree(InputStream input, String outputDirectory) {
+	public static void parseTree(InputStream input, OutputStream outputStream) {
 		
 		Node root = new Node();
 		buildTree(input, root);
@@ -106,8 +113,7 @@ public class ParseTreeFile {
 			logic += "endif\n";
 			rule.setLogic(logic);
 			
-			String filename = outputDirectory + rule.getTokenName() + ".mlm";
-			writeFile(filename, rule);
+			writeFile(outputStream, rule.getTokenName() + ".mlm", rule);
 			
 			priority++;
 		}
@@ -149,8 +155,7 @@ public class ParseTreeFile {
 				logic += "endif\n";
 				rule.setLogic(logic);
 				
-				String filename = outputDirectory + rule.getTokenName() + ".mlm";
-				writeFile(filename, rule);
+				writeFile(outputStream, rule.getTokenName() + ".mlm", rule);
 				counter++;
 			}
 		}
@@ -272,25 +277,25 @@ public class ParseTreeFile {
 		}
 	}
 	
-	private static void writeFile(String filename, Rule rule) {
-		FileWriter fileWriter = null;
+	private static void writeFile(OutputStream outputStream, String filename, Rule rule) {
+		
+		addToZip(outputStream, filename, rule.getMLMString());
+		
+	}
+	
+	private static void addToZip(OutputStream outputStream, String fileName, String outputString) {
+		
+		ZipOutputStream out = new ZipOutputStream(outputStream);
+		ZipEntry e = new ZipEntry(fileName);
 		try {
-			fileWriter = new FileWriter(filename);
-			fileWriter.write(rule.getMLMString());
-		}
-		catch (IOException e) {
+			out.putNextEntry(e);
 			
-			e.printStackTrace();
+			byte[] data = outputString.getBytes();
+			out.write(data, 0, data.length);
+			out.closeEntry();
 		}
-		finally {
-			if (fileWriter != null) {
-				try {
-					fileWriter.close();
-				}
-				catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
+		catch (IOException e1) {
+			log.error("Error adding file to zip file: " + fileName, e1);
 		}
 	}
 	

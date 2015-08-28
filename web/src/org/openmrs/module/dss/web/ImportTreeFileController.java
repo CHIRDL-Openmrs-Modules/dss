@@ -20,7 +20,8 @@ public class ImportTreeFileController extends SimpleFormController {
 	
 	/** Logger for this class and subclasses */
 	protected final Log log = LogFactory.getLog(getClass());
-	
+	private static final String CONTENT_TYPE_ZIP = "application/zip";
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -44,8 +45,9 @@ public class ImportTreeFileController extends SimpleFormController {
 		Map<String, Object> map = new HashMap<String, Object>();
 		String view = getFormView();
 		MultipartFile dataFile = null;
-		String outputDirectoryName = "C:\\Users\\tmdugan\\git\\Obesity_Prediction\\src\\util\\resources\\generated_mlms\\";
-
+		String fileName = "GeneratedObesityMLMs.zip";
+		response.setContentType(CONTENT_TYPE_ZIP);
+		response.setHeader("Content-Disposition","attachment; filename=\""+fileName+"\""); 
 		try {
 			// Load the file.
 			if (request instanceof MultipartHttpServletRequest) {
@@ -57,16 +59,15 @@ public class ImportTreeFileController extends SimpleFormController {
 					if (index < 0) {
 						map.put("incorrectExtension", true);
 						return new ModelAndView(view, map);
-					}					
+					}
 				} else {
 					map.put("missingFile", true);
 					return new ModelAndView(view, map);
 				}
 			}
-
-			
-			if(dataFile != null&&outputDirectoryName != null){
-				ParseTreeFile.parseTree(dataFile.getInputStream(), outputDirectoryName);
+		
+			if (dataFile != null) {
+				ParseTreeFile.parseTree(dataFile.getInputStream(), response.getOutputStream());
 			}
 		}
 		catch (Exception e) {
