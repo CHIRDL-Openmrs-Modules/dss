@@ -323,41 +323,4 @@ public class ParseTreeFile {
 		rule.setRuleCreationDate(ruleCreationDate);
 		return rule;
 	}
-	
-	private void updateParameters(Map<String, Object> parameters, HashMap<String, String> userVarMap,
-	                              HashMap<String, Result> resultLookup, String parameterName, String parameterValue) {
-		int varLen = 0;
-		String variable = null;
-		varLen = parameterValue.length();
-		Object value = userVarMap.get(parameterValue);
-		if (value != null) {
-			parameters.put(parameterName, value);
-		}
-		// It must be a result value or date
-		else if (parameterValue.endsWith("_value")) {
-			variable = parameterValue.substring(0, varLen - 6); // -6 for _value
-			if (resultLookup.get(variable) != null) {
-				value = resultLookup.get(variable).toString();
-			}
-		} else if (parameterValue.endsWith("_date")) {
-			variable = parameterValue.substring(0, varLen - 5); // -5 for _date
-			if (resultLookup.get(variable) != null) {
-				value = resultLookup.get(variable).getResultDate().toString();
-			}
-		} else if (parameterValue.endsWith("_object")) {
-			variable = parameterValue.substring(0, varLen - 7); // -7 for _object
-			if (resultLookup.get(variable) != null) {
-				value = resultLookup.get(variable);
-			}
-		} else {
-			if (resultLookup.get(parameterValue) != null) {
-				value = resultLookup.get(parameterValue).toString();
-			}
-		}
-		if (value != null) {
-			parameters.put(parameterName, value);
-		} else {
-			parameters.put(parameterName, parameterValue);
-		}
-	}
 }
