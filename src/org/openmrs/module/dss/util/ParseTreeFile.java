@@ -146,7 +146,7 @@ public class ParseTreeFile {
 			//break up the file by number of if statements
 			while (ifIndex < ifStatementArray.length) {
 				rule.setTokenName("obesityScoring" + counter);
-				String logic = "If (mode = CONSUME) then \n";
+				String logic = "If (mode = PRODUCE) then \n";
 				logic = readVariables(logic, variables, noDataVariables);
 				for (int i = 0; i < NUM_IF_STATEMENTS && ifIndex < ifStatementArray.length; i++, ifIndex++) {
 					String ifStatement = (String) ifStatementArray[ifIndex];
