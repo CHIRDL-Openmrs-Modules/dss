@@ -204,7 +204,7 @@ public class ParseTreeFile {
 					logic += ";\n";
 					
 				} else {
-					logic += variableName + ":= call getMostCommonObs with \"" + variableName + "\", \"2\", \""
+					logic += variableName + ":= call getMostCommonObs with \"" + variable + "\", \"2\", \""
 					        + org.openmrs.module.chirdlutil.util.Util.YEAR_ABBR + "\";\n";
 				}
 			}
