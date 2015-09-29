@@ -32,6 +32,7 @@ public class AdminList extends AdministrationSectionExt {
 		
 		map.put("module/dss/manage_rules.htm", "Manage Rules");
 		map.put("module/dss/ruleTester.form", "Rule Tester");
+		map.put("module/dss/importRuleAttributeValues.form", "Import Rule Attribute Values From File");
 
 		return map;
 	}
