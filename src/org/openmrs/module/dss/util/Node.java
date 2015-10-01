@@ -179,7 +179,17 @@ public class Node {
 		//This is a leaf node
 		//Create a rule for each possible value of OBESITY
 		if (this.children.size() == 0) {
-			String obesityClassifier = this.value.substring(this.value.indexOf(":") + 1, this.value.length()).trim();
+			
+			int colonIndex = this.value.indexOf(":") + 1;
+			String value = this.value.substring(0,colonIndex-1);
+			if (value.equals("MISSING")) {
+				value = "null";
+			}
+			if(!value.equalsIgnoreCase("null")){
+				value= "\""+value+"\"";
+			}
+			String leafString = "("+ formatVariableName(name())+" = "+value.trim()+")";
+			String obesityClassifier = this.value.substring(colonIndex, this.value.length()).trim();
 
 			Set<String> ifStatements = leafLogicMap.get(obesityClassifier);
 			Set<String> variables = leafVariableMap.get(obesityClassifier);
@@ -189,7 +199,7 @@ public class Node {
 			if (variables == null) {
 				variables = new HashSet<String>();
 			}
-			ifStatements.add(buildIfStatement(variables) + " then\n CALL storeObs With \"obesity_classification\",\""
+			ifStatements.add(buildIfStatement(variables) +" AND "+leafString + " then\n CALL storeObs With \"obesity_classification\",\""
 			        + obesityClassifier + "\";\nendif;");
 			leafLogicMap.put(obesityClassifier, ifStatements);
 			leafVariableMap.put(obesityClassifier, variables);
