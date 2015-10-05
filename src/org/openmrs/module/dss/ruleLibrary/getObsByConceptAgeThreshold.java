@@ -107,14 +107,15 @@ public class getObsByConceptAgeThreshold implements Rule
 		Result ruleResult = null;
 		
 		//limit to just that concept
-		LogicCriteria fullCriteria = new LogicCriteriaImpl(
-				conceptName);
+		LogicCriteria fullCriteria = new LogicCriteriaImpl(conceptName);
 		
 		//limit to concept greater than or equal to threshold
-		fullCriteria = fullCriteria.gte(new OperandNumeric(conceptThreshold));
+		LogicCriteria additionalCriteria = new LogicCriteriaImpl(conceptName).gte(new OperandNumeric(conceptThreshold));
+		fullCriteria = fullCriteria.and(additionalCriteria);
 		
 		//limit to obs before a date computed from patient age
-		fullCriteria = fullCriteria.before(birthdate.getTime());
+		additionalCriteria = new LogicCriteriaImpl(conceptName).before(birthdate.getTime());
+		fullCriteria = fullCriteria.and(additionalCriteria);
 
 		ruleResult = context.read(patientId,context.getLogicDataSource("obs"), 
 				fullCriteria.last());
