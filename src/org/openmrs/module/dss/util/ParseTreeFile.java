@@ -128,7 +128,7 @@ public class ParseTreeFile {
 		//we don't need scoring rules for null
 		leafLogicMap.remove("null");
 		
-		for (String obesityClassifer : leafLogicMap.keySet()) {
+		for (String predictorValue : leafLogicMap.keySet()) {
 			int ifIndex = 0;
 			
 			Rule rule = setupRule();
@@ -139,8 +139,8 @@ public class ParseTreeFile {
 			rule.setKeywords("obesity");
 			rule.setTitle("Obesity scoring rule");
 			
-			Set<String> ifStatements = leafLogicMap.get(obesityClassifer);
-			Set<String> variables = leafVariableMap.get(obesityClassifer);
+			Set<String> ifStatements = leafLogicMap.get(predictorValue);
+			Set<String> variables = leafVariableMap.get(predictorValue);
 			Object[] ifStatementArray = ifStatements.toArray();
 			
 			//break up the file by number of if statements

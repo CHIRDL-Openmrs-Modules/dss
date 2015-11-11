@@ -189,10 +189,10 @@ public class Node {
 				value= "\""+value+"\"";
 			}
 			String leafString = "("+ formatVariableName(name())+" = "+value.trim()+")";
-			String obesityClassifier = this.value.substring(colonIndex, this.value.length()).trim();
+			String predictorValue = this.value.substring(colonIndex, this.value.length()).trim();
 
-			Set<String> ifStatements = leafLogicMap.get(obesityClassifier);
-			Set<String> variables = leafVariableMap.get(obesityClassifier);
+			Set<String> ifStatements = leafLogicMap.get(predictorValue);
+			Set<String> variables = leafVariableMap.get(predictorValue);
 			if (ifStatements == null) {
 				ifStatements = new HashSet<String>();
 			}
@@ -200,9 +200,9 @@ public class Node {
 				variables = new HashSet<String>();
 			}
 			ifStatements.add(buildIfStatement(variables) +" AND "+leafString + " then\n CALL storeObs With \"obesity_classification\",\""
-			        + obesityClassifier + "\";\nendif;");
-			leafLogicMap.put(obesityClassifier, ifStatements);
-			leafVariableMap.put(obesityClassifier, variables);
+			        + predictorValue + "\";\nendif;");
+			leafLogicMap.put(predictorValue, ifStatements);
+			leafVariableMap.put(predictorValue, variables);
 		}
 		
 	}
