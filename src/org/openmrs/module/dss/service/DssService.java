@@ -8,6 +8,8 @@ import org.openmrs.api.APIException;
 import org.openmrs.logic.result.Result;
 import org.openmrs.module.dss.DssRule;
 import org.openmrs.module.dss.hibernateBeans.Rule;
+import org.openmrs.module.dss.hibernateBeans.RuleAttribute;
+import org.openmrs.module.dss.hibernateBeans.RuleAttributeValue;
 
 /**
  * Defines services used by this module
@@ -49,6 +51,8 @@ public interface DssService
 	 */
 	public Rule getRule(int ruleId) throws APIException;
 
+	public Rule getRule(String tokenName) throws APIException;
+	
 	/**
 	 * Adds a new rule to the dss_rule table
 	 * @param classFilename name of the compiled class file that contains the 
@@ -98,4 +102,71 @@ public interface DssService
 	 * @return
 	 */
 	public List<Rule> getPrioritizedRules(String type, Integer startPriority);
+
+	/**
+	 * 
+	 * Looks up a rule attribute by name
+	 * 
+	 * @param ruleAttributeName
+	 * @return
+	 */
+	public RuleAttribute getRuleAttribute(String ruleAttributeName);
+	
+	/**
+	 * 
+	 * Looks up a rule attribute by primary key
+	 * 
+	 * @param ruleAttributeId
+	 * @return
+	 */
+	public RuleAttribute getRuleAttribute(Integer ruleAttributeId);
+	
+	/**
+	 * 
+	 * returns the first rule attribute value matched by rule id and rule attribute name
+	 * 
+	 * @param ruleId
+	 * @param ruleAttributeName
+	 * @return
+	 */
+	public RuleAttributeValue getRuleAttributeValue(Integer ruleId, String ruleAttributeName);
+	
+	/**
+	 * 
+	 * returns all rule attribute values for a given rule id and rule attribute name
+	 * 
+	 * @param ruleId
+	 * @param ruleAttributeName
+	 * @return
+	 */
+	public List<RuleAttributeValue> getRuleAttributeValues(Integer ruleId, String ruleAttributeName);
+	
+	/**
+	 * 
+	 * Returns list of rule attribute values for a given rule id and rule attribute id
+	 * 
+	 * @param ruleId
+	 * @param ruleAttributeId
+	 * @return
+	 */
+	public List<RuleAttributeValue> getRuleAttributeValues(Integer ruleId, Integer ruleAttributeId);
+	
+	/**
+	 * 
+	 * Saves or updates rule attribute value changes to the database
+	 * 
+	 * @param value
+	 * @return
+	 */
+	public RuleAttributeValue saveRuleAttributeValue(RuleAttributeValue value);
+	
+	/**
+	 * Returns a list of rule attribute values for a given rule attribute id and value
+	 * 
+	 * @param ruleAttributeId
+	 * @param value
+	 * @return
+	 */
+	public List<RuleAttributeValue> getRuleAttributesByValue(Integer ruleAttributeId,String value);
+	
 }

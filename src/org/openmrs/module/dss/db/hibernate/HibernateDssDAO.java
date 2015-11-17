@@ -4,9 +4,11 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.Criteria;
 import org.hibernate.SQLQuery;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Example;
+import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.openmrs.api.AdministrationService;
@@ -14,6 +16,8 @@ import org.openmrs.api.context.Context;
 import org.openmrs.api.db.DAOException;
 import org.openmrs.module.dss.db.DssDAO;
 import org.openmrs.module.dss.hibernateBeans.Rule;
+import org.openmrs.module.dss.hibernateBeans.RuleAttribute;
+import org.openmrs.module.dss.hibernateBeans.RuleAttributeValue;
 import org.openmrs.module.chirdlutil.util.Util;
 
 /**
@@ -112,6 +116,93 @@ public class HibernateDssDAO implements DssDAO
 			this.log.error(Util.getStackTrace(e));
 		}
 		return null;
+	}
+	
+	/**
+	 * Looks up a rule attribute by primary key
+	 * @see org.openmrs.module.dss.db.DssDAO#getRuleAttribute(int)
+	 */
+	public RuleAttribute getRuleAttribute(int ruleAttributeId) {
+		return (RuleAttribute) sessionFactory.getCurrentSession().get(RuleAttribute.class, ruleAttributeId);
+	}
+	
+	/**
+	 * Looks up a rule attribute by name
+	 * @see org.openmrs.module.dss.db.DssDAO#getRuleAttribute(java.lang.String)
+	 */
+	public RuleAttribute getRuleAttribute(String ruleAttributeName) {
+		Criteria crit = sessionFactory.getCurrentSession().createCriteria(RuleAttribute.class); 
+
+		crit.add(Expression.eq("name", ruleAttributeName)); 
+
+		return (RuleAttribute) crit.uniqueResult();
+	}
+	
+	/**
+	 * returns all rule attribute values for a given rule id and rule attribute name
+	 * @see org.openmrs.module.dss.db.DssDAO#getRuleAttributeValues(java.lang.Integer, java.lang.String)
+	 */
+	public List<RuleAttributeValue> getRuleAttributeValues(Integer ruleId, String ruleAttributeName) {
+		try {
+			RuleAttribute ruleAttribute = this.getRuleAttribute(ruleAttributeName);
+			
+			if (ruleAttribute != null) {
+				Integer ruleAttributeId = ruleAttribute.getRuleAttributeId();
+				
+				return getRuleAttributeValues(ruleId,ruleAttributeId);
+				
+			}
+		}
+		catch (Exception e) {
+			log.error("Error in method getRuleAttributeValue", e);
+		}
+		return null;
+	}
+	
+	/**
+	 * Returns a list of rule attribute values for a given rule attribute id and value
+	 * @see org.openmrs.module.dss.db.DssDAO#getRuleAttributesByValue(java.lang.Integer, java.lang.String)
+	 */
+	public List<RuleAttributeValue> getRuleAttributesByValue(Integer ruleAttributeId,String value){
+		Criteria crit = sessionFactory.getCurrentSession().createCriteria(RuleAttributeValue.class); 
+
+		crit.add(Expression.eq("value", value)); 
+
+		return crit.list();
+	}
+	
+	/**
+	 * Returns list of rule attribute values for a given rule id and rule attribute id
+	 * @see org.openmrs.module.dss.db.DssDAO#getRuleAttributeValues(java.lang.Integer, java.lang.Integer)
+	 */
+	public List<RuleAttributeValue> getRuleAttributeValues(Integer ruleId, Integer ruleAttributeId) {
+		
+		Criteria crit = sessionFactory.getCurrentSession().createCriteria(RuleAttributeValue.class);
+		crit.add(Expression.eq("ruleId", ruleId)); 
+		crit.add(Expression.eq("ruleAttributeId", ruleAttributeId)); 
+
+		return crit.list();
+	}
+	
+	/**
+	 * returns the first rule attribute value matched by rule id and rule attribute name
+	 * @see org.openmrs.module.dss.db.DssDAO#getRuleAttributeValue(java.lang.Integer, java.lang.String)
+	 */
+	public RuleAttributeValue getRuleAttributeValue(Integer ruleId, String ruleAttributeName) {
+		List<RuleAttributeValue> list = getRuleAttributeValues(ruleId, ruleAttributeName);
+		if (list != null && list.size() > 0) {
+			return list.get(0);
+		}
+		return null;
+	}
+
+	/**
+	 * Saves or updates rule attribute value changes to the database
+	 * @see org.openmrs.module.dss.db.DssDAO#saveRuleAttributeValue(org.openmrs.module.dss.hibernateBeans.RuleAttributeValue)
+	 */
+	public RuleAttributeValue saveRuleAttributeValue(RuleAttributeValue value) {
+		sessionFactory.getCurrentSession().saveOrUpdate(value);
+		return value;
 	}
 	
 	/**
