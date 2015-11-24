@@ -39,6 +39,7 @@ import org.openmrs.api.context.Context;
 import org.openmrs.api.context.ContextAuthenticationException;
 import org.openmrs.logic.result.Result;
 import org.openmrs.logic.token.TokenService;
+import org.openmrs.module.chirdlutil.util.ChirdlUtilConstants;
 import org.openmrs.module.dss.hibernateBeans.Rule;
 import org.openmrs.module.dss.service.DssRmiService;
 import org.openmrs.module.dss.service.DssService;
@@ -238,6 +239,7 @@ public class DssRmiServiceImpl implements DssRmiService {
     		DssService dssService = Context.getService(DssService.class);
     		Map<String,Object> parameters = new HashMap<String,Object>();
     		parameters.put("mode", "PRODUCE");
+    		parameters.put("messageFormat", ChirdlUtilConstants.MESSAGE_CDATA); // DWE CLINREQ-90 The note will be contained within a CDATA section in the xml
     		Rule rule = new Rule();
         	rule.setTokenName("PhysicianNote");
     		rule.setParameters(parameters);
