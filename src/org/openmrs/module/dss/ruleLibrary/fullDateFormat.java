@@ -100,7 +100,7 @@ public class fullDateFormat implements Rule
 				Date result = ruleResult.toDatetime();
 				
 				if(result == null){
-					ruleResult.getResultDate();
+					result = ruleResult.getResultDate();
 				}
 				
 				if (result != null)
