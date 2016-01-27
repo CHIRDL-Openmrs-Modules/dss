@@ -99,6 +99,10 @@ public class fullDateFormat implements Rule
 			{
 				Date result = ruleResult.toDatetime();
 				
+				if(result == null){
+					ruleResult.getResultDate();
+				}
+				
 				if (result != null)
 				{
 
