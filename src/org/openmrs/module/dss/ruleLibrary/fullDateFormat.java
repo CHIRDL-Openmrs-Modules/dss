@@ -81,12 +81,27 @@ public class fullDateFormat implements Rule
 	public Result eval(LogicContext context, Integer patientId,
 			Map<String, Object> parameters) throws LogicException
 	{
-		if(parameters!=null&&parameters.get("param0") != null)
+		if(parameters!=null)
 		{
-			Result ruleResult = (Result) parameters.get("param0");
+			Result ruleResult = null;
+			if(parameters.get("param0") != null){
+				ruleResult = (Result) parameters.get("param0");
+			}else {
+				if (parameters.get("param1") != null) {
+					if(parameters.get("param1") instanceof Result){
+						ruleResult = (Result) parameters.get("param1");
+					}
+				}
+			}
+
+					
 			if(ruleResult != null)
 			{
 				Date result = ruleResult.toDatetime();
+				
+				if(result == null){
+					result = ruleResult.getResultDate();
+				}
 				
 				if (result != null)
 				{
