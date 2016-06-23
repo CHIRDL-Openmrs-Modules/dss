@@ -80,25 +80,35 @@ public class shortDateFormat implements Rule
 	public Result eval(LogicContext context, Integer patientId,
 			Map<String, Object> parameters) throws LogicException
 	{
-		if(parameters!=null&&parameters.get("param0") != null)
-		{
-			Result ruleResult =  (Result) parameters.get("param0");
-			if(ruleResult != null)
-			{
-				Date result = ruleResult.toDatetime();
-				
-				if(result != null)
-				{
-				
-				String pattern = "MM/dd/yy";
-				
-				SimpleDateFormat dateForm = 
-					new SimpleDateFormat(pattern);
-				
-				return new Result(dateForm.format(result));
+		Result ruleResult = null;
+		
+		if (parameters != null) {
+			if (parameters.get("param0") != null) {
+				ruleResult = (Result) parameters.get("param0");
+			} else {
+				if (parameters.get("param1") != null) {
+					if (parameters.get("param1") instanceof Result) {
+						ruleResult = (Result) parameters.get("param1");
+					} else {
+						ruleResult = new Result(Double.valueOf(parameters.get("param1").toString()));
+					}
 				}
 			}
 		}
+		
+		if (ruleResult != null) {
+			Date result = ruleResult.toDatetime();
+			
+			if (result != null) {
+				
+				String pattern = "MM/dd/yy";
+				
+				SimpleDateFormat dateForm = new SimpleDateFormat(pattern);
+				
+				return new Result(dateForm.format(result));
+			}
+		}
+		
 		return Result.emptyResult();
 	}
 }
