@@ -99,6 +99,10 @@ public class shortDateFormat implements Rule
 		if (ruleResult != null) {
 			Date result = ruleResult.toDatetime();
 			
+			if(result == null){
+				result = ruleResult.getResultDate();
+			}
+			
 			if (result != null) {
 				
 				String pattern = "MM/dd/yy";
