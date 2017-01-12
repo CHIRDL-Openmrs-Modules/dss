@@ -21,7 +21,7 @@ import org.openmrs.module.dss.service.DssService;
 public class bpPercentage implements Rule {
 	
 	/** Logger for this class and subclasses */
-	protected final Log Log = LogFactory.getLog(getClass());
+	protected final Log log = LogFactory.getLog(getClass());
 	
 	/**
 	 * *
@@ -147,7 +147,7 @@ public class bpPercentage implements Rule {
 						return new Result(systPercentStr + "%/" + diasPercentStr + "%");
 					}
 					catch (NumberFormatException e) {
-						Log.error("Error parsing systolic and/or diastolic results into an Integer", e);
+						log.error("Error parsing systolic and/or diastolic results into an Integer", e);
 					}
 				}
 			}
