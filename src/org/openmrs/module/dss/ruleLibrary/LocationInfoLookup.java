@@ -3,7 +3,8 @@ package org.openmrs.module.dss.ruleLibrary;
 import java.util.Map;
 import java.util.Set;
 
-import org.jfree.util.Log;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.openmrs.Location;
 import org.openmrs.api.context.Context;
 import org.openmrs.logic.LogicContext;
@@ -14,6 +15,9 @@ import org.openmrs.logic.result.Result.Datatype;
 import org.openmrs.logic.rule.RuleParameterInfo;
 
 public class LocationInfoLookup implements Rule {
+	
+	/** Logger for this class and subclasses */
+	protected final Log Log = LogFactory.getLog(getClass());
 	
 	/**
 	 * *
