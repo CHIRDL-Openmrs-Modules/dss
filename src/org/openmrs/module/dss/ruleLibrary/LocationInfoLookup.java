@@ -3,7 +3,8 @@ package org.openmrs.module.dss.ruleLibrary;
 import java.util.Map;
 import java.util.Set;
 
-import org.jfree.util.Log;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.openmrs.Location;
 import org.openmrs.api.context.Context;
 import org.openmrs.logic.LogicContext;
@@ -14,6 +15,9 @@ import org.openmrs.logic.result.Result.Datatype;
 import org.openmrs.logic.rule.RuleParameterInfo;
 
 public class LocationInfoLookup implements Rule {
+	
+	/** Logger for this class and subclasses */
+	protected final Log log = LogFactory.getLog(getClass());
 	
 	/**
 	 * *
@@ -59,19 +63,19 @@ public class LocationInfoLookup implements Rule {
 	public Result eval(LogicContext context, Integer patientId, Map<String, Object> parameters) throws LogicException {
 		String locationStr = (String) parameters.get("location");
 		if (locationStr == null) {
-			Log.error("No location specified");
+			log.error("No location specified");
 			return Result.emptyResult();
 		}
 		
 		String attribute = (String) parameters.get("param1");
 		if (attribute == null) {
-			Log.error("No location attribute specified");
+			log.error("No location attribute specified");
 			return Result.emptyResult();
 		}
 		
 		Location location = Context.getLocationService().getLocation(locationStr);
 		if (location == null) {
-			Log.error("No location found with ID " + locationStr);
+			log.error("No location found with ID " + locationStr);
 			return Result.emptyResult();
 		}
 		
@@ -118,7 +122,7 @@ public class LocationInfoLookup implements Rule {
 		} else if ("townshipdivision".equalsIgnoreCase(attribute)) {
 			return new Result(location.getTownshipDivision());
 		} else {
-			Log.error(attribute + " is not a supported attribute for a Location.");
+			log.error(attribute + " is not a supported attribute for a Location.");
 			return Result.emptyResult();
 		}
 	}

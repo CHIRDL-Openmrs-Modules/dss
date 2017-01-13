@@ -4,7 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import org.jfree.util.Log;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.openmrs.Patient;
 import org.openmrs.api.context.Context;
 import org.openmrs.logic.LogicContext;
@@ -18,6 +19,9 @@ import org.openmrs.logic.rule.RuleParameterInfo;
 import org.openmrs.module.dss.service.DssService;
 
 public class bpPercentage implements Rule {
+	
+	/** Logger for this class and subclasses */
+	protected final Log log = LogFactory.getLog(getClass());
 	
 	/**
 	 * *
@@ -143,7 +147,7 @@ public class bpPercentage implements Rule {
 						return new Result(systPercentStr + "%/" + diasPercentStr + "%");
 					}
 					catch (NumberFormatException e) {
-						Log.error("Error parsing systolic and/or diastolic results into an Integer", e);
+						log.error("Error parsing systolic and/or diastolic results into an Integer", e);
 					}
 				}
 			}
