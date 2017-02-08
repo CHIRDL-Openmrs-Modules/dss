@@ -1,13 +1,11 @@
 package org.openmrs.module.dss.ruleLibrary;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.openmrs.Encounter;
-import org.openmrs.User;
+import org.openmrs.Person;
 import org.openmrs.api.EncounterService;
-import org.openmrs.api.UserService;
 import org.openmrs.api.context.Context;
 import org.openmrs.logic.LogicContext;
 import org.openmrs.logic.LogicException;
@@ -16,6 +14,7 @@ import org.openmrs.logic.Rule;
 import org.openmrs.logic.result.Result;
 import org.openmrs.logic.result.Result.Datatype;
 import org.openmrs.logic.rule.RuleParameterInfo;
+import org.openmrs.module.chirdlutil.util.ChirdlUtilConstants;
 import org.openmrs.module.chirdlutil.util.Util;
 
 /**
@@ -36,30 +35,32 @@ public class providerName implements Rule
 				.getService(EncounterService.class);
 
 		Encounter encounter = null;
-		Integer encounterId = (Integer) parameters.get("encounterId");
+		Integer encounterId = (Integer) parameters.get(ChirdlUtilConstants.PARAMETER_ENCOUNTER_ID);
 
 		if (encounterId != null)
 		{
 			encounter = encounterService.getEncounter(encounterId);
-			UserService userService = Context.getUserService();
-			List<User> providers = userService.getUsersByPerson(encounter.getProvider(), true);
-			User provider = null;
-			if(providers != null&& providers.size()>0){
-				provider = providers.get(0);
-			}
+			
+			// CHICA-221 Use the provider that has the "Attending Provider" role for the encounter
+			org.openmrs.Provider provider = org.openmrs.module.chirdlutil.util.Util.getProviderByAttendingProviderEncounterRole(encounter);
+			
 			if(provider != null)
 			{
 				String providerName = "";
+				Person person = provider.getPerson();
 				
-				if(provider.getGivenName() != null)
+				if(person != null)
 				{
-					providerName+=Util.toProperCase(provider.getGivenName())+" ";
-				}
-				if(provider.getFamilyName() != null)
-				{
-					providerName+=Util.toProperCase(provider.getFamilyName());
-				}
-				return new Result(providerName);
+					if(person.getGivenName() != null)
+					{
+						providerName+=Util.toProperCase(person.getGivenName())+" ";
+					}
+					if(person.getFamilyName() != null)
+					{
+						providerName+=Util.toProperCase(person.getFamilyName());
+					}
+					return new Result(providerName);
+				}	
 			}
 		}
 
