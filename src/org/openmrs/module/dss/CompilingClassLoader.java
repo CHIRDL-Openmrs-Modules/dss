@@ -38,7 +38,7 @@ import org.openmrs.util.OpenmrsClassLoader;
 
  @Author - Vibha Anand - Adapted from ibm.com/developerWorks
  */
-public class CompilingClassLoader extends OpenmrsClassLoader
+public class CompilingClassLoader extends URLClassLoader // CHICA-965 Extend URLClassLoader instead of OpenmrsClassLoader
 {
 	private Log log = LogFactory.getLog( this.getClass() );
 	
@@ -78,7 +78,7 @@ public class CompilingClassLoader extends OpenmrsClassLoader
 	}
 	
 	private CompilingClassLoader(ClassLoader parent) {
-		super(parent);
+		super(new URL[0], parent);
 		setupClassLoader();
 	}
 
@@ -290,7 +290,7 @@ public class CompilingClassLoader extends OpenmrsClassLoader
     @Override
     public Class<?> loadClass(String name) throws ClassNotFoundException {
     	try {
-	        return getParent().loadClass(name);
+	        return OpenmrsClassLoader.getInstance().loadClass(name); // CHICA-965 Use OpenmrsClassLoader.getInstance() instead of getParent() since we are now extending URLClassLoader
         }
         catch (Exception e) {
         }
