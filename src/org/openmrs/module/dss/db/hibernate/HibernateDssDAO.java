@@ -8,7 +8,7 @@ import org.hibernate.Criteria;
 import org.hibernate.SQLQuery;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Example;
-import org.hibernate.criterion.Expression;
+import org.hibernate.criterion.Restrictions;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.openmrs.api.AdministrationService;
@@ -133,7 +133,7 @@ public class HibernateDssDAO implements DssDAO
 	public RuleAttribute getRuleAttribute(String ruleAttributeName) {
 		Criteria crit = sessionFactory.getCurrentSession().createCriteria(RuleAttribute.class); 
 
-		crit.add(Expression.eq("name", ruleAttributeName)); 
+		crit.add(Restrictions.eq("name", ruleAttributeName)); 
 
 		return (RuleAttribute) crit.uniqueResult();
 	}
@@ -166,7 +166,7 @@ public class HibernateDssDAO implements DssDAO
 	public List<RuleAttributeValue> getRuleAttributesByValue(Integer ruleAttributeId,String value){
 		Criteria crit = sessionFactory.getCurrentSession().createCriteria(RuleAttributeValue.class); 
 
-		crit.add(Expression.eq("value", value)); 
+		crit.add(Restrictions.eq("value", value)); 
 
 		return crit.list();
 	}
@@ -178,8 +178,8 @@ public class HibernateDssDAO implements DssDAO
 	public List<RuleAttributeValue> getRuleAttributeValues(Integer ruleId, Integer ruleAttributeId) {
 		
 		Criteria crit = sessionFactory.getCurrentSession().createCriteria(RuleAttributeValue.class);
-		crit.add(Expression.eq("ruleId", ruleId)); 
-		crit.add(Expression.eq("ruleAttributeId", ruleAttributeId)); 
+		crit.add(Restrictions.eq("ruleId", ruleId)); 
+		crit.add(Restrictions.eq("ruleAttributeId", ruleAttributeId)); 
 
 		return crit.list();
 	}

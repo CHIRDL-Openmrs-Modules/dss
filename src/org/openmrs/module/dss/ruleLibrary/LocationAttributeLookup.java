@@ -12,7 +12,7 @@ import org.openmrs.logic.result.Result;
 import org.openmrs.logic.result.Result.Datatype;
 import org.openmrs.logic.rule.RuleParameterInfo;
 import org.openmrs.module.chirdlutilbackports.hibernateBeans.FormInstance;
-import org.openmrs.module.chirdlutilbackports.hibernateBeans.LocationAttributeValue;
+import org.openmrs.module.chirdlutilbackports.hibernateBeans.ChirdlLocationAttributeValue;
 import org.openmrs.module.chirdlutilbackports.service.ChirdlUtilBackportsService;
 
 public class LocationAttributeLookup implements Rule
@@ -69,7 +69,7 @@ public class LocationAttributeLookup implements Rule
 		if (formInstance != null && param!=null)
 		{
 			Integer locationId = formInstance.getLocationId();
-			LocationAttributeValue locationAttributeValue = 
+			ChirdlLocationAttributeValue locationAttributeValue = 
 				chirdlUtilBackportsService.getLocationAttributeValue(locationId, param);
 		
 			if(locationAttributeValue != null){
