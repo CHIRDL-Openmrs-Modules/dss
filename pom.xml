@@ -119,7 +119,7 @@
 	</dependencyManagement>
 
 	<properties>
-		<openMRSVersion>1.12.1-SNAPSHOT</openMRSVersion>
+		<openMRSVersion>1.12.1</openMRSVersion>
 	</properties>
 
 	<build>
