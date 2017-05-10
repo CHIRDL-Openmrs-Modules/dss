@@ -43,7 +43,9 @@ public class Rule implements java.io.Serializable
 	private String ageMaxUnits = null;
 	private Integer ageMin = null;
 	private Integer ageMax = null;
-
+	
+	private String validation = null;
+	
 	/**
 	 * @return the ruleId
 	 */
@@ -451,6 +453,21 @@ public class Rule implements java.io.Serializable
 	{
 		this.ageMax = ageMax;
 	}
+	
+    /**
+     * @return the validation
+     */
+    public String getValidation() {
+    	return this.validation;
+    }
+
+	
+    /**
+     * @param validation the validation to set
+     */
+    public void setValidation(String validation) {
+    	this.validation = validation;
+    }
 
 	public boolean checkAgeRestrictions(Patient patient)
 	{
@@ -556,5 +573,91 @@ public class Rule implements java.io.Serializable
 		}
 
 		return false;
+	}
+	
+	/**
+	 * Auto generated method comment
+	 * 
+	 * @return
+	 */
+	public String getMLMString() {
+								
+		String title = this.title;
+		if(title == null){
+			title = "";
+		}
+		String institution = this.institution;
+		if(institution == null){
+			institution = "";
+		}
+		String author = this.author;
+		if(author == null){
+			author = "";
+		}
+		String specialist = this.specialist;
+		if(specialist == null){
+			specialist = "";
+		}
+		String ruleCreationDate = this.ruleCreationDate;
+		if(ruleCreationDate == null){
+			ruleCreationDate = "";
+		}
+		String purpose = this.purpose;
+		if(purpose == null){
+			purpose = "";
+		}
+		String explanation = this.explanation;
+		if(explanation == null){
+			explanation = "";
+		}
+		String keywords = this.keywords;
+		if(keywords == null){
+			keywords = "";
+		}
+		String citations = this.citations;
+		if(citations == null){
+			citations = "";
+		}
+		String links = this.links;
+		if(links == null){
+			links = "";
+		}
+		String validation = this.validation;
+		if(validation == null){
+			validation = "";
+		}
+		
+		String maintenance = "Maintenance:\n";
+		maintenance += "Title: " + title + ";;\n";
+		maintenance += "Filename:	" + this.tokenName + ";;\n";
+		maintenance += "Version: " + this.version + ";;\n";
+		maintenance += "Institution: " + institution + ";;\n";
+		maintenance += "Author: " + author + ";;\n";
+		maintenance += "Specialist: " + specialist + ";;\n";
+		maintenance += "Date: " + ruleCreationDate + ";;\n";
+		maintenance += "Validation: " + validation + ";;\n";
+		String mlm = maintenance;
+		String library = "Library:\n";
+		library += "Purpose: " + purpose + ";;\n";
+		library += "Explanation: " + explanation + ";;\n";
+		library += "Keywords: " + keywords + ";;\n";
+		library += "Citations: " + citations + ";;\n";
+		library += "Links: " + links + ";;\n";
+		
+		mlm += library;
+		String knowledge = "Knowledge:\n";
+		knowledge += "Type: data_driven;;\n";
+		knowledge += this.data;
+		if (this.priority != null) {
+			knowledge += "Priority: ";
+			knowledge += this.priority;
+			knowledge += ";;\n";
+		}
+		
+		knowledge += "Evoke: ;;\n";
+		knowledge += this.logic;
+		knowledge += this.action;
+		mlm += knowledge + "end:\n";
+		return mlm;
 	}
 }

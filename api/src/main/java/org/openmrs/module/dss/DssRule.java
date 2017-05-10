@@ -108,12 +108,6 @@ public interface DssRule
 	 */
 	public String getType();
 	
-	public Integer getAgeMin();
-	
-	public Integer getAgeMax();
-	
-	public String getAgeMinUnits();
-	
-	public String getAgeMaxUnits();
-	
+	public String getValidation();
+
 }

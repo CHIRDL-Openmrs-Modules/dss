@@ -1,9 +1,11 @@
 package org.openmrs.module.dss.impl;
 
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -13,6 +15,10 @@ import org.openmrs.api.APIException;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.context.Context;
 import org.openmrs.api.db.DAOException;
+import org.openmrs.arden.ArdenService;
+import org.openmrs.arden.MetadataCompiler;
+import org.openmrs.arden.mlmXML.Assignment;
+import org.openmrs.arden.mlmXML.Evaluable;
 import org.openmrs.logic.LogicService;
 import org.openmrs.logic.impl.LogicCriteriaImpl;
 import org.openmrs.logic.result.Result;
@@ -400,6 +406,7 @@ public class DssServiceImpl implements DssService
 		}
 		
 		databaseRule.setClassFilename(classFilename);
+		databaseRule.setValidation(rule.getValidation());
 		databaseRule.setPriority(rule.getPriority());
 		databaseRule.setAction(rule.getAction());
 		databaseRule.setAuthor(rule.getAuthor());
@@ -419,12 +426,55 @@ public class DssServiceImpl implements DssService
 			databaseRule.setRuleType(rule.getType());
 		}
 		databaseRule.setTokenName(tokenName);
-		databaseRule.setAgeMax(rule.getAgeMax());
-		databaseRule.setAgeMin(rule.getAgeMin());
-		databaseRule.setAgeMinUnits(rule.getAgeMinUnits());
-		databaseRule.setAgeMaxUnits(rule.getAgeMaxUnits());
-		
+		setAgeLimitsAndRuleType(databaseRule);
 		return getDssDAO().addOrUpdateRule(databaseRule);
 		
+	}
+	
+	private void setAgeLimitsAndRuleType(Rule databaseRule){
+		String mlmString = databaseRule.getMLMString();
+
+		ArdenService ardenService = Context.getService(ArdenService.class);
+		try {
+	        List<MetadataCompiler> mlms = ardenService.compile(new StringReader(mlmString));
+
+	        MetadataCompiler mlm = mlms.get(0);
+	        
+	        ArrayList<Evaluable> evaluables = mlm.getKnowledge().getData().getEvaluables();
+	        
+	        for(Evaluable eval:evaluables){
+	        	if(eval instanceof Assignment){
+	        		Assignment assign = (Assignment) eval;
+	        		if(assign.getVariable().trim().equalsIgnoreCase("Age_Min")){
+	        			
+	        			String ageMin = assign.getAssignedValue().toString();
+	        			StringTokenizer tokenizer = new StringTokenizer(ageMin);
+	        			if(tokenizer.hasMoreTokens()){
+	        				databaseRule.setAgeMin(Integer.parseInt(tokenizer.nextToken().trim()));
+	        			}
+	        			if(tokenizer.hasMoreTokens()){
+	        				databaseRule.setAgeMinUnits(tokenizer.nextToken().trim());
+	        			}
+	        		}
+	        		if(assign.getVariable().trim().equalsIgnoreCase("Age_Max")){
+	        			String ageMax = assign.getAssignedValue().toString();
+	        			StringTokenizer tokenizer = new StringTokenizer(ageMax);
+	        			if(tokenizer.hasMoreTokens()){
+	        				databaseRule.setAgeMax(Integer.parseInt(tokenizer.nextToken().trim()));
+	        			}
+	        			if(tokenizer.hasMoreTokens()){
+	        				databaseRule.setAgeMaxUnits(tokenizer.nextToken().trim());
+	        			}
+	        		}
+	        		if(assign.getVariable().trim().equalsIgnoreCase("Rule_Type")){
+	        			String ruleType = assign.getAssignedValue().toString();
+	        			databaseRule.setRuleType(ruleType.trim().replaceAll("\"",""));
+	        		}
+	        	}
+	        }
+        }
+        catch (Exception e) {
+	        log.error("Error generated", e);
+        }
 	}
 }
