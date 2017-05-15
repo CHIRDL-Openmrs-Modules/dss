@@ -25,6 +25,10 @@
 			<artifactId>chirdlutil-api</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>org.openmrs.module</groupId>
+			<artifactId>ardenTranslator-api</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>org.jibx</groupId>
 			<artifactId>jibx-extras</artifactId>
 		</dependency>

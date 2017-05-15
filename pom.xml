@@ -43,6 +43,12 @@
 				<scope>provided</scope>
 			</dependency>
 			<dependency>
+				<groupId>org.openmrs.module</groupId>
+				<artifactId>ardenTranslator-api</artifactId>
+				<version>1.0.0</version>
+				<scope>provided</scope>
+			</dependency>
+			<dependency>
 				<groupId>org.jibx</groupId>
 				<artifactId>jibx-extras</artifactId>
 				<version>1.2.6</version>
