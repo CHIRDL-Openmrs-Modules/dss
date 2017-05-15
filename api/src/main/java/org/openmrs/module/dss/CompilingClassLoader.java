@@ -29,6 +29,7 @@ import org.openmrs.module.ModuleFactory;
 import org.openmrs.module.chirdlutil.util.IOUtil;
 import org.openmrs.module.chirdlutil.util.Util;
 import org.openmrs.module.dss.service.DssService;
+import org.openmrs.module.ardenTranslator.ArdenService;
 import org.openmrs.util.OpenmrsClassLoader;
 
 /**
@@ -257,8 +258,7 @@ public class CompilingClassLoader extends URLClassLoader // CHICA-965 Extend URL
 			if(this.javaRuleDirectory == null){
 				throw new Exception("Global property dss.javaRuleDirectory must be set.");
 			}
-			Context.getArdenService().compileFile(mlmFile, this.javaRuleDirectory); // converts from mlm to java
-			// For now
+			Context.getService(ArdenService.class).compileFile(mlmFile, this.javaRuleDirectory);
 			errorCode = 0;
 			
 		} catch (Exception e)

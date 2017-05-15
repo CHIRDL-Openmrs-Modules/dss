@@ -21,6 +21,7 @@
 	<require_modules>
    		<require_module version="1.13.0">org.openmrs.module.chirdlutil</require_module>
 		<require_module version="2.7.0">org.openmrs.module.chirdlutilbackports</require_module>
+		<require_module version="1.0.0">org.openmrs.module.ardenTranslator</require_module>
 	</require_modules>	
 	
 	<extension>
