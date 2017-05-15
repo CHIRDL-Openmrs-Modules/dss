@@ -258,6 +258,7 @@ public class CompilingClassLoader extends URLClassLoader // CHICA-965 Extend URL
 			if(this.javaRuleDirectory == null){
 				throw new Exception("Global property dss.javaRuleDirectory must be set.");
 			}
+			
 			Context.getService(ArdenService.class).compileFile(mlmFile, this.javaRuleDirectory);
 			errorCode = 0;
 			
