@@ -56,6 +56,10 @@
 			<artifactId>openmrs-test</artifactId>
 			<type>pom</type>
 		</dependency>
+				<dependency>
+    		 	<groupId>arden</groupId>
+     			<artifactId>arden2bytecode</artifactId>
+			</dependency>
 	</dependencies>
 
 	<build>

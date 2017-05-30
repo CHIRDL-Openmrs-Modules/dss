@@ -15,7 +15,7 @@ import org.openmrs.api.APIException;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.context.Context;
 import org.openmrs.api.db.DAOException;
-import org.openmrs.arden.ArdenService;
+import org.openmrs.module.ardenTranslator.ArdenService;
 import org.openmrs.module.ardenTranslator.MetadataCompiler;
 import org.openmrs.module.ardenTranslator.mlmXML.Assignment;
 import org.openmrs.module.ardenTranslator.mlmXML.Evaluable;
