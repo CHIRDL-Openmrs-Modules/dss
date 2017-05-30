@@ -6,7 +6,7 @@ import java.util.List;
 import org.openmrs.Patient;
 import org.openmrs.api.APIException;
 import org.openmrs.logic.result.Result;
-import org.openmrs.module.dss.DssRule;
+import org.openmrs.module.ardenTranslator.MlmRule;
 import org.openmrs.module.dss.hibernateBeans.Rule;
 import org.openmrs.module.dss.hibernateBeans.RuleAttribute;
 import org.openmrs.module.dss.hibernateBeans.RuleAttributeValue;
@@ -57,11 +57,11 @@ public interface DssService
 	 * Adds a new rule to the dss_rule table
 	 * @param classFilename name of the compiled class file that contains the 
 	 * executable rule
-	 * @param rule DssRule to save to the dss_rule table
+	 * @param rule MlmRule to save to the dss_rule table
 	 * @return Rule rule that was added to the dss_rule table
 	 * @throws APIException
 	 */
-	public Rule addRule(String classFilename, DssRule rule) throws APIException;
+	public Rule addRule(String classFilename, MlmRule rule) throws APIException;
 
 	/**
 	 * Deletes an existing rule from the dss_rule table based on the ruleId

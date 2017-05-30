@@ -17,6 +17,7 @@ import org.openmrs.api.context.Context;
 import org.openmrs.api.db.DAOException;
 import org.openmrs.module.ardenTranslator.ArdenService;
 import org.openmrs.module.ardenTranslator.MetadataCompiler;
+import org.openmrs.module.ardenTranslator.MlmRule;
 import org.openmrs.module.ardenTranslator.mlmXML.Assignment;
 import org.openmrs.module.ardenTranslator.mlmXML.Evaluable;
 import org.openmrs.logic.LogicService;
@@ -26,7 +27,6 @@ import org.openmrs.logic.token.TokenService;
 import org.openmrs.module.chirdlutil.util.IOUtil;
 import org.openmrs.module.chirdlutil.util.Util;
 import org.openmrs.module.dss.CompilingClassLoader;
-import org.openmrs.module.dss.DssRule;
 import org.openmrs.module.dss.DssRuleProvider;
 import org.openmrs.module.dss.db.DssDAO;
 import org.openmrs.module.dss.hibernateBeans.Rule;
@@ -391,7 +391,7 @@ public class DssServiceImpl implements DssService
 		return getDssDAO().getRuleAttributesByValue(ruleAttributeId, value);
 	}
 	
-	public Rule addRule(String classFilename,DssRule rule) throws APIException
+	public Rule addRule(String classFilename,MlmRule rule) throws APIException
 	{
 		String tokenName = IOUtil.getFilenameWithoutExtension(classFilename);
 		Rule databaseRule = getDssDAO().getRule(tokenName);

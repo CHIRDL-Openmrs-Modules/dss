@@ -30,6 +30,7 @@ import org.openmrs.module.chirdlutil.util.IOUtil;
 import org.openmrs.module.chirdlutil.util.Util;
 import org.openmrs.module.dss.service.DssService;
 import org.openmrs.module.ardenTranslator.ArdenService;
+import org.openmrs.module.ardenTranslator.MlmRule;
 import org.openmrs.util.OpenmrsClassLoader;
 
 /**
@@ -490,11 +491,11 @@ public class CompilingClassLoader extends URLClassLoader // CHICA-965 Extend URL
 					try
 					{
 						Object obj = clas.newInstance();
-						if (obj instanceof DssRule)
+						if (obj instanceof MlmRule)
 						{
 							DssService dssService = Context
 									.getService(DssService.class);
-							dssService.addRule(classFilename, (DssRule) obj);
+							dssService.addRule(classFilename, (MlmRule) obj);
 						}
 					} catch (Exception e)
 					{

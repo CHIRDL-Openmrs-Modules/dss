@@ -60,6 +60,10 @@
     		 	<groupId>arden</groupId>
      			<artifactId>arden2bytecode</artifactId>
 			</dependency>
+			<dependency>
+			<groupId>org.openmrs.module</groupId>
+			<artifactId>ardenTranslator-api</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>
