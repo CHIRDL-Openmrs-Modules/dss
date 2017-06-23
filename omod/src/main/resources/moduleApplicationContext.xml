@@ -8,9 +8,7 @@
 	<bean id="dssUrlMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
         <property name="mappings">
             <props>
-				<prop key="/module/@MODULE_ID@/runRules.form">runRules</prop>
 				<prop key="/module/@MODULE_ID@/searchRules.form">searchRules</prop>
-				<prop key="/module/@MODULE_ID@/deleteRules.form">deleteRules</prop>
 				<prop key="/module/@MODULE_ID@/ruleTester.form">ruleTester</prop>
 				<prop key="/module/@MODULE_ID@/importRuleAttributeValues.form">importRuleAttributeValues</prop>	
 				<prop key="/module/@MODULE_ID@/dssOperationSuccess.form">dssOperationSuccess</prop>			    
@@ -18,18 +16,6 @@
 		</property>
 	</bean>
 
-	<bean id="runRules" class="@MODULE_PACKAGE@.web.RunRulesController">
-		<property name="commandName"><value>runRulesObject</value></property>
-		<property name="formView"><value>/module/@MODULE_ID@/runRules</value></property>
-		<property name="successView"><value>runRules.form</value></property>
-	</bean>
-	
-	<bean id="deleteRules" class="@MODULE_PACKAGE@.web.DeleteRulesController">
-		<property name="commandName"><value>deleteRulesObject</value></property>
-		<property name="formView"><value>/module/@MODULE_ID@/deleteRules</value></property>
-		<property name="successView"><value>deleteRules.form</value></property>
-	</bean>
-	
 	<bean id="searchRules" class="@MODULE_PACKAGE@.web.SearchRulesController">
 		<property name="commandName"><value>searchRulesObject</value></property>
 		<property name="formView"><value>/module/@MODULE_ID@/searchRules</value></property>
