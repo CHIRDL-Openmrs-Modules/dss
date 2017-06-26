@@ -65,17 +65,4 @@
 			</list>
 		</property>
 	</bean>
-	
-	<!-- CHICA-961 Remove to allow for faster shutdown 
-	<bean id="dssRmiService" class="org.openmrs.module.dss.impl.DssRmiServiceImpl">
-    </bean>
-    
-    <bean class="org.springframework.remoting.rmi.RmiServiceExporter">
-        <property name="serviceName" value="DssRmiService"/>
-        <property name="service" ref="dssRmiService"/>
-        <property name="serviceInterface" value="org.openmrs.module.dss.service.DssRmiService"/>
-        <property name="registryPort" value="1199"/>
-    </bean>
-    -->
-    
 </beans>
