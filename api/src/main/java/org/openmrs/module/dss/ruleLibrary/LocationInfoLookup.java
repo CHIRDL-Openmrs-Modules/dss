@@ -110,17 +110,17 @@ public class LocationInfoLookup implements Rule {
 		} else if ("longitude".equalsIgnoreCase(attribute)) {
 			return new Result(location.getLongitude());
 		} else if ("neighborhoodcell".equalsIgnoreCase(attribute)) {
-			return new Result(location.getNeighborhoodCell());
+			return new Result(location.getAddress3()); // CHICA-1151 getNeighborhoodCell() has been replaced by getAddress3()
 		}  else if ("region".equalsIgnoreCase(attribute)) {
-			return new Result(location.getRegion());
+			return new Result(location.getAddress6()); // CHICA-1151 getRegion() has been replaced by getAddress6()
 		} else if ("retired".equalsIgnoreCase(attribute)) {
 			return new Result(location.getRetired());
 		} else if ("retiredreason".equalsIgnoreCase(attribute)) {
 			return new Result(location.getRetireReason());
 		} else if ("subregion".equalsIgnoreCase(attribute)) {
-			return new Result(location.getSubregion());
+			return new Result(location.getAddress5()); // CHICA-1151 getSubregion() has been replaced by getAddress5()
 		} else if ("townshipdivision".equalsIgnoreCase(attribute)) {
-			return new Result(location.getTownshipDivision());
+			return new Result(location.getAddress4()); // CHICA-1151 getTownshipDivision() has been replaced by getAddress4()
 		} else {
 			log.error(attribute + " is not a supported attribute for a Location.");
 			return Result.emptyResult();

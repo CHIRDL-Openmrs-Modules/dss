@@ -3,6 +3,7 @@
  */
 package org.openmrs.module.dss.web;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,9 +13,11 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Patient;
+import org.openmrs.PatientIdentifierType;
 import org.openmrs.api.PatientService;
 import org.openmrs.api.context.Context;
 import org.openmrs.logic.result.Result;
+import org.openmrs.module.chirdlutil.util.ChirdlUtilConstants;
 import org.openmrs.module.dss.hibernateBeans.Rule;
 import org.openmrs.module.dss.service.DssService;
 import org.springframework.web.servlet.mvc.SimpleFormController;
@@ -59,8 +62,14 @@ public class RuleTesterController extends SimpleFormController
 			try
 			{
 				PatientService patientService = Context.getPatientService();
-				List<Patient> patients = patientService
-						.getPatientsByIdentifier(mrn, false);
+				
+				PatientIdentifierType identifierType = patientService
+						.getPatientIdentifierTypeByName(ChirdlUtilConstants.IDENTIFIER_TYPE_MRN);
+				List<PatientIdentifierType> identifierTypes = new ArrayList<PatientIdentifierType>();
+				identifierTypes.add(identifierType);
+				List<Patient> patients = patientService.getPatientsByIdentifier(null, mrn,
+						identifierTypes, false); // CHICA-1151 getPatientsByIdentifier(String, boolean) has been removed using the fix from CHICA-977 Use getPatientsByIdentifier() as a temporary solution to openmrs TRUNK-5089
+				
 				Patient patient = null;
 				if (patients != null && patients.size() > 0)
 				{
