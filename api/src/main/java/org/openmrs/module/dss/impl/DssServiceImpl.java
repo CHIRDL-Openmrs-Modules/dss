@@ -300,7 +300,7 @@ public class DssServiceImpl implements DssService
 		return getDssDAO().getRule(tokenName);
 	}
 
-	public List<Rule> getPrioritizedRules(String type) throws DAOException
+	public List<Rule> getPrioritizedRules(String type) throws APIException
 	{
 		return getDssDAO().getPrioritizedRules(type, 0);
 	}
@@ -361,15 +361,23 @@ public class DssServiceImpl implements DssService
 	    return getDssDAO().getPrioritizedRules(type, startPriority);
     }
 	
-	
-	public List<Rule> getNonPrioritizedRules(String type) throws DAOException
+	/**
+	 * @see org.openmrs.module.dss.service.DssService#getNonPrioritizedRules(java.lang.String)
+	 */
+	public List<Rule> getNonPrioritizedRules(String type) throws APIException
 	{
 		return getDssDAO().getNonPrioritizedRules(type);
 	}
 	
-	public List<Rule> getRules(Rule rule, boolean ignoreCase, boolean enableLike, String sortColumn)
+	/**
+	 * 
+	 * @see org.openmrs.module.dss.service.DssService#getRules(org.openmrs.module.dss.hibernateBeans.Rule, 
+	 * boolean, boolean, java.lang.String, java.lang.String, java.lang.Integer)
+	 */
+	public List<Rule> getRules(Rule rule, boolean ignoreCase, boolean enableLike, String sortColumn, 
+			String ruleType, Integer priority)
 	{
-		return getDssDAO().getRules(rule, ignoreCase, enableLike, sortColumn);
+		return getDssDAO().getRules(rule, ignoreCase, enableLike, sortColumn, ruleType, priority);
 	}
 	
 	/**

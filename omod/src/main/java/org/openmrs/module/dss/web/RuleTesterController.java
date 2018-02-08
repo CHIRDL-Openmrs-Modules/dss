@@ -82,7 +82,7 @@ public class RuleTesterController extends SimpleFormController
 					Rule rule = new Rule();
 					rule.setTokenName(ruleName);
 					List<Rule> rules = dssService.getRules(rule, false, false,
-							null);
+							null, null, null);
 					Rule currRule = null;
 					if (rules.size() > 0)
 					{

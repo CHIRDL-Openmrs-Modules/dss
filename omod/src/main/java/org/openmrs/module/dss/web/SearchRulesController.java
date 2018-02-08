@@ -180,7 +180,7 @@ public class SearchRulesController extends SimpleFormController
 		{
 			DssService dssService = Context
 					.getService(DssService.class);
-			List<Rule> rules = dssService.getRules(rule,true,true,null);
+			List<Rule> rules = dssService.getRules(rule, true, true, null, null, null);
 			map.put("rules", rules);
 		}
 		map.put("runSearch", runSearch);

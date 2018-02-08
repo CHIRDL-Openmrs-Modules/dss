@@ -221,22 +221,24 @@ public class HibernateDssDAO implements DssDAO
 		return null;
     }
     
+    /**
+     * @see org.openmrs.module.dss.db.DssDAO#getNonPrioritizedRules(java.lang.String)
+     */
 	public List<Rule> getNonPrioritizedRules(String type) throws DAOException
 	{
 		try
 		{
-			AdministrationService adminService = Context
-					.getAdministrationService();
-			String sortOrder = adminService
-					.getGlobalProperty("dss.ruleSortOrder");
-			if (sortOrder == null)
-			{
-				sortOrder = "DESC";
-			}
+			String sql = "SELECT *" + 
+					"  FROM dss_rule rule" + 
+					"       INNER JOIN dss_rule_entry ruleEntry" + 
+					"          ON rule.rule_id = ruleEntry.rule_id" + 
+					"       INNER JOIN dss_rule_type ruleType" + 
+					"          ON ruleEntry.rule_type_id = ruleType.rule_type_id" + 
+					" WHERE ruleType.rule_type = ?" + 
+					" AND ruleType.voided = false" + 
+					" AND ruleEntry.voided = false" + 
+					" AND ruleEntry.priority is null";
 
-			String sql = "select * from dss_rule where rule_type = ? and "
-					+ "priority is null and version='1.0' order by priority "
-					+ sortOrder;
 			SQLQuery qry = this.sessionFactory.getCurrentSession()
 					.createSQLQuery(sql);
 			qry.setString(0, type);
@@ -250,8 +252,12 @@ public class HibernateDssDAO implements DssDAO
 		return null;
 	}
 
-	public List<Rule> getRules(Rule rule, boolean ignoreCase,
-			boolean enableLike, String sortColumn) throws DAOException
+	/**
+	 * @see org.openmrs.module.dss.db.DssDAO#getRules(org.openmrs.module.dss.hibernateBeans.Rule, 
+	 * boolean, boolean, java.lang.String, java.lang.String, java.lang.Integer)
+	 */
+	public List<Rule> getRules(Rule rule, boolean ignoreCase, boolean enableLike, 
+			String sortColumn, String ruleType, Integer priority) throws DAOException
 	{
 		try
 		{

@@ -78,10 +78,13 @@ public interface DssService
 	 * be matched in the dss_rule query regardless of case
 	 * @param enableLike String attributes assigned in the Rule parameter should
 	 * be matched in the dss_rule query using LIKE instead of exact matching
-	 * @param sortColumn The column name for which to sort the results
+	 * @param sortColumn The column name for which to sort the results (optional)
+	 * @param ruleType The rule type (optional)
+	 * @param The priority (optional)
 	 * @return List<Rule>
 	 */
-	public List<Rule> getRules(Rule rule, boolean ignoreCase, boolean enableLike, String sortColumn);
+	public List<Rule> getRules(Rule rule, boolean ignoreCase, boolean enableLike, String sortColumn, 
+			String ruleType, Integer priority);
 
 	/**
 	 * Loads a rule into the openmrs LogicService in preparation for executing it
