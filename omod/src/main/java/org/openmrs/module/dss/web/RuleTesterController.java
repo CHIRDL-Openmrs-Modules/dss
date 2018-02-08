@@ -123,7 +123,7 @@ public class RuleTesterController extends SimpleFormController
 		}
 
 		List<Rule> rules = dssService.getRules(new Rule(), true, true,
-				"tokenName");
+				"tokenName", null, null);
 
 		map.put("rules", rules);
 
