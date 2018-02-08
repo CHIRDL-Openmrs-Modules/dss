@@ -60,10 +60,6 @@
 			<groupId>org.openmrs.module</groupId>
 			<artifactId>legacyui-omod</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>javax.servlet-api</artifactId>			
-		</dependency>
 	</dependencies>
 
 	<build>

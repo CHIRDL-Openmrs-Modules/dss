@@ -120,6 +120,8 @@
 		rule.hbm.xml
 		rule_attribute.hbm.xml
 		rule_attribute_value.hbm.xml
+		rule_type.hbm.xml
+		rule_entry.hbm.xml
 	</mappingFiles>
 	
 </module>

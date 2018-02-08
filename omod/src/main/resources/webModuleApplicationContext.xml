@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:jee="http://www.springframework.org/schema/jee"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+  		    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+  		    http://www.springframework.org/schema/context
+  		    http://www.springframework.org/schema/context/spring-context-3.0.xsd
+  		    http://www.springframework.org/schema/jee
+  		    http://www.springframework.org/schema/jee/spring-jee-3.0.xsd
+  		    http://www.springframework.org/schema/tx
+  		    http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+  		    http://www.springframework.org/schema/aop
+  		    http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+  		    http://www.springframework.org/schema/util
+  		    http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+
+	<!-- Annotation based controllers -->
+	<bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping"/>
+	
+	<context:component-scan base-package="org.openmrs.module.dss.web.controller" />
+	
+	<bean id="dssUrlMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+        <property name="mappings">
+            <props>
+				<prop key="/module/@MODULE_ID@/searchRules.form">searchRules</prop>
+				<prop key="/module/@MODULE_ID@/ruleTester.form">ruleTester</prop>
+				<prop key="/module/@MODULE_ID@/importRuleAttributeValues.form">importRuleAttributeValues</prop>	
+				<prop key="/module/@MODULE_ID@/dssOperationSuccess.form">dssOperationSuccess</prop>			    
+			</props>
+		</property>
+	</bean>
+
+	<bean id="searchRules" class="@MODULE_PACKAGE@.web.SearchRulesController">
+		<property name="commandName"><value>searchRulesObject</value></property>
+		<property name="formView"><value>/module/@MODULE_ID@/searchRules</value></property>
+		<property name="successView"><value>searchRules.form</value></property>
+	</bean>
+	<bean id="ruleTester" class="org.openmrs.module.dss.web.RuleTesterController">
+		<property name="commandName"><value>ruleTesterObject</value></property>
+		<property name="formView"><value>/module/@MODULE_ID@/ruleTester</value></property>
+		<property name="successView"><value>ruleTester.form</value></property>
+	</bean>
+	
+	<bean id="importRuleAttributeValues" class="org.openmrs.module.dss.web.ImportRuleAttributeValuesController">
+        <property name="commandName"><value>importRuleAttributeValuesObject</value></property>
+        <property name="formView"><value>/module/@MODULE_ID@/importRuleAttributeValues</value></property>
+        <property name="successView"><value>dssOperationSuccess.form</value></property>
+    </bean>
+    <bean id="dssOperationSuccess" class="@MODULE_PACKAGE@.web.OperationSuccessController">
+        <property name="commandName"><value>dssOperationSuccessObject</value></property>
+        <property name="formView"><value>/module/@MODULE_ID@/dssOperationSuccess</value></property> 
+        <property name="successView"><value>/openmrs/admin/index.htm</value></property>
+	</bean>
+</beans>

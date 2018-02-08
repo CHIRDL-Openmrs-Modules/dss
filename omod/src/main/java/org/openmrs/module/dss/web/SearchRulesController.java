@@ -67,16 +67,6 @@ public class SearchRulesController extends SimpleFormController
 			rule.setKeywords(keywords);
 		}
 		map.put("keywords", keywords);
-
-		String ruleType = request.getParameter("ruleType");
-		if (ruleType == null || ruleType.length() == 0)
-		{
-			ruleType = "";
-		} else
-		{
-			rule.setRuleType(ruleType);
-		}
-		map.put("ruleType", ruleType);
 		
 		String action = request.getParameter("action");
 		if (action == null || action.length() == 0)

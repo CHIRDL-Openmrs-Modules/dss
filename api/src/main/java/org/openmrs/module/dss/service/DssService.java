@@ -10,6 +10,8 @@ import org.openmrs.module.dss.DssRule;
 import org.openmrs.module.dss.hibernateBeans.Rule;
 import org.openmrs.module.dss.hibernateBeans.RuleAttribute;
 import org.openmrs.module.dss.hibernateBeans.RuleAttributeValue;
+import org.openmrs.module.dss.hibernateBeans.RuleEntry;
+import org.openmrs.module.dss.hibernateBeans.RuleType;
 
 /**
  * Defines services used by this module
@@ -63,12 +65,6 @@ public interface DssService
 	 */
 	public Rule addRule(String classFilename, DssRule rule) throws APIException;
 
-	/**
-	 * Deletes an existing rule from the dss_rule table based on the ruleId
-	 * @param ruleId unique id for the rule to be deleted from the dss_rule table
-	 */
-	public void deleteRule(int ruleId);
-		
 	public List<Rule> getPrioritizedRules(String type);
 	
 	public List<Rule> getNonPrioritizedRules(String type);
@@ -82,6 +78,7 @@ public interface DssService
 	 * be matched in the dss_rule query regardless of case
 	 * @param enableLike String attributes assigned in the Rule parameter should
 	 * be matched in the dss_rule query using LIKE instead of exact matching
+	 * @param sortColumn The column name for which to sort the results
 	 * @return List<Rule>
 	 */
 	public List<Rule> getRules(Rule rule, boolean ignoreCase, boolean enableLike, String sortColumn);
@@ -169,4 +166,59 @@ public interface DssService
 	 */
 	public List<RuleAttributeValue> getRuleAttributesByValue(Integer ruleAttributeId,String value);
 	
+	/**
+	 * Adds or updates a rule type.
+	 * 
+	 * @param ruleType The rule type to add or update.
+	 * @return The added or updated rule type.
+	 * @throws APIException
+	 */
+	public RuleType saveRuleType(RuleType ruleType) throws APIException;
+	
+	/**
+	 * Returns a rule type based on the type provided.
+	 * 
+	 * @param type The rule type
+	 * @return RuleType object matching the provided type of null if one can't be found
+	 * @throws APIException
+	 */
+	public RuleType getRuleType(String type) throws APIException;
+	
+	/**
+	 * Adds or updates a rule entry.
+	 * 
+	 * @param ruleEntry The rule entry to add or update.
+	 * @return The added or updated rule entry.
+	 * @throws APIException
+	 */
+	public RuleEntry saveRuleEntry(RuleEntry ruleEntry) throws APIException;
+	
+	/**
+	 * Returns a rule entry based on rule and rule type.
+	 * 
+	 * @param rule The rule used to retrieve the rule entry.
+	 * @param ruleType The rule type used to retrieve the rule entry.
+	 * @return RuleEntry object or null if one cannot be found.
+	 * @throws APIException
+	 */
+	public RuleEntry getRuleEntry(Rule rule, RuleType ruleType) throws APIException;
+	
+	/**
+	 * Returns a rule entry based on rule ID and rule type.
+	 * 
+	 * @param ruleId The rule ID used to retrieve the rule entry.
+	 * @param ruleType The rule type used to retrieve the rule entry.
+	 * @return RuleEntry object or null if one cannot be found.
+	 * @throws APIException
+	 */
+	public RuleEntry getRuleEntry(Integer ruleId, String ruleType) throws APIException;
+	
+	/**
+	 * Returns all rule entries referencing the provided rule.
+	 * 
+	 * @param rule The rule used to find the rule entry references.
+	 * @return List of RuleEntry objects referencing the provided rule.
+	 * @throws APIException
+	 */
+	public List<RuleEntry> getRuleReferences(Rule rule) throws APIException;
 }

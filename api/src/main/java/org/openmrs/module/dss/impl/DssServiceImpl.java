@@ -1,9 +1,11 @@
 package org.openmrs.module.dss.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -26,6 +28,8 @@ import org.openmrs.module.dss.db.DssDAO;
 import org.openmrs.module.dss.hibernateBeans.Rule;
 import org.openmrs.module.dss.hibernateBeans.RuleAttribute;
 import org.openmrs.module.dss.hibernateBeans.RuleAttributeValue;
+import org.openmrs.module.dss.hibernateBeans.RuleEntry;
+import org.openmrs.module.dss.hibernateBeans.RuleType;
 import org.openmrs.module.dss.service.DssService;
 
 /**
@@ -368,11 +372,6 @@ public class DssServiceImpl implements DssService
 		return getDssDAO().getRules(rule, ignoreCase, enableLike, sortColumn);
 	}
 	
-	public void deleteRule(int ruleId)
-	{
-		getDssDAO().deleteRule(ruleId);
-	}
-	
 	/**
 	 * 
 	 * Returns a list of rule attribute values for a given rule attribute id and value
@@ -400,7 +399,6 @@ public class DssServiceImpl implements DssService
 		}
 		
 		databaseRule.setClassFilename(classFilename);
-		databaseRule.setPriority(rule.getPriority());
 		databaseRule.setAction(rule.getAction());
 		databaseRule.setAuthor(rule.getAuthor());
 		databaseRule.setCitations(rule.getCitations());
@@ -415,16 +413,121 @@ public class DssServiceImpl implements DssService
 		databaseRule.setSpecialist(rule.getSpecialist());
 		databaseRule.setTitle(rule.getTitle());
 		databaseRule.setVersion(rule.getVersion());
-		if(rule.getType() != null){
-			databaseRule.setRuleType(rule.getType());
-		}
 		databaseRule.setTokenName(tokenName);
 		databaseRule.setAgeMax(rule.getAgeMax());
 		databaseRule.setAgeMin(rule.getAgeMin());
 		databaseRule.setAgeMinUnits(rule.getAgeMinUnits());
 		databaseRule.setAgeMaxUnits(rule.getAgeMaxUnits());
 		
-		return getDssDAO().addOrUpdateRule(databaseRule);
-		
+		databaseRule = getDssDAO().addOrUpdateRule(databaseRule);
+		updateRuleReferences(rule, databaseRule);
+		return databaseRule;
+	}
+	
+	/**
+	 * @see org.openmrs.module.dss.service.DssService#saveRuleType(org.openmrs.module.dss.hibernateBeans.RuleType)
+	 */
+	public RuleType saveRuleType(RuleType ruleType) throws APIException {
+		try {
+			return getDssDAO().saveRuleType(ruleType);
+		} catch (DAOException e) {
+			throw new APIException(e);
+		}
+	}
+	
+	/**
+	 * @see org.openmrs.module.dss.service.DssService#getRuleType(java.lang.String)
+	 */
+	public RuleType getRuleType(String type) throws APIException {
+		try {
+			return getDssDAO().getRuleType(type);
+		} catch (DAOException e) {
+			throw new APIException(e);
+		}
+	}
+	
+	/**
+	 * @see org.openmrs.module.dss.service.DssService#saveRuleEntry(org.openmrs.module.dss.hibernateBeans.RuleEntry)
+	 */
+	public RuleEntry saveRuleEntry(RuleEntry ruleEntry) throws APIException {
+		try {
+			return getDssDAO().saveRuleEntry(ruleEntry);
+		} catch (DAOException e) {
+			throw new APIException(e);
+		}
+	}
+
+	/**
+	 * @see org.openmrs.module.dss.service.DssService#getRuleEntry(org.openmrs.module.dss.hibernateBeans.Rule, org.openmrs.module.dss.hibernateBeans.RuleType)
+	 */
+	public RuleEntry getRuleEntry(Rule rule, RuleType ruleType) throws APIException {
+		try {
+			return getDssDAO().getRuleEntry(rule, ruleType);
+		} catch (DAOException e) {
+			throw new APIException(e);
+		}
+	}
+	
+	/**
+	 * @see org.openmrs.module.dss.service.DssService#getRuleEntry(java.lang.Integer, java.lang.String)
+	 */
+	public RuleEntry getRuleEntry(Integer ruleId, String ruleType) throws APIException {
+		try {
+			return getDssDAO().getRuleEntry(ruleId, ruleType);
+		} catch (DAOException e) {
+			throw new APIException(e);
+		}
+	}
+	
+	
+	/**
+	 * @see org.openmrs.module.dss.service.DssService#getRuleReferences(org.openmrs.module.dss.hibernateBeans.Rule)
+	 */
+	public List<RuleEntry> getRuleReferences(Rule rule) throws APIException {
+		try {
+			return getDssDAO().getRuleReferences(rule);
+		} catch (DAOException e) {
+			throw new APIException(e);
+		}
+	}
+	
+	/**
+	 * Updates any information referenced by rule entries.
+	 * 
+	 * @param dssRule The rule containing the new priority
+	 * @param rule The database rule being referenced.
+	 */
+	private void updateRuleReferences(DssRule dssRule, Rule rule) {
+		// See if there are currently any entries referencing this rule
+		List<RuleEntry> ruleEntries = getRuleReferences(rule);
+		if (ruleEntries != null && !ruleEntries.isEmpty()) {
+			Integer priority = dssRule.getPriority();
+			for (RuleEntry ruleEntry : ruleEntries) {
+				Integer currentPriority = ruleEntry.getPriority();
+				if ((currentPriority == null && priority != null) ||
+						(currentPriority != null && priority == null) || 
+						(currentPriority != null && !currentPriority.equals(priority))) {
+					// Void the current row
+					ruleEntry.setVoided(Boolean.TRUE);
+					ruleEntry.setVoidedBy(Context.getAuthenticatedUser());
+					ruleEntry.setVoidReason("Priority change from " + currentPriority + " to " + priority);
+					ruleEntry.setDateVoided(new Date());
+					saveRuleEntry(ruleEntry);
+					
+					// Only create a new row if the rule has a priority < 1000
+					if (priority == null || priority.compareTo(1000) < 0) {
+						// Create a new rule entry
+						RuleEntry newRuleEntry = new RuleEntry();
+						newRuleEntry.setCreator(Context.getAuthenticatedUser());
+						newRuleEntry.setDateCreated(new Date());
+						newRuleEntry.setPriority(priority);
+						newRuleEntry.setRule(ruleEntry.getRule());
+						newRuleEntry.setRuleType(ruleEntry.getRuleType());
+						newRuleEntry.setUuid(UUID.randomUUID().toString());
+						saveRuleEntry(newRuleEntry);
+					}
+				}
+			}
+		}
 	}
 }

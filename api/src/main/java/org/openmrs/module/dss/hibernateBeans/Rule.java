@@ -13,12 +13,12 @@ import org.openmrs.module.chirdlutil.util.Util;
  */
 public class Rule implements java.io.Serializable
 {
+	private static final long serialVersionUID = 1L;
 
 	// Fields
 	private Integer ruleId = null;
 	private String classFilename = null;
 	private Date creationTime = null;
-	private Integer priority = null;
 	private String title = null;
 	private Double version = null;
 	private String institution = null;
@@ -33,7 +33,6 @@ public class Rule implements java.io.Serializable
 	private String data = null;
 	private String logic = null;
 	private String action = null;
-	private String ruleType = null;
 	private Date lastModified = null;
 	private String result = null; // result of executing the rule
 	private String tokenName = null;
@@ -90,22 +89,6 @@ public class Rule implements java.io.Serializable
 	public void setCreationTime(Date creationTime)
 	{
 		this.creationTime = creationTime;
-	}
-
-	/**
-	 * @return the priority
-	 */
-	public Integer getPriority()
-	{
-		return this.priority;
-	}
-
-	/**
-	 * @param priority the priority to set
-	 */
-	public void setPriority(Integer priority)
-	{
-		this.priority = priority;
 	}
 
 	/**
@@ -330,22 +313,6 @@ public class Rule implements java.io.Serializable
 	public void setAction(String action)
 	{
 		this.action = action;
-	}
-
-	/**
-	 * @return the ruleType
-	 */
-	public String getRuleType()
-	{
-		return this.ruleType;
-	}
-
-	/**
-	 * @param ruleType the ruleType to set
-	 */
-	public void setRuleType(String ruleType)
-	{
-		this.ruleType = ruleType;
 	}
 
 	/**

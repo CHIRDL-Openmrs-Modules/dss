@@ -112,7 +112,7 @@ values ('module','Indicates which module rule is part of');
     <diff>
         <version>1.0.5</version>
         <author>Steve McKee</author>
-        <date>February 8th 2018</date>
+        <date>February 6th 2018</date>
         <description>
             Create dss_rule_type and dss_rule_entry tables.  Also populate them with data from dss_rule and drop the priority column from dss_rule.
         </description>
@@ -168,11 +168,11 @@ values ('module','Indicates which module rule is part of');
 			  ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 			
 			  insert into dss_rule_type (rule_type, date_created, uuid)
-			  select distinct rule_type, NOW(), UUID() from dss_rule where (priority is null or priority < 1000);
+			  select distinct rule_type, NOW(), UUID() from dss_rule where (priority is null or priority &lt; 1000);
 			
 			  insert into dss_rule_entry (rule_type_id, rule_id, priority, date_created, uuid)
 			  select b.rule_type_id, a.rule_id, a.priority, NOW(), UUID() from dss_rule a, dss_rule_type b
-			  where (a.priority is null or a.priority < 1000)
+			  where (a.priority is null or a.priority &lt; 1000)
 			  and b.rule_type = a.rule_type;
 			
 			  alter table dss_rule drop column priority;
