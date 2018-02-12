@@ -141,15 +141,10 @@ public class RuleType extends BaseOpenmrsData implements Serializable {
 	}
 
 	/**
-	 * @see java.lang.Object#toString()
+	 * @see org.openmrs.BaseOpenmrsObject#toString()
 	 */
 	@Override
 	public String toString() {
-		return "Rule_Type [ruleTypeId=" + ruleTypeId + ", ruleType=" + ruleType + ", description=" + description
-		        + ", getCreator()=" + getCreator() + ", getDateCreated()=" + getDateCreated() + ", getChangedBy()="
-		        + getChangedBy() + ", getDateChanged()=" + getDateChanged() + ", isVoided()=" + isVoided() + ", getVoided()="
-		        + getVoided() + ", getDateVoided()=" + getDateVoided() + ", getVoidedBy()=" + getVoidedBy()
-		        + ", getVoidReason()=" + getVoidReason() + ", getUuid()=" + getUuid() + "]";
+		return "RuleType [ruleTypeId=" + ruleTypeId + ", ruleType=" + ruleType + ", description=" + description + "]";
 	}
-	
 }

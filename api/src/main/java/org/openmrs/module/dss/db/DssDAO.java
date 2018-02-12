@@ -34,7 +34,14 @@ public interface DssDAO {
 	 */
 	public Rule getRule(String tokenName) throws DAOException;
 	
-	public List<Rule> getNonPrioritizedRules(String type);
+	/**
+	 * Get non-prioritized rules based on type.
+	 * 
+	 * @param type Only rules with this rule type will be returned.
+	 * @return List of non-prioritized Rule objects with the provided type.
+	 * @throws DAOException
+	 */
+	public List<Rule> getNonPrioritizedRules(String type) throws DAOException;
 		
 	/**
 	 * Returns a list of rules from the dss_rule table that match the criteria
@@ -46,12 +53,20 @@ public interface DssDAO {
 	 * @param enableLike String attributes assigned in the Rule parameter should
 	 * be matched in the dss_rule query using LIKE instead of exact matching
 	 * @param sortColumn The column name used to sort the results (optional)
-	 * @param ruleType The rule type (optional)
-	 * @param The priority (optional)
 	 * @return List<Rule>
+	 * @throws DAOException
 	 */
 	public List<Rule> getRules(Rule rule,boolean ignoreCase, boolean enableLike, 
-			String sortColumn, String ruleType, Integer priority);
+			String sortColumn) throws DAOException;
+	
+	/**
+	 * Returns a list of rules based on rule type.
+	 * 
+	 * @param type The rule type to search.
+	 * @return List of Rule objects containing the provided rule type.
+	 * @throws DAOException
+	 */
+	public List<Rule> getRulesByType(String type) throws DAOException;
 	
 	/**
 	 * Adds a new rule to the dss_rule table
@@ -67,8 +82,9 @@ public interface DssDAO {
 	 * @param type Only rules with this rule type will be returned.
 	 * @param startPriority Only rules with a priority equal to or greater than this will be returned.
 	 * @return
+	 * @throws DAOException
 	 */
-	public List<Rule> getPrioritizedRules(String type, Integer startPriority);
+	public List<Rule> getPrioritizedRules(String type, Integer startPriority) throws DAOException;
 
 	/**
 	 * 
@@ -76,8 +92,9 @@ public interface DssDAO {
 	 * 
 	 * @param ruleAttributeName
 	 * @return
+	 * @throws DAOException
 	 */
-	public RuleAttribute getRuleAttribute(String ruleAttributeName);
+	public RuleAttribute getRuleAttribute(String ruleAttributeName) throws DAOException;
 
 	/**
 	 * 
@@ -85,8 +102,9 @@ public interface DssDAO {
 	 * 
 	 * @param ruleAttributeId
 	 * @return
+	 * @throws DAOException
 	 */
-	public RuleAttribute getRuleAttribute(int ruleAttributeId);
+	public RuleAttribute getRuleAttribute(int ruleAttributeId) throws DAOException;
 	
 	/**
 	 * 
@@ -95,8 +113,10 @@ public interface DssDAO {
 	 * @param ruleId
 	 * @param ruleAttributeName
 	 * @return
+	 * @throws DAOException
 	 */
-	public RuleAttributeValue getRuleAttributeValue(Integer ruleId, String ruleAttributeName); 
+	public RuleAttributeValue getRuleAttributeValue(Integer ruleId, 
+			String ruleAttributeName) throws DAOException; 
 	
 	/**
 	 * 
@@ -105,8 +125,10 @@ public interface DssDAO {
 	 * @param ruleId
 	 * @param ruleAttributeName
 	 * @return
+	 * @throws DAOException
 	 */
-	public List<RuleAttributeValue> getRuleAttributeValues(Integer ruleId, String ruleAttributeName); 
+	public List<RuleAttributeValue> getRuleAttributeValues(Integer ruleId, 
+			String ruleAttributeName) throws DAOException; 
 	
 	/**
 	 * 
@@ -115,8 +137,10 @@ public interface DssDAO {
 	 * @param ruleId
 	 * @param ruleAttributeId
 	 * @return
+	 * @throws DAOException
 	 */
-	public List<RuleAttributeValue> getRuleAttributeValues(Integer ruleId, Integer ruleAttributeId);
+	public List<RuleAttributeValue> getRuleAttributeValues(Integer ruleId, 
+			Integer ruleAttributeId) throws DAOException;
 	
 	/**
 	 * 
@@ -124,8 +148,9 @@ public interface DssDAO {
 	 * 
 	 * @param value
 	 * @return
+	 * @throws DAOException
 	 */
-	public RuleAttributeValue saveRuleAttributeValue(RuleAttributeValue value) ;
+	public RuleAttributeValue saveRuleAttributeValue(RuleAttributeValue value) throws DAOException;
 	
 	/**
 	 * Returns a list of rule attribute values for a given rule attribute id and value
@@ -133,8 +158,10 @@ public interface DssDAO {
 	 * @param ruleAttributeId
 	 * @param value
 	 * @return
+	 * @throws DAOException
 	 */
-	public List<RuleAttributeValue> getRuleAttributesByValue(Integer ruleAttributeId,String value);
+	public List<RuleAttributeValue> getRuleAttributesByValue(Integer ruleAttributeId, 
+			String value) throws DAOException;
 	
 	/**
 	 * Adds or updates a rule type.

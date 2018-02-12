@@ -9,8 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.dss.service.DssService;
 import org.openmrs.module.dss.hibernateBeans.Rule;
+import org.openmrs.module.dss.service.DssService;
 import org.springframework.web.servlet.mvc.SimpleFormController;
 
 public class SearchRulesController extends SimpleFormController
@@ -180,7 +180,7 @@ public class SearchRulesController extends SimpleFormController
 		{
 			DssService dssService = Context
 					.getService(DssService.class);
-			List<Rule> rules = dssService.getRules(rule, true, true, null, null, null);
+			List<Rule> rules = dssService.getRules(rule, true, true, null);
 			map.put("rules", rules);
 		}
 		map.put("runSearch", runSearch);

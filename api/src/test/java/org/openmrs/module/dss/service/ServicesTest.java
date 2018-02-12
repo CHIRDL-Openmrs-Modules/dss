@@ -248,14 +248,18 @@ public class ServicesTest extends BaseModuleContextSensitiveTest{
 		Assert.assertEquals(new Integer(6), rule1.getRuleId());
 	}
 	
-//	@Test
-//	public void testVoidingByPriority() throws Exception {
-//		DssService dssService = Context.getService(DssService.class);
-//		DssRule dssRule = new TestRule();
-//		dssRule.set
-//		Rule rule = dssService.getRule("MDEPFUPWS");
-//		rule.
-//	}
+	@Test
+	public void testGetRuleByType() throws Exception {
+		DssService dssService = Context.getService(DssService.class);
+		List<Rule> rules = dssService.getRulesByType("PWS");
+		Assert.assertEquals(1, rules.size());
+		
+		rules = dssService.getRulesByType("PWS_2");
+		Assert.assertEquals(1, rules.size());
+		
+		rules = dssService.getRulesByType("PrioritizedTest");
+		Assert.assertEquals(4, rules.size());
+	}
 	
 	private class TestRule implements DssRule {
 		

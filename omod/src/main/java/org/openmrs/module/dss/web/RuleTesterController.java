@@ -81,14 +81,7 @@ public class RuleTesterController extends SimpleFormController
 					parameters.put("mode", mode);
 					Rule rule = new Rule();
 					rule.setTokenName(ruleName);
-					List<Rule> rules = dssService.getRules(rule, false, false,
-							null, null, null);
-					Rule currRule = null;
-					if (rules.size() > 0)
-					{
-						currRule = rules.get(0);
-					}
-
+					Rule currRule = dssService.getRule(ruleName);
 					if (currRule != null
 							&& currRule.checkAgeRestrictions(patient))
 					{
@@ -123,7 +116,7 @@ public class RuleTesterController extends SimpleFormController
 		}
 
 		List<Rule> rules = dssService.getRules(new Rule(), true, true,
-				"tokenName", null, null);
+				"tokenName");
 
 		map.put("rules", rules);
 
