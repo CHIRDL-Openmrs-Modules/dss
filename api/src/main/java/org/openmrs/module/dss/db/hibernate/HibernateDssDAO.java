@@ -54,6 +54,9 @@ public class HibernateDssDAO implements DssDAO
 		this.sessionFactory = sessionFactory;
 	}
 
+	/**
+	 * @see org.openmrs.module.dss.db.DssDAO#getRule(int)
+	 */
 	public Rule getRule(int ruleId) throws DAOException
 	{
 		try 
@@ -66,10 +69,13 @@ public class HibernateDssDAO implements DssDAO
 		catch (Exception e) 
 		{
 			log.error("Error retrieving rule " + ruleId, e);
-			throw e;
+			throw new DAOException(e);
 		}
 	}
 
+	/**
+	 * @see org.openmrs.module.dss.db.DssDAO#getRule(java.lang.String)
+	 */
 	public Rule getRule(String tokenName) throws DAOException
 	{
 		try 
@@ -82,10 +88,13 @@ public class HibernateDssDAO implements DssDAO
 		catch (Exception e) 
 		{
 			log.error("Error retrieving rule " + tokenName, e);
-			throw e;
+			throw new DAOException(e);
 		}
 	}
 
+	/**
+	 * @see org.openmrs.module.dss.db.DssDAO#addOrUpdateRule(org.openmrs.module.dss.hibernateBeans.Rule)
+	 */
 	public Rule addOrUpdateRule(Rule rule) throws DAOException
 	{
 		try 
@@ -95,7 +104,7 @@ public class HibernateDssDAO implements DssDAO
 		catch (Exception e) 
 		{
 			log.error("Error adding/updating rule", e);
-			throw e;
+			throw new DAOException(e);
 		}
 	}
 	
@@ -112,7 +121,7 @@ public class HibernateDssDAO implements DssDAO
 		catch (Exception e) 
 		{
 			log.error("Error retrieving rule attribute " + ruleAttributeId, e);
-			throw e;
+			throw new DAOException(e);
 		}
 	}
 	
@@ -131,7 +140,7 @@ public class HibernateDssDAO implements DssDAO
 		catch (Exception e) 
 		{
 			log.error("Error retrieving rule attribute " + ruleAttributeName, e);
-			throw e;
+			throw new DAOException(e);
 		}
 	}
 	
@@ -153,7 +162,7 @@ public class HibernateDssDAO implements DssDAO
 		catch (Exception e) {
 			log.error("Error in method getRuleAttributeValues ruleId = " + ruleId + 
 				" ruleAttributeName = " + ruleAttributeName, e);
-			throw e;
+			throw new DAOException(e);
 		}
 		
 		return Collections.emptyList();
@@ -174,7 +183,7 @@ public class HibernateDssDAO implements DssDAO
 		catch (Exception e) {
 			log.error("Error in method getRuleAttributesByValue ruleAttributeId = " + ruleAttributeId + 
 				" value = " + value, e);
-			throw e;
+			throw new DAOException(e);
 		}
 	}
 	
@@ -194,7 +203,7 @@ public class HibernateDssDAO implements DssDAO
 		catch (Exception e) {
 			log.error("Error in method getRuleAttributeValues ruleId = " + ruleId + 
 				" ruleAttributeId = " + ruleAttributeId, e);
-			throw e;
+			throw new DAOException(e);
 		}
 	}
 	
@@ -213,7 +222,7 @@ public class HibernateDssDAO implements DssDAO
 		catch (Exception e) {
 			log.error("Error in method getRuleAttributeValue ruleId = " + ruleId + 
 				" ruleAttributeName = " + ruleAttributeName, e);
-			throw e;
+			throw new DAOException(e);
 		}
 		
 		return null;
@@ -230,7 +239,7 @@ public class HibernateDssDAO implements DssDAO
 		}
 		catch (Exception e) {
 			log.error("Error in method saveRuleAttributeValue value = " + value, e);
-			throw e;
+			throw new DAOException(e);
 		}
 	}
 	
@@ -280,7 +289,7 @@ public class HibernateDssDAO implements DssDAO
 		{
 			log.error("Error in method getPrioritizedRules type = " + type + 
 				" startPriority = " + startPriority, e);
-			throw e;
+			throw new DAOException(e);
 		}
     }
     
@@ -310,7 +319,7 @@ public class HibernateDssDAO implements DssDAO
 		} catch (Exception e)
 		{
 			log.error("Error in method getNonPrioritizedRules type = " + type, e);
-			throw e;
+			throw new DAOException(e);
 		}
 	}
 
@@ -363,7 +372,7 @@ public class HibernateDssDAO implements DssDAO
 			log.error("Error in method getRules rule = " + rule + 
 				" ignoreCase = " + ignoreCase + " enableLike = " + enableLike + 
 				" sortColumn = " + sortColumn, e);
-			throw e;
+			throw new DAOException(e);
 		}
 	}
 	
@@ -389,7 +398,7 @@ public class HibernateDssDAO implements DssDAO
 			return qry.list();
 		} catch (Exception e) {
 			log.error("Error in method getRulesByType type = " + type, e);
-			throw e;
+			throw new DAOException(e);
 		}
 	}
 	
@@ -401,7 +410,7 @@ public class HibernateDssDAO implements DssDAO
 			return (RuleType) this.sessionFactory.getCurrentSession().merge(ruleType);
 		} catch (Exception e) {
 			log.error("Error saving rule type " + ruleType, e);
-			throw e;
+			throw new DAOException(e);
 		}
 	}
 	
@@ -418,7 +427,7 @@ public class HibernateDssDAO implements DssDAO
 			return (RuleType)crit.uniqueResult();
 		} catch (Exception e) {
 			log.error("Error retrieving rule type " + type, e);
-			throw e;
+			throw new DAOException(e);
 		}
 	}
 	
@@ -430,7 +439,7 @@ public class HibernateDssDAO implements DssDAO
 			return (RuleEntry) this.sessionFactory.getCurrentSession().merge(ruleEntry);
 		} catch (Exception e) {
 			log.error("Error saving rule entry " + ruleEntry, e);
-			throw e;
+			throw new DAOException(e);
 		}
 	}
 
@@ -445,7 +454,7 @@ public class HibernateDssDAO implements DssDAO
 			return (RuleEntry)crit.uniqueResult();
 		} catch (Exception e) {
 			log.error("Error retrieving rule entry rule = " + rule + " ruleType = " + ruleType, e);
-			throw e;
+			throw new DAOException(e);
 		}
 	}
 	
@@ -463,7 +472,7 @@ public class HibernateDssDAO implements DssDAO
 			return (RuleEntry)crit.uniqueResult();
 		} catch (Exception e) {
 			log.error("Error retrieving rule entry ruleId = " + ruleId + " ruleType = " + ruleType, e);
-			throw e;
+			throw new DAOException(e);
 		}
 	}
 
@@ -477,7 +486,7 @@ public class HibernateDssDAO implements DssDAO
 			return crit.list();
 		} catch (Exception e) {
 			log.error("Error retrieving rule references rule = " + rule, e);
-			throw e;
+			throw new DAOException(e);
 		}
 	}
 }
