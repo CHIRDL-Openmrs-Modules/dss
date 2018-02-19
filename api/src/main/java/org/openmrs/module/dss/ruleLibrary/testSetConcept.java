@@ -84,7 +84,7 @@ public class testSetConcept implements Rule
 			// name of the set to search
 			Concept set = conceptService.getConceptByName("TEST SET");
 
-			List<Concept> concepts = conceptService.getConceptsInSet(set);
+			List<Concept> concepts = conceptService.getConceptsByConceptSet(set); // CHICA-1151 getConceptsInSet() has been replaced with getConceptsByConceptSet()
 
 			LogicCriteria criteria = null;
 
