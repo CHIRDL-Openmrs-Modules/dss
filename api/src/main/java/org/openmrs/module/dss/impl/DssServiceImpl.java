@@ -526,10 +526,10 @@ public class DssServiceImpl implements DssService
 						(currentPriority != null && priority == null) || 
 						(currentPriority != null && !currentPriority.equals(priority))) {
 					// Void the current row
-					ruleEntry.setVoided(Boolean.TRUE);
-					ruleEntry.setVoidedBy(Context.getAuthenticatedUser());
-					ruleEntry.setVoidReason("Priority change from " + currentPriority + " to " + priority);
-					ruleEntry.setDateVoided(new Date());
+					ruleEntry.setRetired(Boolean.TRUE);
+					ruleEntry.setRetiredBy(Context.getAuthenticatedUser());
+					ruleEntry.setRetireReason("Priority change from " + currentPriority + " to " + priority);
+					ruleEntry.setDateRetired(new Date());
 					saveRuleEntry(ruleEntry);
 					
 					// Only create a new row if the rule has a priority < 1000

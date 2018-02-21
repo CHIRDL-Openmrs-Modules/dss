@@ -265,9 +265,9 @@ public class HibernateDssDAO implements DssDAO
 					"          ON rule.rule_id = ruleEntry.rule_id" + 
 					"       INNER JOIN dss_rule_type ruleType" + 
 					"          ON ruleEntry.rule_type_id = ruleType.rule_type_id" + 
-					" WHERE ruleType.rule_type = ?" + 
-					" AND ruleType.voided = false" + 
-					" AND ruleEntry.voided = false" + 
+					" WHERE ruleType.name = ?" + 
+					" AND ruleType.retired = false" + 
+					" AND ruleEntry.retired = false" + 
 					" AND ruleEntry.priority >= ?" + 
 					" AND ruleEntry.priority < 1000" + 
 					" ORDER BY ruleEntry.priority " + sortOrder;
@@ -306,9 +306,9 @@ public class HibernateDssDAO implements DssDAO
 					"          ON rule.rule_id = ruleEntry.rule_id" + 
 					"       INNER JOIN dss_rule_type ruleType" + 
 					"          ON ruleEntry.rule_type_id = ruleType.rule_type_id" + 
-					" WHERE ruleType.rule_type = ?" + 
-					" AND ruleType.voided = false" + 
-					" AND ruleEntry.voided = false" + 
+					" WHERE ruleType.name = ?" + 
+					" AND ruleType.retired = false" + 
+					" AND ruleEntry.retired = false" + 
 					" AND ruleEntry.priority is null";
 
 			SQLQuery qry = this.sessionFactory.getCurrentSession()
@@ -387,9 +387,9 @@ public class HibernateDssDAO implements DssDAO
 					"          ON rule.rule_id = ruleEntry.rule_id" + 
 					"       INNER JOIN dss_rule_type ruleType" + 
 					"          ON ruleEntry.rule_type_id = ruleType.rule_type_id" + 
-					" WHERE ruleType.rule_type = ?" + 
-					" AND ruleType.voided = false" + 
-					" AND ruleEntry.voided = false";
+					" WHERE ruleType.name = ?" + 
+					" AND ruleType.retired = false" + 
+					" AND ruleEntry.retired = false";
 
 			SQLQuery qry = this.sessionFactory.getCurrentSession()
 					.createSQLQuery(sql);
@@ -421,8 +421,8 @@ public class HibernateDssDAO implements DssDAO
 		try {
 			Criteria crit = sessionFactory.getCurrentSession().createCriteria(RuleType.class); 
 	
-			crit.add(Restrictions.eq("ruleType", type)); 
-			crit.add(Restrictions.eq("voided", Boolean.FALSE));
+			crit.add(Restrictions.eq("name", type)); 
+			crit.add(Restrictions.eq("retired", Boolean.FALSE));
 	
 			return (RuleType)crit.uniqueResult();
 		} catch (Exception e) {
@@ -450,7 +450,7 @@ public class HibernateDssDAO implements DssDAO
 		try {
 			Criteria crit = sessionFactory.getCurrentSession().createCriteria(RuleEntry.class, "entry")
 					.add(Restrictions.eq("rule", rule)).add(Restrictions.eq("ruleType", ruleType))
-					.add(Restrictions.eq("voided", Boolean.FALSE));
+					.add(Restrictions.eq("retired", Boolean.FALSE));
 			return (RuleEntry)crit.uniqueResult();
 		} catch (Exception e) {
 			log.error("Error retrieving rule entry rule = " + rule + " ruleType = " + ruleType, e);
@@ -467,8 +467,8 @@ public class HibernateDssDAO implements DssDAO
 					.createAlias("rule", "rule")
 					.createAlias("ruleType", "ruleType")
 					.add(Restrictions.eq("rule.ruleId", ruleId))
-					.add(Restrictions.eq("ruleType.ruleType", ruleType))
-					.add(Restrictions.eq("voided", Boolean.FALSE));
+					.add(Restrictions.eq("ruleType.name", ruleType))
+					.add(Restrictions.eq("retired", Boolean.FALSE));
 			return (RuleEntry)crit.uniqueResult();
 		} catch (Exception e) {
 			log.error("Error retrieving rule entry ruleId = " + ruleId + " ruleType = " + ruleType, e);
@@ -482,7 +482,7 @@ public class HibernateDssDAO implements DssDAO
 	public List<RuleEntry> getRuleReferences(Rule rule) throws DAOException {
 		try {
 			Criteria crit = sessionFactory.getCurrentSession().createCriteria(RuleEntry.class, "entry")
-					.add(Restrictions.eq("rule", rule)).add(Restrictions.eq("voided", Boolean.FALSE));
+					.add(Restrictions.eq("rule", rule)).add(Restrictions.eq("retired", Boolean.FALSE));
 			return crit.list();
 		} catch (Exception e) {
 			log.error("Error retrieving rule references rule = " + rule, e);

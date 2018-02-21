@@ -123,10 +123,10 @@ public class ServicesTest extends BaseModuleContextSensitiveTest{
 		RuleType ruleType = dssService.getRuleType("PWS");
 		Assert.assertNotNull(ruleType);
 		Assert.assertEquals(new Integer(1), ruleType.getRuleTypeId());
-		Assert.assertEquals("PWS", ruleType.getRuleType());
+		Assert.assertEquals("PWS", ruleType.getName());
 		Assert.assertEquals(new Integer(1), ruleType.getCreator().getUserId());
 		Assert.assertEquals("2017-07-19 11:32:21", dt.format(ruleType.getDateCreated()));
-		Assert.assertEquals(Boolean.FALSE, ruleType.getVoided());
+		Assert.assertEquals(Boolean.FALSE, ruleType.getRetired());
 		Assert.assertEquals("7cb211ff-6c97-11e7-9be2-0a0027000019", ruleType.getUuid());
 	}
 	
@@ -144,7 +144,7 @@ public class ServicesTest extends BaseModuleContextSensitiveTest{
 		Assert.assertEquals(new Integer(227), ruleEntry.getPriority());
 		Assert.assertEquals(new Integer(1), ruleEntry.getCreator().getUserId());
 		Assert.assertEquals("2017-07-19 11:34:46", dt.format(ruleEntry.getDateCreated()));
-		Assert.assertEquals(Boolean.FALSE, ruleEntry.getVoided());
+		Assert.assertEquals(Boolean.FALSE, ruleEntry.getRetired());
 		Assert.assertEquals("d30cb9c7-6c97-11e7-9be2-0a0027000010", ruleEntry.getUuid());
 	}
 	
@@ -160,7 +160,7 @@ public class ServicesTest extends BaseModuleContextSensitiveTest{
 		Assert.assertEquals(new Integer(227), ruleEntry.getPriority());
 		Assert.assertEquals(new Integer(1), ruleEntry.getCreator().getUserId());
 		Assert.assertEquals("2017-07-19 11:34:46", dt.format(ruleEntry.getDateCreated()));
-		Assert.assertEquals(Boolean.FALSE, ruleEntry.getVoided());
+		Assert.assertEquals(Boolean.FALSE, ruleEntry.getRetired());
 		Assert.assertEquals("d30cb9c7-6c97-11e7-9be2-0a0027000010", ruleEntry.getUuid());
 	}
 	
@@ -178,22 +178,28 @@ public class ServicesTest extends BaseModuleContextSensitiveTest{
 		DssService dssService = Context.getService(DssService.class);
 		// Create and save a new rule type
 		RuleType ruleType = new RuleType();
-		ruleType.setCreator(Context.getUserService().getUser(new Integer(1)));
-		ruleType.setDateCreated(new Date());
 		ruleType.setDescription("This is a new rule type");
-		ruleType.setRuleType("PWS_Test");
-		ruleType.setUuid(UUID.randomUUID().toString());
+		ruleType.setName("PWS_Test");
 		ruleType = dssService.saveRuleType(ruleType);
 		Assert.assertNotNull(ruleType);
+		Assert.assertNotNull(ruleType.getUuid());
+		Assert.assertNotNull(ruleType.getDateCreated());
+		Assert.assertNotNull(ruleType.getCreator());
+		System.out.println("UUID: " + ruleType.getUuid());
+		System.out.println("Date Created: " + ruleType.getDateCreated());
+		System.out.println("Creator: " + ruleType.getCreator());
 		
 		// Void an existing rule type
 		ruleType = dssService.getRuleType("PWS_Test");
 		Assert.assertNotNull(ruleType);
-		ruleType.setVoided(Boolean.TRUE);
-		ruleType.setVoidedBy(Context.getUserService().getUser(new Integer(1)));
-		ruleType.setVoidReason("Voiding for test.");
-		ruleType.setDateVoided(new Date());
-		dssService.saveRuleType(ruleType);
+		ruleType.setRetired(Boolean.TRUE);
+		ruleType.setRetiredBy(Context.getUserService().getUser(new Integer(1)));
+		ruleType.setRetireReason("Voiding for test.");
+		ruleType.setDateRetired(new Date());
+		ruleType = dssService.saveRuleType(ruleType);
+		Assert.assertNotNull(ruleType);
+		Assert.assertNotNull(ruleType.getRetiredBy());
+		Assert.assertNotNull(ruleType.getDateRetired());
 	}
 	
 	@Test
@@ -215,11 +221,12 @@ public class ServicesTest extends BaseModuleContextSensitiveTest{
 		// Void an existing rule type
 		ruleEntry = dssService.getRuleEntry(rule, ruleType);
 		Assert.assertNotNull(ruleEntry);
-		ruleEntry.setVoided(Boolean.TRUE);
-		ruleEntry.setVoidedBy(Context.getUserService().getUser(new Integer(1)));
-		ruleEntry.setVoidReason("Voiding for test.");
-		ruleEntry.setDateVoided(new Date());
+		ruleEntry.setRetired(Boolean.TRUE);
+		ruleEntry.setRetiredBy(Context.getUserService().getUser(new Integer(1)));
+		ruleEntry.setRetireReason("Voiding for test.");
+		ruleEntry.setDateRetired(new Date());
 		dssService.saveRuleEntry(ruleEntry);
+		
 	}
 	
 	@Test

@@ -14,20 +14,19 @@
 package org.openmrs.module.dss.hibernateBeans;
 
 import java.io.Serializable;
-import org.openmrs.BaseOpenmrsData;
+
+import org.openmrs.BaseOpenmrsMetadata;
 
 /**
  * Bean for the dss_rule_type table
  * 
  * @author Steve McKee
  */
-public class RuleType extends BaseOpenmrsData implements Serializable {
+public class RuleType extends BaseOpenmrsMetadata implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
 	private Integer ruleTypeId;
-	private String ruleType;
-	private String description;
 	
 	/**
 	 * @return the ruleTypeId
@@ -41,34 +40,6 @@ public class RuleType extends BaseOpenmrsData implements Serializable {
 	 */
 	public void setRuleTypeId(Integer ruleTypeId) {
 		this.ruleTypeId = ruleTypeId;
-	}
-
-	/**
-	 * @return the ruleType
-	 */
-	public String getRuleType() {
-		return ruleType;
-	}
-	
-	/**
-	 * @param ruleType the ruleType to set
-	 */
-	public void setRuleType(String ruleType) {
-		this.ruleType = ruleType;
-	}
-	
-	/**
-	 * @return the description
-	 */
-	public String getDescription() {
-		return description;
-	}
-	
-	/**
-	 * @param description the description to set
-	 */
-	public void setDescription(String description) {
-		this.description = description;
 	}
 
 	/**
@@ -94,8 +65,6 @@ public class RuleType extends BaseOpenmrsData implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + ((description == null) ? 0 : description.hashCode());
-		result = prime * result + ((ruleType == null) ? 0 : ruleType.hashCode());
 		result = prime * result + ((ruleTypeId == null) ? 0 : ruleTypeId.hashCode());
 		return result;
 	}
@@ -117,20 +86,6 @@ public class RuleType extends BaseOpenmrsData implements Serializable {
 			return false;
 		}
 		RuleType other = (RuleType) obj;
-		if (description == null) {
-			if (other.description != null) {
-				return false;
-			}
-		} else if (!description.equals(other.description)) {
-			return false;
-		}
-		if (ruleType == null) {
-			if (other.ruleType != null) {
-				return false;
-			}
-		} else if (!ruleType.equals(other.ruleType)) {
-			return false;
-		}
 		if (ruleTypeId == null) {
 			if (other.ruleTypeId != null) {
 				return false;
@@ -145,6 +100,6 @@ public class RuleType extends BaseOpenmrsData implements Serializable {
 	 */
 	@Override
 	public String toString() {
-		return "RuleType [ruleTypeId=" + ruleTypeId + ", ruleType=" + ruleType + ", description=" + description + "]";
+		return "RuleType [ruleTypeId=" + ruleTypeId + "]";
 	}
 }
