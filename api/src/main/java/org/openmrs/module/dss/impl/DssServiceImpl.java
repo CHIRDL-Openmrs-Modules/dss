@@ -1,11 +1,9 @@
 package org.openmrs.module.dss.impl;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -372,7 +370,8 @@ public class DssServiceImpl implements DssService
 	
 	/**
 	 * Saves or updates rule attribute value changes to the database
-	 * @see org.openmrs.module.dss.service.DssService#saveRuleAttributeValue(org.openmrs.module.dss.hibernateBeans.RuleAttributeValue)
+	 * @see org.openmrs.module.dss.service.DssService#saveRuleAttributeValue(
+	 * org.openmrs.module.dss.hibernateBeans.RuleAttributeValue)
 	 */
 	public RuleAttributeValue saveRuleAttributeValue(RuleAttributeValue value) throws APIException {
 
@@ -474,6 +473,14 @@ public class DssServiceImpl implements DssService
 	}
 	
 	/**
+	 * @see org.openmrs.module.dss.service.DssService#retireRuleType(org.openmrs.module.dss.hibernateBeans.RuleType, 
+	 * java.lang.String)
+	 */
+	public void retireRuleType(RuleType ruleType, String reason) throws APIException {
+		getDssDAO().saveRuleType(ruleType);
+	}
+	
+	/**
 	 * @see org.openmrs.module.dss.service.DssService#getRuleType(java.lang.String)
 	 */
 	public RuleType getRuleType(String type) throws APIException {
@@ -486,9 +493,18 @@ public class DssServiceImpl implements DssService
 	public RuleEntry saveRuleEntry(RuleEntry ruleEntry) throws APIException {
 		return getDssDAO().saveRuleEntry(ruleEntry);
 	}
+	
+	/**
+	 * @see org.openmrs.module.dss.service.DssService#retireRuleEntry(org.openmrs.module.dss.hibernateBeans.RuleEntry, 
+	 * java.lang.String)
+	 */
+	public void retireRuleEntry(RuleEntry ruleEntry, String reason) throws APIException {
+		Context.getService(DssService.class).saveRuleEntry(ruleEntry);
+	}
 
 	/**
-	 * @see org.openmrs.module.dss.service.DssService#getRuleEntry(org.openmrs.module.dss.hibernateBeans.Rule, org.openmrs.module.dss.hibernateBeans.RuleType)
+	 * @see org.openmrs.module.dss.service.DssService#getRuleEntry(org.openmrs.module.dss.hibernateBeans.Rule, 
+	 * org.openmrs.module.dss.hibernateBeans.RuleType)
 	 */
 	public RuleEntry getRuleEntry(Rule rule, RuleType ruleType) throws APIException {
 		return getDssDAO().getRuleEntry(rule, ruleType);
@@ -525,24 +541,18 @@ public class DssServiceImpl implements DssService
 				if ((currentPriority == null && priority != null) ||
 						(currentPriority != null && priority == null) || 
 						(currentPriority != null && !currentPriority.equals(priority))) {
-					// Void the current row
-					ruleEntry.setRetired(Boolean.TRUE);
-					ruleEntry.setRetiredBy(Context.getAuthenticatedUser());
-					ruleEntry.setRetireReason("Priority change from " + currentPriority + " to " + priority);
-					ruleEntry.setDateRetired(new Date());
-					saveRuleEntry(ruleEntry);
+					// Retire the current row
+					Context.getService(DssService.class).retireRuleEntry(
+						ruleEntry, "Priority change from " + currentPriority + " to " + priority);
 					
 					// Only create a new row if the rule has a priority < 1000
 					if (priority == null || priority.compareTo(1000) < 0) {
 						// Create a new rule entry
 						RuleEntry newRuleEntry = new RuleEntry();
-						newRuleEntry.setCreator(Context.getAuthenticatedUser());
-						newRuleEntry.setDateCreated(new Date());
 						newRuleEntry.setPriority(priority);
 						newRuleEntry.setRule(ruleEntry.getRule());
 						newRuleEntry.setRuleType(ruleEntry.getRuleType());
-						newRuleEntry.setUuid(UUID.randomUUID().toString());
-						saveRuleEntry(newRuleEntry);
+						Context.getService(DssService.class).saveRuleEntry(newRuleEntry);
 					}
 				}
 			}

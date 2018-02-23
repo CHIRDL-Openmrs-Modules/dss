@@ -185,21 +185,11 @@ public class ServicesTest extends BaseModuleContextSensitiveTest{
 		Assert.assertNotNull(ruleType.getUuid());
 		Assert.assertNotNull(ruleType.getDateCreated());
 		Assert.assertNotNull(ruleType.getCreator());
-		System.out.println("UUID: " + ruleType.getUuid());
-		System.out.println("Date Created: " + ruleType.getDateCreated());
-		System.out.println("Creator: " + ruleType.getCreator());
 		
-		// Void an existing rule type
+		// Retire an existing rule type
 		ruleType = dssService.getRuleType("PWS_Test");
 		Assert.assertNotNull(ruleType);
-		ruleType.setRetired(Boolean.TRUE);
-		ruleType.setRetiredBy(Context.getUserService().getUser(new Integer(1)));
-		ruleType.setRetireReason("Voiding for test.");
-		ruleType.setDateRetired(new Date());
-		ruleType = dssService.saveRuleType(ruleType);
-		Assert.assertNotNull(ruleType);
-		Assert.assertNotNull(ruleType.getRetiredBy());
-		Assert.assertNotNull(ruleType.getDateRetired());
+		dssService.retireRuleType(ruleType, "Voiding for test.");
 	}
 	
 	@Test
@@ -209,24 +199,16 @@ public class ServicesTest extends BaseModuleContextSensitiveTest{
 		RuleType ruleType = dssService.getRuleType("PWS_2");
 		Rule rule = dssService.getRule("MDEPFUPWS");
 		RuleEntry ruleEntry = new RuleEntry();
-		ruleEntry.setCreator(Context.getUserService().getUser(new Integer(1)));
-		ruleEntry.setDateCreated(new Date());
 		ruleEntry.setRuleType(ruleType);
-		ruleEntry.setUuid(UUID.randomUUID().toString());
 		ruleEntry.setPriority(new Integer(98));
 		ruleEntry.setRule(rule);
 		ruleEntry = dssService.saveRuleEntry(ruleEntry);
 		Assert.assertNotNull(ruleEntry);
 		
-		// Void an existing rule type
+		// Retire an existing rule type
 		ruleEntry = dssService.getRuleEntry(rule, ruleType);
 		Assert.assertNotNull(ruleEntry);
-		ruleEntry.setRetired(Boolean.TRUE);
-		ruleEntry.setRetiredBy(Context.getUserService().getUser(new Integer(1)));
-		ruleEntry.setRetireReason("Voiding for test.");
-		ruleEntry.setDateRetired(new Date());
-		dssService.saveRuleEntry(ruleEntry);
-		
+		dssService.retireRuleEntry(ruleEntry, "Voiding for test.");
 	}
 	
 	@Test

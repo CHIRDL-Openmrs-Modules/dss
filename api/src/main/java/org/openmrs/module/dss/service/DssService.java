@@ -232,6 +232,15 @@ public interface DssService
 	public RuleType saveRuleType(RuleType ruleType) throws APIException;
 	
 	/**
+	 * Retires a rule type.
+	 * 
+	 * @param ruleType The rule type to retire.
+	 * @param reason The reason for retiring the rule type.
+	 * @throws APIException
+	 */
+	public void retireRuleType(RuleType ruleType, String reason) throws APIException;
+	
+	/**
 	 * Returns a rule type based on the type provided.
 	 * 
 	 * @param type The rule type
@@ -248,6 +257,15 @@ public interface DssService
 	 * @throws APIException
 	 */
 	public RuleEntry saveRuleEntry(RuleEntry ruleEntry) throws APIException;
+	
+	/**
+	 * Retires a rule entry.
+	 * 
+	 * @param ruleEntry The rule entry to retire.
+	 * @param reason The reason for retiring the rule entry.
+	 * @throws APIException
+	 */
+	public void retireRuleEntry(RuleEntry ruleEntry, String reason) throws APIException;
 	
 	/**
 	 * Returns a rule entry based on rule and rule type.
