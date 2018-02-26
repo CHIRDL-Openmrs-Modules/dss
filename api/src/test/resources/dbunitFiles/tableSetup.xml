@@ -17,5 +17,5 @@
     <dss_rule_entry rule_entry_id="4" rule_type_id="3" rule_id="6" creator="1" date_created="2017-07-19 11:34:46" retired="0" uuid="d30cb9c7-6c97-11e7-9be2-0a0027000013"/>
     <dss_rule_entry rule_entry_id="5" rule_type_id="3" rule_id="7" priority="223" creator="1" date_created="2017-07-19 11:34:46" retired="0" uuid="d30cb9c7-6c97-11e7-9be2-0a0027000014"/>
     <dss_rule_entry rule_entry_id="6" rule_type_id="2" rule_id="7" priority="223" creator="1" date_created="2017-07-19 11:34:46" retired="0" uuid="d30cb9c7-6c97-11e7-9be2-0a0027000015"/>
-    <dss_rule_entry rule_entry_id="7" rule_type_id="3" rule_id="8" priority="223" creator="1" date_created="2017-07-19 11:34:46" retired="1" retired_by="1" date_retired="2018-07-19 11:34:46" retired_reason="Test void" uuid="d30cb9c7-6c97-11e7-9be2-0a0027000016"/>
+    <dss_rule_entry rule_entry_id="7" rule_type_id="3" rule_id="8" priority="223" creator="1" date_created="2017-07-19 11:34:46" retired="1" retired_by="1" date_retired="2018-07-19 11:34:46" retire_reason="Test void" uuid="d30cb9c7-6c97-11e7-9be2-0a0027000016"/>
 </dataset>
