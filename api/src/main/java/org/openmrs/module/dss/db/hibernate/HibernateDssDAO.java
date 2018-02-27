@@ -259,20 +259,22 @@ public class HibernateDssDAO implements DssDAO
 				sortOrder = "DESC";
 			}
 			
-			String sql = "SELECT *" + 
-					"  FROM dss_rule rule" + 
-					"       INNER JOIN dss_rule_entry ruleEntry" + 
-					"          ON rule.rule_id = ruleEntry.rule_id" + 
-					"       INNER JOIN dss_rule_type ruleType" + 
-					"          ON ruleEntry.rule_type_id = ruleType.rule_type_id" + 
-					" WHERE ruleType.name = ?" + 
-					" AND ruleType.retired = false" + 
-					" AND ruleEntry.retired = false" + 
-					" AND ruleEntry.priority >= ?" + 
-					" AND ruleEntry.priority < 1000" + 
-					" ORDER BY ruleEntry.priority " + sortOrder;
-			SQLQuery qry = this.sessionFactory.getCurrentSession()
-					.createSQLQuery(sql);
+			StringBuilder sql = new StringBuilder();
+			sql.append("SELECT *\n");
+			sql.append("  FROM dss_rule rule\n");
+			sql.append("       INNER JOIN dss_rule_entry ruleEntry\n");
+			sql.append("          ON rule.rule_id = ruleEntry.rule_id\n");
+			sql.append("       INNER JOIN dss_rule_type ruleType\n");
+			sql.append("          ON ruleEntry.rule_type_id = ruleType.rule_type_id\n");
+			sql.append(" WHERE ruleType.name = ?\n");
+			sql.append(" AND ruleType.retired = false\n");
+			sql.append(" AND ruleEntry.retired = false\n");
+			sql.append(" AND ruleEntry.priority >= ?\n");
+			sql.append(" AND ruleEntry.priority < 1000\n");
+			sql.append(" ORDER BY ruleEntry.priority ");
+			sql.append(sortOrder);
+
+			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql.toString());
 			qry.setString(0, type);
 			if (startPriority != null) 
 			{
@@ -300,19 +302,19 @@ public class HibernateDssDAO implements DssDAO
 	{
 		try
 		{
-			String sql = "SELECT *" + 
-					"  FROM dss_rule rule" + 
-					"       INNER JOIN dss_rule_entry ruleEntry" + 
-					"          ON rule.rule_id = ruleEntry.rule_id" + 
-					"       INNER JOIN dss_rule_type ruleType" + 
-					"          ON ruleEntry.rule_type_id = ruleType.rule_type_id" + 
-					" WHERE ruleType.name = ?" + 
-					" AND ruleType.retired = false" + 
-					" AND ruleEntry.retired = false" + 
-					" AND ruleEntry.priority is null";
+			StringBuilder sql = new StringBuilder();
+			sql.append("SELECT *\n");
+			sql.append("  FROM dss_rule rule\n");
+			sql.append("       INNER JOIN dss_rule_entry ruleEntry\n");
+			sql.append("          ON rule.rule_id = ruleEntry.rule_id\n");
+			sql.append("       INNER JOIN dss_rule_type ruleType\n");
+			sql.append("          ON ruleEntry.rule_type_id = ruleType.rule_type_id\n");
+			sql.append(" WHERE ruleType.name = ?\n");
+			sql.append(" AND ruleType.retired = false\n");
+			sql.append(" AND ruleEntry.retired = false\n");
+			sql.append(" AND ruleEntry.priority is null\n");
 
-			SQLQuery qry = this.sessionFactory.getCurrentSession()
-					.createSQLQuery(sql);
+			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql.toString());
 			qry.setString(0, type);
 			qry.addEntity(Rule.class);
 			return qry.list();
@@ -381,18 +383,18 @@ public class HibernateDssDAO implements DssDAO
 	 */
 	public List<Rule> getRulesByType(String type) throws DAOException {
 		try {
-			String sql = "SELECT *" + 
-					"  FROM dss_rule rule" + 
-					"       INNER JOIN dss_rule_entry ruleEntry" + 
-					"          ON rule.rule_id = ruleEntry.rule_id" + 
-					"       INNER JOIN dss_rule_type ruleType" + 
-					"          ON ruleEntry.rule_type_id = ruleType.rule_type_id" + 
-					" WHERE ruleType.name = ?" + 
-					" AND ruleType.retired = false" + 
-					" AND ruleEntry.retired = false";
+			StringBuilder sql = new StringBuilder();
+			sql.append("SELECT *\n");
+			sql.append("  FROM dss_rule rule\n");
+			sql.append("       INNER JOIN dss_rule_entry ruleEntry\n");
+			sql.append("          ON rule.rule_id = ruleEntry.rule_id\n");
+			sql.append("       INNER JOIN dss_rule_type ruleType\n");
+			sql.append("          ON ruleEntry.rule_type_id = ruleType.rule_type_id\n");
+			sql.append(" WHERE ruleType.name = ?\n");
+			sql.append(" AND ruleType.retired = false\n");
+			sql.append(" AND ruleEntry.retired = false\n");
 
-			SQLQuery qry = this.sessionFactory.getCurrentSession()
-					.createSQLQuery(sql);
+			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql.toString());
 			qry.setString(0, type);
 			qry.addEntity(Rule.class);
 			return qry.list();
