@@ -2,9 +2,7 @@ package org.openmrs.module.dss.service;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -18,7 +16,7 @@ import org.openmrs.module.dss.hibernateBeans.RuleType;
 import org.openmrs.module.dss.util.TestUtil;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
 
-public class ServicesTest extends BaseModuleContextSensitiveTest{
+public class DssServiceTest extends BaseModuleContextSensitiveTest{
 	
 	@Before
 	public void runBeforeEachTest() throws Exception {
