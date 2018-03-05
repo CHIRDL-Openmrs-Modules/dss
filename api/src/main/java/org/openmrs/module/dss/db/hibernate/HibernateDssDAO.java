@@ -409,7 +409,8 @@ public class HibernateDssDAO implements DssDAO
 	 */
 	public RuleType saveRuleType(RuleType ruleType) throws DAOException {
 		try {
-			return (RuleType) this.sessionFactory.getCurrentSession().merge(ruleType);
+			this.sessionFactory.getCurrentSession().saveOrUpdate(ruleType);
+			return ruleType;
 		} catch (Exception e) {
 			log.error("Error saving rule type " + ruleType, e);
 			throw new DAOException(e);
@@ -438,7 +439,8 @@ public class HibernateDssDAO implements DssDAO
 	 */
 	public RuleEntry saveRuleEntry(RuleEntry ruleEntry) throws DAOException {
 		try {
-			return (RuleEntry) this.sessionFactory.getCurrentSession().merge(ruleEntry);
+			this.sessionFactory.getCurrentSession().saveOrUpdate(ruleEntry);
+			return ruleEntry;
 		} catch (Exception e) {
 			log.error("Error saving rule entry " + ruleEntry, e);
 			throw new DAOException(e);
