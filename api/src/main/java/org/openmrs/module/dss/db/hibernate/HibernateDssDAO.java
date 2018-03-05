@@ -353,7 +353,7 @@ public class HibernateDssDAO implements DssDAO
 
 			if (sortColumn == null)
 			{
-				sortColumn = "priority";
+				sortColumn = "title";
 			}
 
 			if (sortOrder == null || sortOrder.equalsIgnoreCase("ASC"))
