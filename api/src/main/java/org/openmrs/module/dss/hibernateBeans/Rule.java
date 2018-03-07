@@ -13,12 +13,12 @@ import org.openmrs.module.chirdlutil.util.Util;
  */
 public class Rule implements java.io.Serializable
 {
+	private static final long serialVersionUID = 1L;
 
 	// Fields
 	private Integer ruleId = null;
 	private String classFilename = null;
 	private Date creationTime = null;
-	private Integer priority = null;
 	private String title = null;
 	private Double version = null;
 	private String institution = null;
@@ -33,7 +33,6 @@ public class Rule implements java.io.Serializable
 	private String data = null;
 	private String logic = null;
 	private String action = null;
-	private String ruleType = null;
 	private Date lastModified = null;
 	private String result = null; // result of executing the rule
 	private String tokenName = null;
@@ -90,22 +89,6 @@ public class Rule implements java.io.Serializable
 	public void setCreationTime(Date creationTime)
 	{
 		this.creationTime = creationTime;
-	}
-
-	/**
-	 * @return the priority
-	 */
-	public Integer getPriority()
-	{
-		return this.priority;
-	}
-
-	/**
-	 * @param priority the priority to set
-	 */
-	public void setPriority(Integer priority)
-	{
-		this.priority = priority;
 	}
 
 	/**
@@ -333,22 +316,6 @@ public class Rule implements java.io.Serializable
 	}
 
 	/**
-	 * @return the ruleType
-	 */
-	public String getRuleType()
-	{
-		return this.ruleType;
-	}
-
-	/**
-	 * @param ruleType the ruleType to set
-	 */
-	public void setRuleType(String ruleType)
-	{
-		this.ruleType = ruleType;
-	}
-
-	/**
 	 * @return the lastModified
 	 */
 	public Date getLastModified()
@@ -556,5 +523,188 @@ public class Rule implements java.io.Serializable
 		}
 
 		return false;
+	}
+
+	/**
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((action == null) ? 0 : action.hashCode());
+		result = prime * result + ((ageMax == null) ? 0 : ageMax.hashCode());
+		result = prime * result + ((ageMaxUnits == null) ? 0 : ageMaxUnits.hashCode());
+		result = prime * result + ((ageMin == null) ? 0 : ageMin.hashCode());
+		result = prime * result + ((ageMinUnits == null) ? 0 : ageMinUnits.hashCode());
+		result = prime * result + ((author == null) ? 0 : author.hashCode());
+		result = prime * result + ((citations == null) ? 0 : citations.hashCode());
+		result = prime * result + ((classFilename == null) ? 0 : classFilename.hashCode());
+		result = prime * result + ((creationTime == null) ? 0 : creationTime.hashCode());
+		result = prime * result + ((data == null) ? 0 : data.hashCode());
+		result = prime * result + ((explanation == null) ? 0 : explanation.hashCode());
+		result = prime * result + ((institution == null) ? 0 : institution.hashCode());
+		result = prime * result + ((keywords == null) ? 0 : keywords.hashCode());
+		result = prime * result + ((lastModified == null) ? 0 : lastModified.hashCode());
+		result = prime * result + ((links == null) ? 0 : links.hashCode());
+		result = prime * result + ((logic == null) ? 0 : logic.hashCode());
+		result = prime * result + ((purpose == null) ? 0 : purpose.hashCode());
+		result = prime * result + ((this.result == null) ? 0 : this.result.hashCode());
+		result = prime * result + ((ruleCreationDate == null) ? 0 : ruleCreationDate.hashCode());
+		result = prime * result + ((ruleId == null) ? 0 : ruleId.hashCode());
+		result = prime * result + ((specialist == null) ? 0 : specialist.hashCode());
+		result = prime * result + ((title == null) ? 0 : title.hashCode());
+		result = prime * result + ((tokenName == null) ? 0 : tokenName.hashCode());
+		result = prime * result + ((version == null) ? 0 : version.hashCode());
+		return result;
+	}
+
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Rule other = (Rule) obj;
+		if (action == null) {
+			if (other.action != null)
+				return false;
+		} else if (!action.equals(other.action))
+			return false;
+		if (ageMax == null) {
+			if (other.ageMax != null)
+				return false;
+		} else if (!ageMax.equals(other.ageMax))
+			return false;
+		if (ageMaxUnits == null) {
+			if (other.ageMaxUnits != null)
+				return false;
+		} else if (!ageMaxUnits.equals(other.ageMaxUnits))
+			return false;
+		if (ageMin == null) {
+			if (other.ageMin != null)
+				return false;
+		} else if (!ageMin.equals(other.ageMin))
+			return false;
+		if (ageMinUnits == null) {
+			if (other.ageMinUnits != null)
+				return false;
+		} else if (!ageMinUnits.equals(other.ageMinUnits))
+			return false;
+		if (author == null) {
+			if (other.author != null)
+				return false;
+		} else if (!author.equals(other.author))
+			return false;
+		if (citations == null) {
+			if (other.citations != null)
+				return false;
+		} else if (!citations.equals(other.citations))
+			return false;
+		if (classFilename == null) {
+			if (other.classFilename != null)
+				return false;
+		} else if (!classFilename.equals(other.classFilename))
+			return false;
+		if (creationTime == null) {
+			if (other.creationTime != null)
+				return false;
+		} else if (!creationTime.equals(other.creationTime))
+			return false;
+		if (data == null) {
+			if (other.data != null)
+				return false;
+		} else if (!data.equals(other.data))
+			return false;
+		if (explanation == null) {
+			if (other.explanation != null)
+				return false;
+		} else if (!explanation.equals(other.explanation))
+			return false;
+		if (institution == null) {
+			if (other.institution != null)
+				return false;
+		} else if (!institution.equals(other.institution))
+			return false;
+		if (keywords == null) {
+			if (other.keywords != null)
+				return false;
+		} else if (!keywords.equals(other.keywords))
+			return false;
+		if (lastModified == null) {
+			if (other.lastModified != null)
+				return false;
+		} else if (!lastModified.equals(other.lastModified))
+			return false;
+		if (links == null) {
+			if (other.links != null)
+				return false;
+		} else if (!links.equals(other.links))
+			return false;
+		if (logic == null) {
+			if (other.logic != null)
+				return false;
+		} else if (!logic.equals(other.logic))
+			return false;
+		if (purpose == null) {
+			if (other.purpose != null)
+				return false;
+		} else if (!purpose.equals(other.purpose))
+			return false;
+		if (result == null) {
+			if (other.result != null)
+				return false;
+		} else if (!result.equals(other.result))
+			return false;
+		if (ruleCreationDate == null) {
+			if (other.ruleCreationDate != null)
+				return false;
+		} else if (!ruleCreationDate.equals(other.ruleCreationDate))
+			return false;
+		if (ruleId == null) {
+			if (other.ruleId != null)
+				return false;
+		} else if (!ruleId.equals(other.ruleId))
+			return false;
+		if (specialist == null) {
+			if (other.specialist != null)
+				return false;
+		} else if (!specialist.equals(other.specialist))
+			return false;
+		if (title == null) {
+			if (other.title != null)
+				return false;
+		} else if (!title.equals(other.title))
+			return false;
+		if (tokenName == null) {
+			if (other.tokenName != null)
+				return false;
+		} else if (!tokenName.equals(other.tokenName))
+			return false;
+		if (version == null) {
+			if (other.version != null)
+				return false;
+		} else if (!version.equals(other.version))
+			return false;
+		return true;
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Rule [ruleId=" + ruleId + ", classFilename=" + classFilename + ", creationTime=" + creationTime + ", title="
+		        + title + ", version=" + version + ", institution=" + institution + ", author=" + author + ", specialist="
+		        + specialist + ", ruleCreationDate=" + ruleCreationDate + ", purpose=" + purpose + ", explanation="
+		        + explanation + ", keywords=" + keywords + ", citations=" + citations + ", links=" + links + ", data=" + data
+		        + ", logic=" + logic + ", action=" + action + ", lastModified=" + lastModified + ", result=" + result
+		        + ", tokenName=" + tokenName + ", ageMinUnits=" + ageMinUnits + ", ageMaxUnits=" + ageMaxUnits + ", ageMin="
+		        + ageMin + ", ageMax=" + ageMax + "]";
 	}
 }

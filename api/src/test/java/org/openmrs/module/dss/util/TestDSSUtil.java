@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.openmrs.module.dss.test.util;
+package org.openmrs.module.dss.util;
 
 import java.util.Calendar;
 
@@ -13,7 +13,7 @@ import junit.framework.TestCase;
  * @author tmdugan
  * 
  */
-public class TestUtil extends TestCase
+public class TestDSSUtil extends TestCase
 {
 	/**
 	 * 

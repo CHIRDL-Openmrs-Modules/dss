@@ -1,0 +1,73 @@
+<!ELEMENT dataset (
+    global_property*,
+    dss_rule*,
+    dss_rule_type*,
+    dss_rule_entry*)>
+
+<!ELEMENT dss_rule EMPTY>
+<!ATTLIST dss_rule
+    rule_id CDATA #REQUIRED
+    class_filename CDATA #REQUIRED
+    creation_time CDATA #REQUIRED
+    title CDATA #IMPLIED
+    version CDATA #IMPLIED
+    institution CDATA #IMPLIED
+    author CDATA #IMPLIED
+    specialist CDATA #IMPLIED
+    ruleCreationDate CDATA #IMPLIED
+    purpose CDATA #IMPLIED
+    explanation CDATA #IMPLIED
+    keywords CDATA #IMPLIED
+    citations CDATA #IMPLIED
+    links CDATA #IMPLIED
+    data CDATA #IMPLIED
+    logic CDATA #IMPLIED
+    action CDATA #IMPLIED
+    last_modified CDATA #IMPLIED
+    token_name CDATA #IMPLIED
+    age_min_units CDATA #IMPLIED
+    age_max_units CDATA #IMPLIED
+    age_min CDATA #IMPLIED
+    age_max CDATA #IMPLIED
+>
+
+<!ELEMENT dss_rule_entry EMPTY>
+<!ATTLIST dss_rule_entry
+    rule_entry_id CDATA #REQUIRED
+    rule_type_id CDATA #REQUIRED
+    rule_id CDATA #REQUIRED
+    priority CDATA #IMPLIED
+    creator CDATA #REQUIRED
+    date_created CDATA #REQUIRED
+    changed_by CDATA #IMPLIED
+    date_changed CDATA #IMPLIED
+    retired CDATA #REQUIRED
+    retired_by CDATA #IMPLIED
+    date_retired CDATA #IMPLIED
+    retire_reason CDATA #IMPLIED
+    uuid CDATA #REQUIRED
+>
+
+<!ELEMENT dss_rule_type EMPTY>
+<!ATTLIST dss_rule_type
+    rule_type_id CDATA #REQUIRED
+    name CDATA #REQUIRED
+    description CDATA #IMPLIED
+    creator CDATA #REQUIRED
+    date_created CDATA #REQUIRED
+    changed_by CDATA #IMPLIED
+    date_changed CDATA #IMPLIED
+    retired CDATA #REQUIRED
+    retired_by CDATA #IMPLIED
+    date_retired CDATA #IMPLIED
+    retire_reason CDATA #IMPLIED
+    uuid CDATA #REQUIRED
+>
+
+<!ELEMENT global_property EMPTY>
+<!ATTLIST global_property
+    property CDATA #REQUIRED
+    property_value CDATA #IMPLIED
+    description CDATA #IMPLIED
+    uuid CDATA #REQUIRED
+>

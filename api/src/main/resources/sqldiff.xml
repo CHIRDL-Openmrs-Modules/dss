@@ -109,4 +109,76 @@ insert into `dss_rule_attribute`(`name`,`description`)
 values ('module','Indicates which module rule is part of');
         </sql>
     </diff>
+    <diff>
+        <version>1.0.5</version>
+        <author>Steve McKee</author>
+        <date>February 6th 2018</date>
+        <description>
+            Create dss_rule_type and dss_rule_entry tables.  Also populate them with data from dss_rule and drop the priority column from dss_rule.
+        </description>
+        <sql>
+            CREATE TABLE `dss_rule_type` (
+              `rule_type_id` int(11) NOT NULL AUTO_INCREMENT,
+              `name` varchar(255) NOT NULL,
+              `description` varchar(255) DEFAULT NULL,
+              `creator` int(11) NOT NULL default 0,
+              `date_created` datetime NOT NULL default '0000-00-00 00:00:00',
+              `changed_by` int(11) default NULL,
+              `date_changed` datetime default NULL,
+              `retired` tinyint(1) NOT NULL default 0,
+              `retired_by` int(11) default NULL,
+              `date_retired` datetime default NULL,
+              `retire_reason` varchar(255) default NULL,
+              `uuid` char(38) NOT NULL,
+              PRIMARY KEY (`rule_type_id`),
+              KEY `dss_rule_type_user_created_fk` (`creator`),
+              KEY `dss_rule_type_user_changed_by_fk` (`changed_by`),
+              KEY `dss_rule_type_user_voided_by_fk` (`retired_by`),
+              INDEX `name_of_rule_type` (`name`),
+              CONSTRAINT `dss_rule_type_user_created_fk` FOREIGN KEY (`creator`) REFERENCES `users` (`user_id`),
+              CONSTRAINT `dss_rule_type_user_changed_by_fk` FOREIGN KEY (`changed_by`) REFERENCES `users` (`user_id`),
+              CONSTRAINT `dss_rule_type_user_voided_by_fk` FOREIGN KEY (`retired_by`) REFERENCES `users` (`user_id`)
+              ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+              
+              
+			CREATE TABLE `dss_rule_entry`(
+			  `rule_entry_id` int(11) NOT NULL AUTO_INCREMENT,
+			  `rule_type_id` int(11) NOT NULL,
+			  `rule_id` int(11) NOT NULL,
+			  `priority` int(11) default NULL,
+              `creator` int(11) NOT NULL default 0,
+              `date_created` datetime NOT NULL default '0000-00-00 00:00:00',
+              `changed_by` int(11) default NULL,
+              `date_changed` datetime default NULL,
+              `retired` tinyint(1) NOT NULL default 0,
+              `retired_by` int(11) default NULL,
+              `date_retired` datetime default NULL,
+              `retire_reason` varchar(255) default NULL,
+              `uuid` char(38) NOT NULL,
+              PRIMARY KEY (`rule_entry_id`),
+              KEY `dss_rule_type_fk` (`rule_type_id`),
+              KEY `dss_rule_fk` (`rule_id`),
+              KEY `dss_rule_entry_user_created_fk` (`creator`),
+			  KEY `dss_rule_entry_user_changed_by_fk` (`changed_by`),
+			  KEY `dss_rule_entry_user_voided_by_fk` (`retired_by`),
+			  CONSTRAINT `dss_rule_type_fk` FOREIGN KEY (`rule_type_id`) REFERENCES `dss_rule_type` (`rule_type_id`),
+			  CONSTRAINT `dss_rule_fk` FOREIGN KEY (`rule_id`) REFERENCES dss_rule(`rule_id`),
+			  CONSTRAINT `dss_rule_entry_user_created_fk` FOREIGN KEY (`creator`) REFERENCES `users` (`user_id`),
+			  CONSTRAINT `dss_rule_entry_user_changed_by_fk` FOREIGN KEY (`changed_by`) REFERENCES `users` (`user_id`),
+			  CONSTRAINT `dss_rule_entry_user_voided_by_fk` FOREIGN KEY (`retired_by`) REFERENCES `users` (`user_id`)
+			  ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+			
+			  insert into dss_rule_type (name, creator, date_created, uuid)
+			  select distinct rule_type, 1, NOW(), UUID() from dss_rule where (priority is null or priority &lt; 1000);
+			
+			  insert into dss_rule_entry (rule_type_id, rule_id, priority, creator, date_created, uuid)
+			  select b.rule_type_id, a.rule_id, a.priority, 1, NOW(), UUID() from dss_rule a, dss_rule_type b
+			  where (a.priority is null or a.priority &lt; 1000)
+			  and b.name = a.rule_type;
+			
+			  alter table dss_rule drop column priority;
+			  alter table dss_rule drop column rule_type;
+              alter table `dss_rule` add index `rule_token_name` (`token_name`);
+        </sql>
+    </diff>
 </sqldiff>

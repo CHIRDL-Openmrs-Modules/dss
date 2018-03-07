@@ -1,5 +1,6 @@
 package org.openmrs.module.dss.db.hibernate;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -8,9 +9,9 @@ import org.hibernate.Criteria;
 import org.hibernate.SQLQuery;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Example;
-import org.hibernate.criterion.Restrictions;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.context.Context;
 import org.openmrs.api.db.DAOException;
@@ -18,7 +19,8 @@ import org.openmrs.module.dss.db.DssDAO;
 import org.openmrs.module.dss.hibernateBeans.Rule;
 import org.openmrs.module.dss.hibernateBeans.RuleAttribute;
 import org.openmrs.module.dss.hibernateBeans.RuleAttributeValue;
-import org.openmrs.module.chirdlutil.util.Util;
+import org.openmrs.module.dss.hibernateBeans.RuleEntry;
+import org.openmrs.module.dss.hibernateBeans.RuleType;
 
 /**
  * Hibernate implementations of Dss related database functions.
@@ -52,97 +54,102 @@ public class HibernateDssDAO implements DssDAO
 		this.sessionFactory = sessionFactory;
 	}
 
-	public Rule getRule(int ruleId)
+	/**
+	 * @see org.openmrs.module.dss.db.DssDAO#getRule(int)
+	 */
+	public Rule getRule(int ruleId) throws DAOException
 	{
-		try
+		try 
 		{
-			String sql = "select * from dss_rule where rule_id=?";
-			SQLQuery qry = this.sessionFactory.getCurrentSession()
-					.createSQLQuery(sql);
-			qry.setInteger(0, ruleId);
-			qry.addEntity(Rule.class);
-			return (Rule) qry.uniqueResult();
-		} catch (Exception e)
-		{
-			this.log.error(Util.getStackTrace(e));
-		}
-		return null;
-	}
+			Criteria crit = sessionFactory.getCurrentSession().createCriteria(Rule.class);
+			crit.add(Restrictions.eq("ruleId", ruleId)); 
 
-	public Rule getRule(String tokenName)
-	{
-		try
+			return (Rule)crit.uniqueResult();
+		} 
+		catch (Exception e) 
 		{
-			String sql = "select * from dss_rule where token_name=?";
-			SQLQuery qry = this.sessionFactory.getCurrentSession()
-					.createSQLQuery(sql);
-			qry.setString(0, tokenName);
-			qry.addEntity(Rule.class);
-			return (Rule) qry.uniqueResult();
-		} catch (Exception e)
-		{
-			this.log.error(Util.getStackTrace(e));
-		}
-		return null;
-	}
-
-	public void deleteRule(int ruleId)
-	{
-		try
-		{
-			Rule rule = this.getRule(ruleId);
-			this.sessionFactory.getCurrentSession().delete(rule);
-		} catch (Exception e)
-		{
-			this.log.error(Util.getStackTrace(e));
+			log.error("Error retrieving rule " + ruleId, e);
+			throw new DAOException(e);
 		}
 	}
 
-	public Rule addOrUpdateRule(Rule rule)
+	/**
+	 * @see org.openmrs.module.dss.db.DssDAO#getRule(java.lang.String)
+	 */
+	public Rule getRule(String tokenName) throws DAOException
 	{
-		try
+		try 
 		{
-			// If the rule type for the rule to save is still null,
-			// then set the rule type to the token_name
-			if (rule.getRuleType() == null)
-			{
-				rule.setRuleType(rule.getTokenName());
-				this.log.error("Rule "+rule.getTokenName()+" does not have a rule type set. "+
-						"It will not be available for prioritization until the rule type is set to a form name.");
-			}
+			Criteria crit = sessionFactory.getCurrentSession().createCriteria(Rule.class);
+			crit.add(Restrictions.eq("tokenName", tokenName));
+			
+			return (Rule)crit.uniqueResult();
+		} 
+		catch (Exception e) 
+		{
+			log.error("Error retrieving rule " + tokenName, e);
+			throw new DAOException(e);
+		}
+	}
+
+	/**
+	 * @see org.openmrs.module.dss.db.DssDAO#addOrUpdateRule(org.openmrs.module.dss.hibernateBeans.Rule)
+	 */
+	public Rule addOrUpdateRule(Rule rule) throws DAOException
+	{
+		try 
+		{
 			return (Rule) this.sessionFactory.getCurrentSession().merge(rule);
-		} catch (Exception e)
+		} 
+		catch (Exception e) 
 		{
-			this.log.error(Util.getStackTrace(e));
+			log.error("Error adding/updating rule", e);
+			throw new DAOException(e);
 		}
-		return null;
 	}
 	
 	/**
 	 * Looks up a rule attribute by primary key
 	 * @see org.openmrs.module.dss.db.DssDAO#getRuleAttribute(int)
 	 */
-	public RuleAttribute getRuleAttribute(int ruleAttributeId) {
-		return (RuleAttribute) sessionFactory.getCurrentSession().get(RuleAttribute.class, ruleAttributeId);
+	public RuleAttribute getRuleAttribute(int ruleAttributeId) throws DAOException {
+		try 
+		{
+			return (RuleAttribute) sessionFactory.getCurrentSession().get(
+				RuleAttribute.class, ruleAttributeId);
+		} 
+		catch (Exception e) 
+		{
+			log.error("Error retrieving rule attribute " + ruleAttributeId, e);
+			throw new DAOException(e);
+		}
 	}
 	
 	/**
 	 * Looks up a rule attribute by name
 	 * @see org.openmrs.module.dss.db.DssDAO#getRuleAttribute(java.lang.String)
 	 */
-	public RuleAttribute getRuleAttribute(String ruleAttributeName) {
-		Criteria crit = sessionFactory.getCurrentSession().createCriteria(RuleAttribute.class); 
+	public RuleAttribute getRuleAttribute(String ruleAttributeName) throws DAOException {
+		try 
+		{
+			Criteria crit = sessionFactory.getCurrentSession().createCriteria(RuleAttribute.class); 
+			crit.add(Restrictions.eq("name", ruleAttributeName)); 
 
-		crit.add(Restrictions.eq("name", ruleAttributeName)); 
-
-		return (RuleAttribute) crit.uniqueResult();
+			return (RuleAttribute) crit.uniqueResult();
+		} 
+		catch (Exception e) 
+		{
+			log.error("Error retrieving rule attribute " + ruleAttributeName, e);
+			throw new DAOException(e);
+		}
 	}
 	
 	/**
 	 * returns all rule attribute values for a given rule id and rule attribute name
 	 * @see org.openmrs.module.dss.db.DssDAO#getRuleAttributeValues(java.lang.Integer, java.lang.String)
 	 */
-	public List<RuleAttributeValue> getRuleAttributeValues(Integer ruleId, String ruleAttributeName) {
+	public List<RuleAttributeValue> getRuleAttributeValues(Integer ruleId, 
+			String ruleAttributeName) throws DAOException {
 		try {
 			RuleAttribute ruleAttribute = this.getRuleAttribute(ruleAttributeName);
 			
@@ -150,49 +157,74 @@ public class HibernateDssDAO implements DssDAO
 				Integer ruleAttributeId = ruleAttribute.getRuleAttributeId();
 				
 				return getRuleAttributeValues(ruleId,ruleAttributeId);
-				
 			}
 		}
 		catch (Exception e) {
-			log.error("Error in method getRuleAttributeValue", e);
+			log.error("Error in method getRuleAttributeValues ruleId = " + ruleId + 
+				" ruleAttributeName = " + ruleAttributeName, e);
+			throw new DAOException(e);
 		}
-		return null;
+		
+		return Collections.emptyList();
 	}
 	
 	/**
 	 * Returns a list of rule attribute values for a given rule attribute id and value
 	 * @see org.openmrs.module.dss.db.DssDAO#getRuleAttributesByValue(java.lang.Integer, java.lang.String)
 	 */
-	public List<RuleAttributeValue> getRuleAttributesByValue(Integer ruleAttributeId,String value){
-		Criteria crit = sessionFactory.getCurrentSession().createCriteria(RuleAttributeValue.class); 
+	public List<RuleAttributeValue> getRuleAttributesByValue(Integer ruleAttributeId, 
+			String value) throws DAOException {
+		try {
+			Criteria crit = sessionFactory.getCurrentSession().createCriteria(RuleAttributeValue.class); 
+			crit.add(Restrictions.eq("value", value)); 
 
-		crit.add(Restrictions.eq("value", value)); 
-
-		return crit.list();
+			return crit.list();
+		}
+		catch (Exception e) {
+			log.error("Error in method getRuleAttributesByValue ruleAttributeId = " + ruleAttributeId + 
+				" value = " + value, e);
+			throw new DAOException(e);
+		}
 	}
 	
 	/**
 	 * Returns list of rule attribute values for a given rule id and rule attribute id
 	 * @see org.openmrs.module.dss.db.DssDAO#getRuleAttributeValues(java.lang.Integer, java.lang.Integer)
 	 */
-	public List<RuleAttributeValue> getRuleAttributeValues(Integer ruleId, Integer ruleAttributeId) {
-		
-		Criteria crit = sessionFactory.getCurrentSession().createCriteria(RuleAttributeValue.class);
-		crit.add(Restrictions.eq("ruleId", ruleId)); 
-		crit.add(Restrictions.eq("ruleAttributeId", ruleAttributeId)); 
+	public List<RuleAttributeValue> getRuleAttributeValues(Integer ruleId, 
+			Integer ruleAttributeId) throws DAOException {
+		try {
+			Criteria crit = sessionFactory.getCurrentSession().createCriteria(RuleAttributeValue.class);
+			crit.add(Restrictions.eq("ruleId", ruleId)); 
+			crit.add(Restrictions.eq("ruleAttributeId", ruleAttributeId)); 
 
-		return crit.list();
+			return crit.list();
+		}
+		catch (Exception e) {
+			log.error("Error in method getRuleAttributeValues ruleId = " + ruleId + 
+				" ruleAttributeId = " + ruleAttributeId, e);
+			throw new DAOException(e);
+		}
 	}
 	
 	/**
 	 * returns the first rule attribute value matched by rule id and rule attribute name
 	 * @see org.openmrs.module.dss.db.DssDAO#getRuleAttributeValue(java.lang.Integer, java.lang.String)
 	 */
-	public RuleAttributeValue getRuleAttributeValue(Integer ruleId, String ruleAttributeName) {
-		List<RuleAttributeValue> list = getRuleAttributeValues(ruleId, ruleAttributeName);
-		if (list != null && list.size() > 0) {
-			return list.get(0);
+	public RuleAttributeValue getRuleAttributeValue(Integer ruleId, String ruleAttributeName) 
+			throws DAOException {
+		try {
+			List<RuleAttributeValue> list = getRuleAttributeValues(ruleId, ruleAttributeName);
+			if (list != null && list.size() > 0) {
+				return list.get(0);
+			}
 		}
+		catch (Exception e) {
+			log.error("Error in method getRuleAttributeValue ruleId = " + ruleId + 
+				" ruleAttributeName = " + ruleAttributeName, e);
+			throw new DAOException(e);
+		}
+		
 		return null;
 	}
 
@@ -200,15 +232,21 @@ public class HibernateDssDAO implements DssDAO
 	 * Saves or updates rule attribute value changes to the database
 	 * @see org.openmrs.module.dss.db.DssDAO#saveRuleAttributeValue(org.openmrs.module.dss.hibernateBeans.RuleAttributeValue)
 	 */
-	public RuleAttributeValue saveRuleAttributeValue(RuleAttributeValue value) {
-		sessionFactory.getCurrentSession().saveOrUpdate(value);
-		return value;
+	public RuleAttributeValue saveRuleAttributeValue(RuleAttributeValue value) throws DAOException {
+		try {
+			sessionFactory.getCurrentSession().saveOrUpdate(value);
+			return value;
+		}
+		catch (Exception e) {
+			log.error("Error in method saveRuleAttributeValue value = " + value, e);
+			throw new DAOException(e);
+		}
 	}
 	
 	/**
 	 * @see org.openmrs.module.dss.db.DssDAO#getPrioritizedRules(java.lang.String, java.lang.Integer)
 	 */
-    public List<Rule> getPrioritizedRules(String type, Integer startPriority) 
+    public List<Rule> getPrioritizedRules(String type, Integer startPriority) throws DAOException
     {
     	try
 		{
@@ -220,12 +258,23 @@ public class HibernateDssDAO implements DssDAO
 			{
 				sortOrder = "DESC";
 			}
+			
+			StringBuilder sql = new StringBuilder();
+			sql.append("SELECT *\n");
+			sql.append("  FROM dss_rule rule\n");
+			sql.append("       INNER JOIN dss_rule_entry ruleEntry\n");
+			sql.append("          ON rule.rule_id = ruleEntry.rule_id\n");
+			sql.append("       INNER JOIN dss_rule_type ruleType\n");
+			sql.append("          ON ruleEntry.rule_type_id = ruleType.rule_type_id\n");
+			sql.append(" WHERE ruleType.name = ?\n");
+			sql.append(" AND ruleType.retired = false\n");
+			sql.append(" AND ruleEntry.retired = false\n");
+			sql.append(" AND ruleEntry.priority >= ?\n");
+			sql.append(" AND ruleEntry.priority < ?\n");
+			sql.append(" ORDER BY ruleEntry.priority ");
+			sql.append(sortOrder);
 
-			String sql = "select * from dss_rule where rule_type=? and "
-					+ "priority >=? and priority<1000 and "
-					+ "version='1.0' order by priority " + sortOrder;
-			SQLQuery qry = this.sessionFactory.getCurrentSession()
-					.createSQLQuery(sql);
+			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql.toString());
 			qry.setString(0, type);
 			if (startPriority != null) 
 			{
@@ -236,46 +285,53 @@ public class HibernateDssDAO implements DssDAO
 				qry.setInteger(1, 0);
 			}
 			
+			qry.setInteger(2, RuleEntry.RULE_PRIORITY_RETIRE);
 			qry.addEntity(Rule.class);
 			return qry.list();
 		} catch (Exception e)
 		{
-			this.log.error(Util.getStackTrace(e));
+			log.error("Error in method getPrioritizedRules type = " + type + 
+				" startPriority = " + startPriority, e);
+			throw new DAOException(e);
 		}
-		return null;
     }
     
+    /**
+     * @see org.openmrs.module.dss.db.DssDAO#getNonPrioritizedRules(java.lang.String)
+     */
 	public List<Rule> getNonPrioritizedRules(String type) throws DAOException
 	{
 		try
 		{
-			AdministrationService adminService = Context
-					.getAdministrationService();
-			String sortOrder = adminService
-					.getGlobalProperty("dss.ruleSortOrder");
-			if (sortOrder == null)
-			{
-				sortOrder = "DESC";
-			}
+			StringBuilder sql = new StringBuilder();
+			sql.append("SELECT *\n");
+			sql.append("  FROM dss_rule rule\n");
+			sql.append("       INNER JOIN dss_rule_entry ruleEntry\n");
+			sql.append("          ON rule.rule_id = ruleEntry.rule_id\n");
+			sql.append("       INNER JOIN dss_rule_type ruleType\n");
+			sql.append("          ON ruleEntry.rule_type_id = ruleType.rule_type_id\n");
+			sql.append(" WHERE ruleType.name = ?\n");
+			sql.append(" AND ruleType.retired = false\n");
+			sql.append(" AND ruleEntry.retired = false\n");
+			sql.append(" AND ruleEntry.priority is null\n");
 
-			String sql = "select * from dss_rule where rule_type = ? and "
-					+ "priority is null and version='1.0' order by priority "
-					+ sortOrder;
-			SQLQuery qry = this.sessionFactory.getCurrentSession()
-					.createSQLQuery(sql);
+			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql.toString());
 			qry.setString(0, type);
 			qry.addEntity(Rule.class);
 			return qry.list();
 		} catch (Exception e)
 		{
-			this.log.error(Util.getStackTrace(e));
+			log.error("Error in method getNonPrioritizedRules type = " + type, e);
+			throw new DAOException(e);
 		}
-
-		return null;
 	}
 
-	public List<Rule> getRules(Rule rule, boolean ignoreCase,
-			boolean enableLike, String sortColumn) throws DAOException
+	/**
+	 * @see org.openmrs.module.dss.db.DssDAO#getRules(org.openmrs.module.dss.hibernateBeans.Rule, 
+	 * boolean, boolean, java.lang.String)
+	 */
+	public List<Rule> getRules(Rule rule, boolean ignoreCase, boolean enableLike, 
+			String sortColumn) throws DAOException
 	{
 		try
 		{
@@ -298,7 +354,7 @@ public class HibernateDssDAO implements DssDAO
 
 			if (sortColumn == null)
 			{
-				sortColumn = "priority";
+				sortColumn = "title";
 			}
 
 			if (sortOrder == null || sortOrder.equalsIgnoreCase("ASC"))
@@ -316,8 +372,126 @@ public class HibernateDssDAO implements DssDAO
 			return results;
 		} catch (Exception e)
 		{
-			this.log.error(Util.getStackTrace(e));
+			log.error("Error in method getRules rule = " + rule + 
+				" ignoreCase = " + ignoreCase + " enableLike = " + enableLike + 
+				" sortColumn = " + sortColumn, e);
+			throw new DAOException(e);
 		}
-		return null;
+	}
+	
+	/**
+	 * @see org.openmrs.module.dss.db.DssDAO#getRules(java.lang.String)
+	 */
+	public List<Rule> getRulesByType(String type) throws DAOException {
+		try {
+			StringBuilder sql = new StringBuilder();
+			sql.append("SELECT *\n");
+			sql.append("  FROM dss_rule rule\n");
+			sql.append("       INNER JOIN dss_rule_entry ruleEntry\n");
+			sql.append("          ON rule.rule_id = ruleEntry.rule_id\n");
+			sql.append("       INNER JOIN dss_rule_type ruleType\n");
+			sql.append("          ON ruleEntry.rule_type_id = ruleType.rule_type_id\n");
+			sql.append(" WHERE ruleType.name = ?\n");
+			sql.append(" AND ruleType.retired = false\n");
+			sql.append(" AND ruleEntry.retired = false\n");
+
+			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql.toString());
+			qry.setString(0, type);
+			qry.addEntity(Rule.class);
+			return qry.list();
+		} catch (Exception e) {
+			log.error("Error in method getRulesByType type = " + type, e);
+			throw new DAOException(e);
+		}
+	}
+	
+	/**
+	 * @see org.openmrs.module.dss.db.DssDAO#saveRuleType(org.openmrs.module.dss.hibernateBeans.RuleType)
+	 */
+	public RuleType saveRuleType(RuleType ruleType) throws DAOException {
+		try {
+			this.sessionFactory.getCurrentSession().saveOrUpdate(ruleType);
+			return ruleType;
+		} catch (Exception e) {
+			log.error("Error saving rule type " + ruleType, e);
+			throw new DAOException(e);
+		}
+	}
+	
+	/**
+	 * @see org.openmrs.module.dss.db.DssDAO#getRuleType(java.lang.String)
+	 */
+	public RuleType getRuleType(String type) throws DAOException {
+		try {
+			Criteria crit = sessionFactory.getCurrentSession().createCriteria(RuleType.class); 
+	
+			crit.add(Restrictions.eq("name", type)); 
+			crit.add(Restrictions.eq("retired", Boolean.FALSE));
+	
+			return (RuleType)crit.uniqueResult();
+		} catch (Exception e) {
+			log.error("Error retrieving rule type " + type, e);
+			throw new DAOException(e);
+		}
+	}
+	
+	/**
+	 * @see org.openmrs.module.dss.db.DssDAO#saveRuleEntry(org.openmrs.module.dss.hibernateBeans.RuleEntry)
+	 */
+	public RuleEntry saveRuleEntry(RuleEntry ruleEntry) throws DAOException {
+		try {
+			this.sessionFactory.getCurrentSession().saveOrUpdate(ruleEntry);
+			return ruleEntry;
+		} catch (Exception e) {
+			log.error("Error saving rule entry " + ruleEntry, e);
+			throw new DAOException(e);
+		}
+	}
+
+	/**
+	 * @see org.openmrs.module.dss.db.DssDAO#getRuleEntry(org.openmrs.module.dss.hibernateBeans.Rule, org.openmrs.module.dss.hibernateBeans.RuleType)
+	 */
+	public RuleEntry getRuleEntry(Rule rule, RuleType ruleType) throws DAOException {
+		try {
+			Criteria crit = sessionFactory.getCurrentSession().createCriteria(RuleEntry.class, "entry")
+					.add(Restrictions.eq("rule", rule)).add(Restrictions.eq("ruleType", ruleType))
+					.add(Restrictions.eq("retired", Boolean.FALSE));
+			return (RuleEntry)crit.uniqueResult();
+		} catch (Exception e) {
+			log.error("Error retrieving rule entry rule = " + rule + " ruleType = " + ruleType, e);
+			throw new DAOException(e);
+		}
+	}
+	
+	/**
+	 * @see org.openmrs.module.dss.db.DssDAO#getRuleEntry(java.lang.Integer, java.lang.String)
+	 */
+	public RuleEntry getRuleEntry(Integer ruleId, String ruleType) throws DAOException {
+		try {
+			Criteria crit = sessionFactory.getCurrentSession().createCriteria(RuleEntry.class, "entry")
+					.createAlias("rule", "rule")
+					.createAlias("ruleType", "ruleType")
+					.add(Restrictions.eq("rule.ruleId", ruleId))
+					.add(Restrictions.eq("ruleType.name", ruleType))
+					.add(Restrictions.eq("retired", Boolean.FALSE));
+			return (RuleEntry)crit.uniqueResult();
+		} catch (Exception e) {
+			log.error("Error retrieving rule entry ruleId = " + ruleId + " ruleType = " + ruleType, e);
+			throw new DAOException(e);
+		}
+	}
+
+	/**
+	 * @see org.openmrs.module.dss.db.DssDAO#getRuleReferences(org.openmrs.module.dss.hibernateBeans.Rule)
+	 */
+	public List<RuleEntry> getRuleReferences(Rule rule) throws DAOException {
+		try {
+			Criteria crit = sessionFactory.getCurrentSession().createCriteria(RuleEntry.class, "entry")
+					.add(Restrictions.eq("rule", rule)).add(Restrictions.eq("retired", Boolean.FALSE));
+			return crit.list();
+		} catch (Exception e) {
+			log.error("Error retrieving rule references rule = " + rule, e);
+			throw new DAOException(e);
+		}
 	}
 }
