@@ -1,0 +1,64 @@
+#title, #ruleTypeDiv {
+    text-align: center;
+    margin: auto;
+}
+
+#ruleListsDiv {
+	width: 100%;
+	height: 100%;
+	padding-top: 20px;
+}
+
+#availableRules, #prioritizedRules, #nonPrioritizedRules {
+    border: 1px solid #eee;
+    width: 142px;
+    min-height: 20px;
+    list-style-type: none;
+    margin: 0;
+    padding: 5px 0 0 0;
+    float: left;
+    margin-right: 10px;
+}
+
+#availableRules li, #prioritizedRules li, #nonPrioritizedRules li {
+    margin: 0 5px 5px 5px;
+    padding: 5px;
+    font-size: 1.2em;
+    width: 120px;
+}
+
+#ruleContent {
+	height: 700px;
+	width: 100%;
+}
+
+#rulePrioritizationForm {
+	height: 100%;
+	width: 100%:
+}
+
+fieldset {
+    border: 0;
+}
+
+select {
+	min-width: 450px;
+}
+
+.overflow {
+    height: 200px;
+}
+
+.ruleListDiv {
+	height: 100%;
+    width: 33%;
+    float: left;
+    margin: auto;
+    text-align: center;
+}
+
+.connectedSortable {
+	text-align: center;
+	margin: auto;
+}
+

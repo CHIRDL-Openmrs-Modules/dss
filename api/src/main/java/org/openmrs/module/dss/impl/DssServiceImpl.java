@@ -488,6 +488,13 @@ public class DssServiceImpl implements DssService
 	}
 	
 	/**
+	 * @see org.openmrs.module.dss.service.DssService#getRuleTypes(boolean)
+	 */
+	public List<RuleType> getRuleTypes(boolean includeRetired) throws APIException {
+		return getDssDAO().getRuleTypes(includeRetired);
+	}
+	
+	/**
 	 * @see org.openmrs.module.dss.service.DssService#saveRuleEntry(org.openmrs.module.dss.hibernateBeans.RuleEntry)
 	 */
 	public RuleEntry saveRuleEntry(RuleEntry ruleEntry) throws APIException {

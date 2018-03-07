@@ -250,6 +250,15 @@ public interface DssService
 	public RuleType getRuleType(String type) throws APIException;
 	
 	/**
+	 * Returns a list of rule types.
+	 * 
+	 * @param includeRetired whether or not to include retired rule types in the list
+	 * @return List of RuleType objects
+	 * @throws APIException
+	 */
+	public List<RuleType> getRuleTypes(boolean includeRetired) throws APIException;
+	
+	/**
 	 * Adds or updates a rule entry.
 	 * 
 	 * @param ruleEntry The rule entry to add or update.

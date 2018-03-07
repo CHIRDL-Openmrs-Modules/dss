@@ -129,6 +129,17 @@ public class DssServiceTest extends BaseModuleContextSensitiveTest{
 	}
 	
 	@Test
+	public void testGetRuleTypes() throws Exception {
+		DssService dssService = Context.getService(DssService.class);
+		List<RuleType> ruleTypes = dssService.getRuleTypes(false);
+		Assert.assertNotNull(ruleTypes);
+		Assert.assertTrue(ruleTypes.size() == 3);
+		ruleTypes = dssService.getRuleTypes(true);
+		Assert.assertNotNull(ruleTypes);
+		Assert.assertTrue(ruleTypes.size() == 4);
+	}
+	
+	@Test
 	public void testGetRuleEntry() throws Exception {
 		DateFormat dt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		DssService dssService = Context.getService(DssService.class);

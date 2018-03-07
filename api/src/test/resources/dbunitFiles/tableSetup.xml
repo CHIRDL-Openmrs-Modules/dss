@@ -11,6 +11,7 @@
     <dss_rule_type rule_type_id="1" name="PWS" creator="1" date_created="2017-07-19 11:32:21" retired="0" uuid="7cb211ff-6c97-11e7-9be2-0a0027000019"/>
     <dss_rule_type rule_type_id="2" name="PWS_2" creator="1" date_created="2017-08-20 11:32:21" retired="0" uuid="7cb211ff-6c97-11e7-9be2-0a0027000018"/>
     <dss_rule_type rule_type_id="3" name="PrioritizedTest" creator="1" date_created="2017-07-19 11:32:21" retired="0" uuid="7cb211ff-6c97-11e7-9be2-0a0027000020"/>
+    <dss_rule_type rule_type_id="4" name="RetiredTest" creator="1" date_created="2017-07-19 11:32:21" retired="1" retired_by="1" retire_reason="testing" uuid="7cb211ff-6c97-11e7-9be2-0a0027000021"/>
     <dss_rule_entry rule_entry_id="1" rule_type_id="1" rule_id="3" priority="227" creator="1" date_created="2017-07-19 11:34:46" retired="0" uuid="d30cb9c7-6c97-11e7-9be2-0a0027000010"/>
     <dss_rule_entry rule_entry_id="2" rule_type_id="3" rule_id="4" priority="222" creator="1" date_created="2017-07-19 11:34:46" retired="0" uuid="d30cb9c7-6c97-11e7-9be2-0a0027000011"/>
     <dss_rule_entry rule_entry_id="3" rule_type_id="3" rule_id="5" priority="220" creator="1" date_created="2017-07-19 11:34:46" retired="0" uuid="d30cb9c7-6c97-11e7-9be2-0a0027000012"/>

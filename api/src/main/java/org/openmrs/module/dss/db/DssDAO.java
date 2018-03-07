@@ -182,6 +182,15 @@ public interface DssDAO {
 	public RuleType getRuleType(String type) throws DAOException;
 	
 	/**
+	 * Returns a list of rule types.
+	 * 
+	 * @param includeRetired whether or not to include retired rule types in the list
+	 * @return List of RuleType objects
+	 * @throws DAOException
+	 */
+	public List<RuleType> getRuleTypes(boolean includeRetired) throws DAOException;
+	
+	/**
 	 * Adds or updates a rule entry.
 	 * 
 	 * @param ruleEntry The rule entry to add or update.

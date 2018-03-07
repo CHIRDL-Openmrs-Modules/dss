@@ -436,6 +436,24 @@ public class HibernateDssDAO implements DssDAO
 	}
 	
 	/**
+	 * @see org.openmrs.module.dss.db.DssDAO#getRuleTypes(boolean)
+	 */
+	public List<RuleType> getRuleTypes(boolean includeRetired) throws DAOException {
+		try {
+			Criteria crit = sessionFactory.getCurrentSession().createCriteria(RuleType.class);
+			crit.addOrder(Order.asc("name"));
+			if (!includeRetired) {
+				crit.add(Restrictions.eq("retired", Boolean.FALSE));
+			}
+	
+			return crit.list();
+		} catch (Exception e) {
+			log.error("Error retrieving rule types", e);
+			throw new DAOException(e);
+		}
+	}
+	
+	/**
 	 * @see org.openmrs.module.dss.db.DssDAO#saveRuleEntry(org.openmrs.module.dss.hibernateBeans.RuleEntry)
 	 */
 	public RuleEntry saveRuleEntry(RuleEntry ruleEntry) throws DAOException {
