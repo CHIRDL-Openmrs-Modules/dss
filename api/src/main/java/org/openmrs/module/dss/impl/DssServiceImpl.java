@@ -546,7 +546,7 @@ public class DssServiceImpl implements DssService
 						ruleEntry, "Priority change from " + currentPriority + " to " + priority);
 					
 					// Only create a new row if the rule has a priority < 1000
-					if (priority == null || priority.compareTo(1000) < 0) {
+					if (priority == null || priority.compareTo(RuleEntry.RULE_PRIORITY_RETIRE) < 0) {
 						// Create a new rule entry
 						RuleEntry newRuleEntry = new RuleEntry();
 						newRuleEntry.setPriority(priority);

@@ -270,7 +270,7 @@ public class HibernateDssDAO implements DssDAO
 			sql.append(" AND ruleType.retired = false\n");
 			sql.append(" AND ruleEntry.retired = false\n");
 			sql.append(" AND ruleEntry.priority >= ?\n");
-			sql.append(" AND ruleEntry.priority < 1000\n");
+			sql.append(" AND ruleEntry.priority < ?\n");
 			sql.append(" ORDER BY ruleEntry.priority ");
 			sql.append(sortOrder);
 
@@ -285,6 +285,7 @@ public class HibernateDssDAO implements DssDAO
 				qry.setInteger(1, 0);
 			}
 			
+			qry.setInteger(2, RuleEntry.RULE_PRIORITY_RETIRE);
 			qry.addEntity(Rule.class);
 			return qry.list();
 		} catch (Exception e)

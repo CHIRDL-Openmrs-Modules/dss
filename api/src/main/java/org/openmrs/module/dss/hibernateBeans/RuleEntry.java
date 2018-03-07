@@ -25,6 +25,8 @@ import org.openmrs.module.chirdlutilbackports.BaseChirdlMetadata;
  */
 public class RuleEntry extends BaseChirdlMetadata implements Serializable {
 	
+	public static final int RULE_PRIORITY_RETIRE = 1000;
+	
 	private static final long serialVersionUID = 1L;
 	
 	private Integer ruleEntryId;
