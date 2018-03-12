@@ -10,12 +10,15 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.dss.hibernateBeans.Rule;
 import org.openmrs.module.dss.hibernateBeans.RuleType;
 import org.openmrs.module.dss.service.DssService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -25,7 +28,7 @@ import org.springframework.web.servlet.view.RedirectView;
  * @author Steve McKee
  */
 @Controller
-@RequestMapping(value = "module/dss/rulePrioritization.form")
+@RequestMapping(value = "module/dss/")
 public class RulePrioritizationController {
 
 	/** Logger for this class and subclasses */
@@ -41,20 +44,33 @@ public class RulePrioritizationController {
 	private static final String PARAM_RULE_TYPE = "ruleType";
 	private static final String PARAM_RULE_TYPES = "ruleTypes";
 
-	@RequestMapping(method = RequestMethod.POST)
-	protected ModelAndView processSubmit(HttpServletRequest request, HttpServletResponse response, Object object) throws Exception {
+	@RequestMapping(value = "rulePrioritization.form", method = RequestMethod.POST)
+	protected ModelAndView processSubmit(HttpServletRequest request, HttpServletResponse response, Object object) 
+			throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("operationType", "Editing form attributes value");
 		return new ModelAndView(new RedirectView(SUCCESS_FORM_VIEW), map);
 	}
 
-	@RequestMapping(method = RequestMethod.GET)
+	@RequestMapping(value = "rulePrioritization.form", method = RequestMethod.GET)
 	protected String initForm(HttpServletRequest request, ModelMap map) throws Exception {
 		DssService service = Context.getService(DssService.class);
 		List<RuleType> ruleTypes = service.getRuleTypes(false);
 		map.put(PARAM_RULE_TYPES, ruleTypes);
 		
 		return FORM_VIEW;
+	}
+	
+	@RequestMapping(value = "getPrioritizedRules", method = RequestMethod.GET)
+	@ResponseBody
+	public List<Rule> getPrioritizedRules(@RequestParam(value = "ruleType", required = true) String ruleType){
+		DssService dssService = Context.getService(DssService.class);
+		return dssService.getPrioritizedRules(ruleType);
+	}
+	
+	@RequestMapping(value = "getNonPrioritizedRules", method = RequestMethod.GET)
+	@ResponseBody
+	public List<Rule> getNonPrioritizedRules(@RequestParam(value = "ruleType", required = true) String ruleType){
+		DssService dssService = Context.getService(DssService.class);
+		return dssService.getNonPrioritizedRules(ruleType);
 	}
 }

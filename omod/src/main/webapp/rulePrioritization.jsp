@@ -33,35 +33,73 @@
 	        </fieldset>
         </div>
         
+        <div id="ruleListTitlesDiv">
+            <div class="ruleListTitleDiv">
+                <h2>Available Rules</h2>
+            </div>
+            <div class="ruleListTitleDiv">
+                <h2>Prioritized Rules</h2>
+            </div>
+            <div class="ruleListTitleDiv">
+                <h2>Non-Prioritized Rules</h2>
+            </div>
+        </div>
         <div id="ruleListsDiv">
             <div class="ruleListDiv">
-                <h2>Available Rules</h2>
                 <ul id="availableRules" class="connectedSortable">
 				  <li class="ui-state-default">Item 1</li>
 				  <li class="ui-state-default">Item 2</li>
 				  <li class="ui-state-default">Item 3</li>
 				  <li class="ui-state-default">Item 4</li>
 				  <li class="ui-state-default">Item 5</li>
-				</ul>
-            </div>
-            <div class="ruleListDiv">
-                <h2>Prioritized Rules</h2>
-                <ul id="prioritizedRules" class="connectedSortable">
-                  <li class="ui-state-default">Item 6</li>
+				  <li class="ui-state-default">Item 6</li>
                   <li class="ui-state-default">Item 7</li>
                   <li class="ui-state-default">Item 8</li>
                   <li class="ui-state-default">Item 9</li>
                   <li class="ui-state-default">Item 10</li>
-                </ul>
-            </div>
-            <div class="ruleListDiv">
-                <h2>Non-Prioritized Rules</h2>
-                <ul id="nonPrioritizedRules" class="connectedSortable">
                   <li class="ui-state-default">Item 11</li>
                   <li class="ui-state-default">Item 12</li>
                   <li class="ui-state-default">Item 13</li>
                   <li class="ui-state-default">Item 14</li>
                   <li class="ui-state-default">Item 15</li>
+				</ul>
+            </div>
+            <div class="ruleListDiv">
+                <ul id="prioritizedRules" class="connectedSortable">
+                  <li class="ui-state-default">Item 16</li>
+                  <li class="ui-state-default">Item 17</li>
+                  <li class="ui-state-default">Item 18</li>
+                  <li class="ui-state-default">Item 19</li>
+                  <li class="ui-state-default">Item 20</li>
+                  <li class="ui-state-default">Item 21</li>
+                  <li class="ui-state-default">Item 22</li>
+                  <li class="ui-state-default">Item 23</li>
+                  <li class="ui-state-default">Item 24</li>
+                  <li class="ui-state-default">Item 25</li>
+                  <li class="ui-state-default">Item 26</li>
+                  <li class="ui-state-default">Item 27</li>
+                  <li class="ui-state-default">Item 28</li>
+                  <li class="ui-state-default">Item 29</li>
+                  <li class="ui-state-default">Item 30</li>
+                </ul>
+            </div>
+            <div class="ruleListDiv">
+                <ul id="nonPrioritizedRules" class="connectedSortable">
+                  <li class="ui-state-default">Item 31</li>
+                  <li class="ui-state-default">Item 32</li>
+                  <li class="ui-state-default">Item 33</li>
+                  <li class="ui-state-default">Item 34</li>
+                  <li class="ui-state-default">Item 35</li>
+                  <li class="ui-state-default">Item 36</li>
+                  <li class="ui-state-default">Item 37</li>
+                  <li class="ui-state-default">Item 38</li>
+                  <li class="ui-state-default">Item 39</li>
+                  <li class="ui-state-default">Item 40</li>
+                  <li class="ui-state-default">Item 41</li>
+                  <li class="ui-state-default">Item 42</li>
+                  <li class="ui-state-default">Item 43</li>
+                  <li class="ui-state-default">Item 44</li>
+                  <li class="ui-state-default">Item 45</li>
                 </ul>
             </div>
         </div>

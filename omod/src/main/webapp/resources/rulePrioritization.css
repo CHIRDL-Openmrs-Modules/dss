@@ -5,26 +5,33 @@
 
 #ruleListsDiv {
 	width: 100%;
-	height: 100%;
+	height: 400px;
 	padding-top: 20px;
+}
+
+#ruleListTitlesDiv {
+    width: 100%;
+    height: 35px;
+    padding-top: 20px;
 }
 
 #availableRules, #prioritizedRules, #nonPrioritizedRules {
     border: 1px solid #eee;
-    width: 142px;
+    height: 400px;
+    width: 100%;
     min-height: 20px;
     list-style-type: none;
     margin: 0;
     padding: 5px 0 0 0;
-    float: left;
     margin-right: 10px;
+    overflow: auto;
 }
 
 #availableRules li, #prioritizedRules li, #nonPrioritizedRules li {
     margin: 0 5px 5px 5px;
     padding: 5px;
     font-size: 1.2em;
-    width: 120px;
+    width: 90%;
 }
 
 #ruleContent {
@@ -45,16 +52,24 @@ select {
 	min-width: 450px;
 }
 
+.selected {
+    background: #E1E0E0 !important;
+}
+
 .overflow {
     height: 200px;
 }
 
-.ruleListDiv {
-	height: 100%;
+.listOverflow {
+    height: 400px;
+}
+
+.ruleListDiv, .ruleListTitleDiv {
+	height: 400px;
     width: 33%;
-    float: left;
     margin: auto;
     text-align: center;
+    display: inline-block;
 }
 
 .connectedSortable {
