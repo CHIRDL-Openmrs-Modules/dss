@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.openmrs.Patient;
+import org.openmrs.annotation.Authorized;
 import org.openmrs.api.APIException;
 import org.openmrs.logic.result.Result;
 import org.openmrs.module.dss.DssRule;
@@ -25,6 +26,7 @@ public interface DssService
 	 * @param ruleList List of rules to run
 	 * @return String result as a string
 	 */
+	@Authorized()
 	public String runRulesAsString(Patient p, List<Rule> ruleList);
 
 	/**
@@ -33,6 +35,7 @@ public interface DssService
 	 * @param rule single rule to evaluate
 	 * @return String result as an openmrs Result object
 	 */
+	@Authorized()
 	public Result runRule(Patient p, Rule rule);
 
 	/**
@@ -41,6 +44,7 @@ public interface DssService
 	 * @param ruleList list of rules to evaluate
 	 * @return ArrayList of openmrs Result objects
 	 */
+	@Authorized()
 	public ArrayList<Result> runRules(Patient p, List<Rule> ruleList);
 
 	/**
@@ -49,8 +53,10 @@ public interface DssService
 	 * @return Rule rule from the dss_rule table
 	 * @throws APIException
 	 */
+	@Authorized()
 	public Rule getRule(int ruleId) throws APIException;
 
+	@Authorized()
 	public Rule getRule(String tokenName) throws APIException;
 	
 	/**
@@ -61,16 +67,20 @@ public interface DssService
 	 * @return Rule rule that was added to the dss_rule table
 	 * @throws APIException
 	 */
+	@Authorized()
 	public Rule addRule(String classFilename, DssRule rule) throws APIException;
 
 	/**
 	 * Deletes an existing rule from the dss_rule table based on the ruleId
 	 * @param ruleId unique id for the rule to be deleted from the dss_rule table
 	 */
+	@Authorized()
 	public void deleteRule(int ruleId);
 		
+	@Authorized()
 	public List<Rule> getPrioritizedRules(String type);
 	
+	@Authorized()
 	public List<Rule> getNonPrioritizedRules(String type);
 		
 	/**
@@ -84,6 +94,7 @@ public interface DssService
 	 * be matched in the dss_rule query using LIKE instead of exact matching
 	 * @return List<Rule>
 	 */
+	@Authorized()
 	public List<Rule> getRules(Rule rule, boolean ignoreCase, boolean enableLike, String sortColumn);
 
 	/**
@@ -92,6 +103,7 @@ public interface DssService
 	 * @return Rule object
 	 * @throws Exception
 	 */
+	@Authorized()
 	public org.openmrs.logic.Rule loadRule(String rule, boolean updateRule) throws Exception;
 	
 	/**
@@ -101,6 +113,7 @@ public interface DssService
 	 * @param startPriority Only rules with a priority equal to or greater than this will be returned.
 	 * @return
 	 */
+	@Authorized()
 	public List<Rule> getPrioritizedRules(String type, Integer startPriority);
 
 	/**
@@ -110,6 +123,7 @@ public interface DssService
 	 * @param ruleAttributeName
 	 * @return
 	 */
+	@Authorized()
 	public RuleAttribute getRuleAttribute(String ruleAttributeName);
 	
 	/**
@@ -119,6 +133,7 @@ public interface DssService
 	 * @param ruleAttributeId
 	 * @return
 	 */
+	@Authorized()
 	public RuleAttribute getRuleAttribute(Integer ruleAttributeId);
 	
 	/**
@@ -129,6 +144,7 @@ public interface DssService
 	 * @param ruleAttributeName
 	 * @return
 	 */
+	@Authorized()
 	public RuleAttributeValue getRuleAttributeValue(Integer ruleId, String ruleAttributeName);
 	
 	/**
@@ -139,6 +155,7 @@ public interface DssService
 	 * @param ruleAttributeName
 	 * @return
 	 */
+	@Authorized()
 	public List<RuleAttributeValue> getRuleAttributeValues(Integer ruleId, String ruleAttributeName);
 	
 	/**
@@ -149,6 +166,7 @@ public interface DssService
 	 * @param ruleAttributeId
 	 * @return
 	 */
+	@Authorized()
 	public List<RuleAttributeValue> getRuleAttributeValues(Integer ruleId, Integer ruleAttributeId);
 	
 	/**
@@ -158,6 +176,7 @@ public interface DssService
 	 * @param value
 	 * @return
 	 */
+	@Authorized()
 	public RuleAttributeValue saveRuleAttributeValue(RuleAttributeValue value);
 	
 	/**
@@ -167,6 +186,7 @@ public interface DssService
 	 * @param value
 	 * @return
 	 */
+	@Authorized()
 	public List<RuleAttributeValue> getRuleAttributesByValue(Integer ruleAttributeId,String value);
 	
 }
