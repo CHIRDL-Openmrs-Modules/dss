@@ -1,5 +1,7 @@
 package org.openmrs.module.dss.service;
 
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -7,6 +9,7 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.openmrs.annotation.Authorized;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.chirdlutil.util.IOUtil;
 import org.openmrs.module.dss.DssRule;
@@ -15,6 +18,7 @@ import org.openmrs.module.dss.hibernateBeans.RuleEntry;
 import org.openmrs.module.dss.hibernateBeans.RuleType;
 import org.openmrs.module.dss.util.TestUtil;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
+import org.openmrs.test.SkipBaseSetup;
 
 public class DssServiceTest extends BaseModuleContextSensitiveTest{
 	
@@ -257,6 +261,22 @@ public class DssServiceTest extends BaseModuleContextSensitiveTest{
 		
 		rules = dssService.getRulesByType("PrioritizedTest");
 		Assert.assertEquals(4, rules.size());
+	}
+	
+	/**
+	 * Test to make sure that all service methods have the Authorized annotation
+	 * @throws Exception
+	 */
+	@Test
+	@SkipBaseSetup
+	public void checkAuthorizationAnnotations() throws Exception {
+		Method[] allMethods = DssService.class.getDeclaredMethods();
+		for (Method method : allMethods) {
+		    if (Modifier.isPublic(method.getModifiers())) {
+		        Authorized authorized = method.getAnnotation(Authorized.class);
+		        Assert.assertNotNull("Authorized annotation not found on method " + method.getName(), authorized);
+		    }
+		}
 	}
 	
 	private class TestRule implements DssRule {
