@@ -279,6 +279,7 @@ public interface DssService
 	 * @return List of RuleType objects
 	 * @throws APIException
 	 */
+	@Authorized()
 	public List<RuleType> getRuleTypes(boolean includeRetired) throws APIException;
 	
 	/**
