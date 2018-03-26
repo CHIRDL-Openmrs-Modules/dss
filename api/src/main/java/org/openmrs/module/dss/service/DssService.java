@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.openmrs.Patient;
+import org.openmrs.annotation.Authorized;
 import org.openmrs.api.APIException;
 import org.openmrs.logic.result.Result;
 import org.openmrs.module.dss.DssRule;
@@ -29,6 +30,7 @@ public interface DssService
 	 * @return String result as a string
 	 * @throws APIException
 	 */
+	@Authorized()
 	public String runRulesAsString(Patient p, List<Rule> ruleList) throws APIException;
 
 	/**
@@ -39,6 +41,7 @@ public interface DssService
 	 * @return String result as an openmrs Result object
 	 * @throws APIException
 	 */
+	@Authorized()
 	public Result runRule(Patient p, Rule rule) throws APIException;
 
 	/**
@@ -49,6 +52,7 @@ public interface DssService
 	 * @return ArrayList of openmrs Result objects
 	 * @throws APIException
 	 */
+	@Authorized()
 	public ArrayList<Result> runRules(Patient p, List<Rule> ruleList) throws APIException;
 
 	/**
@@ -58,6 +62,7 @@ public interface DssService
 	 * @return Rule rule from the dss_rule table
 	 * @throws APIException
 	 */
+	@Authorized()
 	public Rule getRule(int ruleId) throws APIException;
 
 	/**
@@ -67,6 +72,7 @@ public interface DssService
 	 * @return Rule from the dss_rule table
 	 * @throws APIException
 	 */
+	@Authorized()
 	public Rule getRule(String tokenName) throws APIException;
 	
 	/**
@@ -78,6 +84,7 @@ public interface DssService
 	 * @return Rule rule that was added to the dss_rule table
 	 * @throws APIException
 	 */
+	@Authorized()
 	public Rule addRule(String classFilename, DssRule rule) throws APIException;
 
 	/**
@@ -88,8 +95,9 @@ public interface DssService
 	 * @return
 	 * @throws APIException
 	 */
+	@Authorized()
 	public List<Rule> getPrioritizedRules(String type) throws APIException;
-	
+
 	/**
 	 * Get non prioritized rules based on type.
 	 * 
@@ -97,6 +105,7 @@ public interface DssService
 	 * @return List of Rule objects with the provided type.
 	 * @throws APIException
 	 */
+	@Authorized()
 	public List<Rule> getNonPrioritizedRules(String type) throws APIException;
 		
 	/**
@@ -113,6 +122,7 @@ public interface DssService
 	 * @return List<Rule>
 	 * @throws APIException
 	 */
+	@Authorized()
 	public List<Rule> getRules(Rule rule, boolean ignoreCase, boolean enableLike, 
 			String sortColumn) throws APIException;
 	
@@ -123,6 +133,7 @@ public interface DssService
 	 * @return List of Rule objects containing the provided rule type.
 	 * @throws APIException
 	 */
+	@Authorized()
 	public List<Rule> getRulesByType(String type) throws APIException;
 
 	/**
@@ -132,6 +143,7 @@ public interface DssService
 	 * @return Rule object
 	 * @throws APIException
 	 */
+	@Authorized()
 	public org.openmrs.logic.Rule loadRule(String rule, boolean updateRule) throws APIException;
 	
 	/**
@@ -143,6 +155,7 @@ public interface DssService
 	 * (or 0 if not stated).
 	 * @throws APIException
 	 */
+	@Authorized()
 	public List<Rule> getPrioritizedRules(String type, Integer startPriority) throws APIException;
 
 	/**
@@ -153,6 +166,7 @@ public interface DssService
 	 * @return
 	 * @throws APIException
 	 */
+	@Authorized()
 	public RuleAttribute getRuleAttribute(String ruleAttributeName)  throws APIException;
 	
 	/**
@@ -163,6 +177,7 @@ public interface DssService
 	 * @return
 	 * @throws APIException
 	 */
+	@Authorized()
 	public RuleAttribute getRuleAttribute(Integer ruleAttributeId) throws APIException;
 	
 	/**
@@ -174,6 +189,7 @@ public interface DssService
 	 * @return
 	 * @throws APIException
 	 */
+	@Authorized()
 	public RuleAttributeValue getRuleAttributeValue(Integer ruleId, 
 			String ruleAttributeName) throws APIException;
 	
@@ -186,6 +202,7 @@ public interface DssService
 	 * @return
 	 * @throws APIException
 	 */
+	@Authorized()
 	public List<RuleAttributeValue> getRuleAttributeValues(Integer ruleId, 
 			String ruleAttributeName) throws APIException;
 	
@@ -198,6 +215,7 @@ public interface DssService
 	 * @return
 	 * @throws APIException
 	 */
+	@Authorized()
 	public List<RuleAttributeValue> getRuleAttributeValues(Integer ruleId, 
 			Integer ruleAttributeId) throws APIException;
 	
@@ -209,6 +227,7 @@ public interface DssService
 	 * @return
 	 * @throws APIException
 	 */
+	@Authorized()
 	public RuleAttributeValue saveRuleAttributeValue(RuleAttributeValue value) throws APIException;
 	
 	/**
@@ -219,6 +238,7 @@ public interface DssService
 	 * @return
 	 * @throws APIException
 	 */
+	@Authorized()
 	public List<RuleAttributeValue> getRuleAttributesByValue(Integer ruleAttributeId, 
 			String value) throws APIException;
 	
@@ -229,6 +249,7 @@ public interface DssService
 	 * @return The added or updated rule type.
 	 * @throws APIException
 	 */
+	@Authorized()
 	public RuleType saveRuleType(RuleType ruleType) throws APIException;
 	
 	/**
@@ -238,6 +259,7 @@ public interface DssService
 	 * @param reason The reason for retiring the rule type.
 	 * @throws APIException
 	 */
+	@Authorized()
 	public void retireRuleType(RuleType ruleType, String reason) throws APIException;
 	
 	/**
@@ -247,6 +269,7 @@ public interface DssService
 	 * @return RuleType object matching the provided type of null if one can't be found
 	 * @throws APIException
 	 */
+	@Authorized()
 	public RuleType getRuleType(String type) throws APIException;
 	
 	/**
@@ -256,6 +279,7 @@ public interface DssService
 	 * @return The added or updated rule entry.
 	 * @throws APIException
 	 */
+	@Authorized()
 	public RuleEntry saveRuleEntry(RuleEntry ruleEntry) throws APIException;
 	
 	/**
@@ -265,6 +289,7 @@ public interface DssService
 	 * @param reason The reason for retiring the rule entry.
 	 * @throws APIException
 	 */
+	@Authorized()
 	public void retireRuleEntry(RuleEntry ruleEntry, String reason) throws APIException;
 	
 	/**
@@ -275,6 +300,7 @@ public interface DssService
 	 * @return RuleEntry object or null if one cannot be found.
 	 * @throws APIException
 	 */
+	@Authorized()
 	public RuleEntry getRuleEntry(Rule rule, RuleType ruleType) throws APIException;
 	
 	/**
@@ -285,6 +311,7 @@ public interface DssService
 	 * @return RuleEntry object or null if one cannot be found.
 	 * @throws APIException
 	 */
+	@Authorized()
 	public RuleEntry getRuleEntry(Integer ruleId, String ruleType) throws APIException;
 	
 	/**
@@ -294,5 +321,6 @@ public interface DssService
 	 * @return List of RuleEntry objects referencing the provided rule.
 	 * @throws APIException
 	 */
+	@Authorized()
 	public List<RuleEntry> getRuleReferences(Rule rule) throws APIException;
 }
