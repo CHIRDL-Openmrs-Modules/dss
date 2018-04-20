@@ -10,8 +10,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.dss.hibernateBeans.Rule;
+import org.openmrs.module.dss.hibernateBeans.RuleEntry;
 import org.openmrs.module.dss.hibernateBeans.RuleType;
+import org.openmrs.module.dss.hibernateBeans.dto.RuleEntryDTO;
 import org.openmrs.module.dss.service.DssService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -60,17 +61,19 @@ public class RulePrioritizationController {
 		return FORM_VIEW;
 	}
 	
-	@RequestMapping(value = "getPrioritizedRules", method = RequestMethod.GET)
+	@RequestMapping(value = "getPrioritizedRuleEntries", method = RequestMethod.GET)
 	@ResponseBody
-	public List<Rule> getPrioritizedRules(@RequestParam(value = "ruleType", required = true) String ruleType){
+	public List<RuleEntryDTO> getPrioritizedRules(@RequestParam(value = "ruleType", required = true) String ruleType){
 		DssService dssService = Context.getService(DssService.class);
-		return dssService.getPrioritizedRules(ruleType);
+		List<RuleEntry> ruleEntries = dssService.getPrioritizedRuleEntries(ruleType);
+		return RuleEntryDTO.convertFrom(ruleEntries);
 	}
 	
-	@RequestMapping(value = "getNonPrioritizedRules", method = RequestMethod.GET)
+	@RequestMapping(value = "getNonPrioritizedRuleEntries", method = RequestMethod.GET)
 	@ResponseBody
-	public List<Rule> getNonPrioritizedRules(@RequestParam(value = "ruleType", required = true) String ruleType){
+	public List<RuleEntryDTO> getNonPrioritizedRuleEntries(@RequestParam(value = "ruleType", required = true) String ruleType){
 		DssService dssService = Context.getService(DssService.class);
-		return dssService.getNonPrioritizedRules(ruleType);
+		List<RuleEntry> ruleEntries = dssService.getNonPrioritizedRuleEntries(ruleType);
+		return RuleEntryDTO.convertFrom(ruleEntries);
 	}
 }

@@ -297,6 +297,39 @@ public class HibernateDssDAO implements DssDAO
     }
     
     /**
+     * @see org.openmrs.module.dss.db.DssDAO#getPrioritizedRuleEntries(java.lang.String, java.lang.Integer)
+     */
+	public List<RuleEntry> getPrioritizedRuleEntries(String ruleType, Integer startPriority) throws DAOException {
+		try {
+			AdministrationService adminService = Context.getAdministrationService();
+			String sortOrder = adminService.getGlobalProperty("dss.ruleSortOrder");
+			boolean sortAsc = "ASC".equalsIgnoreCase(sortOrder);
+			Order order = Order.desc("entry.priority");
+			if (sortAsc) {
+				order = Order.asc("entry.priority");
+			}
+			
+			if (startPriority == null) {
+				startPriority = 0;
+			}
+			
+			Criteria crit = sessionFactory.getCurrentSession().createCriteria(RuleEntry.class, "entry")
+					.createAlias("rule", "rule")
+					.createAlias("ruleType", "ruleType")
+					.add(Restrictions.eq("ruleType.name", ruleType))
+					.add(Restrictions.eq("entry.retired", Boolean.FALSE))
+					.add(Restrictions.eq("ruleType.retired", Boolean.FALSE))
+					.add(Restrictions.ge("entry.priority", startPriority))
+					.add(Restrictions.lt("entry.priority", RuleEntry.RULE_PRIORITY_RETIRE))
+					.addOrder(order);
+			return crit.list();
+		} catch (Exception e) {
+			log.error("Error retrieving prioritized rule entries for ruleType = " + ruleType, e);
+			throw new DAOException(e);
+		}
+	}
+    
+    /**
      * @see org.openmrs.module.dss.db.DssDAO#getNonPrioritizedRules(java.lang.String)
      */
 	public List<Rule> getNonPrioritizedRules(String type) throws DAOException
@@ -322,6 +355,26 @@ public class HibernateDssDAO implements DssDAO
 		} catch (Exception e)
 		{
 			log.error("Error in method getNonPrioritizedRules type = " + type, e);
+			throw new DAOException(e);
+		}
+	}
+	
+	/**
+	 * @see org.openmrs.module.dss.db.DssDAO#getNonPrioritizedRuleEntries(java.lang.String)
+	 */
+	public List<RuleEntry> getNonPrioritizedRuleEntries(String ruleType) throws DAOException {
+		try {
+			Criteria crit = sessionFactory.getCurrentSession().createCriteria(RuleEntry.class, "entry")
+					.createAlias("rule", "rule")
+					.createAlias("ruleType", "ruleType")
+					.add(Restrictions.eq("ruleType.name", ruleType))
+					.add(Restrictions.eq("entry.retired", Boolean.FALSE))
+					.add(Restrictions.eq("ruleType.retired", Boolean.FALSE))
+					.add(Restrictions.isNull("entry.priority"))
+					.addOrder(Order.asc("rule.tokenName"));
+			return crit.list();
+		} catch (Exception e) {
+			log.error("Error retrieving non-prioritized rule entries for ruleType = " + ruleType, e);
 			throw new DAOException(e);
 		}
 	}

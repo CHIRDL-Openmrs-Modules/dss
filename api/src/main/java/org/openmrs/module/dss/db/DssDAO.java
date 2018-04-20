@@ -42,6 +42,15 @@ public interface DssDAO {
 	 * @throws DAOException
 	 */
 	public List<Rule> getNonPrioritizedRules(String type) throws DAOException;
+	
+	/**
+	 * Get non-prioritized rule entries based on a rule type.
+	 * 
+	 * @param ruleType Only rule entries with this rule type will be returned.
+	 * @return List of non-prioritized RuleEntry objects with the provided rule type.
+	 * @throws DAOException
+	 */
+	public List<RuleEntry> getNonPrioritizedRuleEntries(String ruleType) throws DAOException;
 		
 	/**
 	 * Returns a list of rules from the dss_rule table that match the criteria
@@ -85,6 +94,17 @@ public interface DssDAO {
 	 * @throws DAOException
 	 */
 	public List<Rule> getPrioritizedRules(String type, Integer startPriority) throws DAOException;
+	
+	/**
+	 * Get prioritized rule entries based on a rule type and start priority.
+	 * 
+	 * @param ruleType Only rule entries with this rule type will be returned.
+	 * @param startPriority Only rule entries with rules with a priority equal to or greater than this will be returned.
+	 * @return List of prioritized RuleEntry objects with the provided rule type and and a priority equal to or greater
+	 * than the one provided.
+	 * @throws DAOException
+	 */
+	public List<RuleEntry> getPrioritizedRuleEntries(String ruleType, Integer startPriority) throws DAOException;
 
 	/**
 	 * 

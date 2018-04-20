@@ -25,9 +25,9 @@
 	        <fieldset>
 	            <select name="ruleTypeSelect" id="ruleTypeSelect">
 	                <option selected="selected">Please Choose a Rule Type</option>
-	                <option>Create New...</option>
+	                <option value="Create New">Create New...</option>
 	                <c:forEach items="${ruleTypes}" var="ruleType">
-	                    <option>${ruleType.name}</option>
+	                    <option value="${ruleType.name}">${ruleType.name}</option>
 	                </c:forEach>
 	            </select>
 	        </fieldset>
@@ -66,7 +66,7 @@
             </div>
             <div class="ruleListDiv">
                 <ul id="prioritizedRules" class="connectedSortable">
-                  <li class="ui-state-default">Item 16</li>
+                  <!-- <li class="ui-state-default">Item 16</li>
                   <li class="ui-state-default">Item 17</li>
                   <li class="ui-state-default">Item 18</li>
                   <li class="ui-state-default">Item 19</li>
@@ -80,12 +80,12 @@
                   <li class="ui-state-default">Item 27</li>
                   <li class="ui-state-default">Item 28</li>
                   <li class="ui-state-default">Item 29</li>
-                  <li class="ui-state-default">Item 30</li>
+                  <li class="ui-state-default">Item 30</li> -->
                 </ul>
             </div>
             <div class="ruleListDiv">
                 <ul id="nonPrioritizedRules" class="connectedSortable">
-                  <li class="ui-state-default">Item 31</li>
+                  <!--<li class="ui-state-default">Item 31</li>
                   <li class="ui-state-default">Item 32</li>
                   <li class="ui-state-default">Item 33</li>
                   <li class="ui-state-default">Item 34</li>
@@ -99,7 +99,7 @@
                   <li class="ui-state-default">Item 42</li>
                   <li class="ui-state-default">Item 43</li>
                   <li class="ui-state-default">Item 44</li>
-                  <li class="ui-state-default">Item 45</li>
+                  <li class="ui-state-default">Item 45</li> -->
                 </ul>
             </div>
         </div>

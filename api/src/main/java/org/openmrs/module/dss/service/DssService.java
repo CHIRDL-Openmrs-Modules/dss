@@ -97,6 +97,29 @@ public interface DssService
 	 */
 	@Authorized()
 	public List<Rule> getPrioritizedRules(String type) throws APIException;
+	
+	/**
+	 * Get prioritized rule entries based on a rule type and start priority.
+	 * 
+	 * @param ruleType Only rule entries with this rule type will be returned.
+	 * @return List of prioritized RuleEntry objects with the provided rule type and and a priority equal to or greater
+	 * than the one provided.
+	 * @throws APIException
+	 */
+	@Authorized()
+	public List<RuleEntry> getPrioritizedRuleEntries(String ruleType) throws APIException;
+	
+	/**
+	 * Get prioritized rule entries based on a rule type and start priority.
+	 * 
+	 * @param ruleType Only rule entries with this rule type will be returned.
+	 * @param startPriority Only rule entries with rules with a priority equal to or greater than this will be returned.
+	 * @return List of prioritized RuleEntry objects with the provided rule type and and a priority equal to or greater
+	 * than the one provided.
+	 * @throws APIException
+	 */
+	@Authorized()
+	public List<RuleEntry> getPrioritizedRuleEntries(String ruleType, Integer startPriority) throws APIException;
 
 	/**
 	 * Get non prioritized rules based on type.
@@ -107,6 +130,16 @@ public interface DssService
 	 */
 	@Authorized()
 	public List<Rule> getNonPrioritizedRules(String type) throws APIException;
+	
+	/**
+	 * Get non-prioritized rule entries based on a rule type.
+	 * 
+	 * @param ruleType Only rule entries with this rule type will be returned.
+	 * @return List of non-prioritized RuleEntry objects with the provided rule type.
+	 * @throws APIException
+	 */
+	@Authorized()
+	public List<RuleEntry> getNonPrioritizedRuleEntries(String ruleType) throws APIException;
 		
 	/**
 	 * Returns a list of rules from the dss_rule table that match the criteria
