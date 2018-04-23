@@ -1,5 +1,6 @@
 var dssRulePrioritizedRulesUrl = ctx + "/module/dss/getPrioritizedRuleEntries.htm?";
 var dssRuleNonPrioritizedRulesUrl = ctx + "/module/dss/getNonPrioritizedRuleEntries.htm?";
+var dssRuleDisassociatedRulesUrl = ctx + "/module/dss/getDisassociatedRules.htm?";
 $( function() {
     $( "#ruleTypeSelect" )
       .selectmenu({
@@ -7,6 +8,8 @@ $( function() {
         	  var ruleType = data.item.value;
         	  populatePrioritizedRules(ruleType);
         	  populateNonPrioritizedRules(ruleType);
+        	  populateAvailableRules(ruleType);
+        	  event.preventDefault();
           }
          }
       )
@@ -66,6 +69,39 @@ $( function() {
         }
       }).addClass( "listOverflow" );
     
+    $("#errorDialog").dialog({
+        open: function() { 
+            $(".ui-dialog").addClass("ui-dialog-shadow"); 
+            $(".ui-dialog").addClass("no-close");
+        },
+        autoOpen: false,
+        modal: true,
+        resizable: false,
+        show: {
+          effect: "fade",
+          duration: 500
+        },
+        hide: {
+          effect: "fade",
+          duration: 500
+        },
+        buttons: [
+          {
+	          text:"OK",
+	          click: function() {
+	        	  $(this).dialog("close");
+	          }
+          }
+        ]
+    });
+    
+    $( ".progressBarDiv" ).hide();
+    
+    $( "#submitButton" ).button();
+    $("#submitButton").click(function(event) {
+		//$("#submitConfirmationDialog").dialog("open");
+		event.preventDefault();
+	});
 } );
 
 function populatePrioritizedRules(ruleType) {
@@ -75,11 +111,10 @@ function populatePrioritizedRules(ruleType) {
 	var action = "ruleType=" + ruleType;
 	$.ajax({
 	  beforeSend: function(){
-		  //$("#formServerError").hide();
-		  //$("#formLoading").show();
+		  $( "#prioritizedRulesPB" ).show();
       },
       complete: function(){
-    	  //$("#formLoading").hide();
+    	  $( "#prioritizedRulesPB" ).hide();
       },
       "accepts": {
     	  mycustomtype: "application/json"
@@ -114,8 +149,8 @@ function populatePrioritizedRuleList(data) {
 }
 
 function handlePopulatePrioritizedRulesError(xhr, textStatus, error) {
-	//$( "#cacheMessage" ).html("An error occurred clearing the cache:\n" + error);
-    //$( "#clearCacheCompleteDialog" ).dialog("open");
+	$( "#errorMessage" ).html("An error occurred loading the prioritized rules list:\n" + error);
+    $( "#errorDialog" ).dialog("open");
 }
 
 function populateNonPrioritizedRules(ruleType) {
@@ -125,11 +160,10 @@ function populateNonPrioritizedRules(ruleType) {
 	var action = "ruleType=" + ruleType;
 	$.ajax({
 	  beforeSend: function(){
-		  //$("#formServerError").hide();
-		  //$("#formLoading").show();
+		  $( "#nonPrioritizedRulesPB" ).show();
       },
       complete: function(){
-    	  //$("#formLoading").hide();
+    	  $( "#nonPrioritizedRulesPB" ).hide();
       },
       "accepts": {
     	  mycustomtype: "application/json"
@@ -164,6 +198,51 @@ function populateNonPrioritizedRuleList(data) {
 }
 
 function handlePopulateNonPrioritizedRulesError(xhr, textStatus, error) {
-	//$( "#cacheMessage" ).html("An error occurred clearing the cache:\n" + error);
-    //$( "#clearCacheCompleteDialog" ).dialog("open");
+	$( "#errorMessage" ).html("An error occurred loading the non-prioritized rules list:\n" + error);
+    $( "#errorDialog" ).dialog("open");
+}
+
+function populateAvailableRules(ruleType) {
+	var selectmenu = $("#availableRules");
+	selectmenu.find("li").remove().end();
+	selectmenu.sortable("refresh");
+	var action = "ruleType=" + ruleType;
+	$.ajax({
+	  beforeSend: function(){
+		  $( "#availableRulesPB" ).show();
+      },
+      complete: function(){
+    	  $( "#availableRulesPB" ).hide();
+      },
+      "accepts": {
+    	  mycustomtype: "application/json"
+      },
+	  "cache": false,
+	  "dataType": "json",
+	  "data": action,
+	  "type": "GET",
+	  "url": dssRuleDisassociatedRulesUrl,
+	  "timeout": 30000, // optional if you want to handle timeouts (which you should)
+	  "error": handlePopulateDisassociatedRulesError, // this sets up jQuery to give me errors
+	  "success": function (data) {
+		  populateAvailableRuleList(data);
+      }
+	});
+}
+
+function populateAvailableRuleList(data) {
+	var selectmenu = $("#availableRules");
+	$.each(data, function (index, value) {
+		var ruleId = value.ruleId || null;
+		var tokenName = value.tokenName || null;
+		var listItem = '<li id="' + ruleId + '" class="ui-state-default">' + tokenName + '</li>';
+		selectmenu.append(listItem);
+    });
+	
+	selectmenu.sortable('refresh');
+}
+
+function handlePopulateDisassociatedRulesError(xhr, textStatus, error) {
+	$( "#errorMessage" ).html("An error occurred loading the available rules list:\n" + error);
+    $( "#errorDialog" ).dialog("open");
 }

@@ -565,4 +565,33 @@ public class HibernateDssDAO implements DssDAO
 			throw new DAOException(e);
 		}
 	}
+	
+	/**
+	 * @see org.openmrs.module.dss.db.DssDAO#getDisassociatedRules(java.lang.String)
+	 */
+	public List<Rule> getDisassociatedRules(String ruleType) throws DAOException {
+		try {
+			StringBuilder sql = new StringBuilder();
+			sql.append("SELECT *\n");
+			sql.append("  FROM dss_rule\n");
+			sql.append(" WHERE rule_id NOT IN\n");
+			sql.append("          (SELECT rule.rule_id\n");
+			sql.append("             FROM dss_rule rule\n");
+			sql.append("                  INNER JOIN dss_rule_entry ruleEntry\n");
+			sql.append("                     ON rule.rule_id = ruleEntry.rule_id\n");
+			sql.append("                  INNER JOIN dss_rule_type ruleType\n");
+			sql.append("                     ON ruleEntry.rule_type_id = ruleType.rule_type_id\n");
+			sql.append("            WHERE ruleType.name = ?\n");
+			sql.append("                  AND ruleType.retired = FALSE\n");
+			sql.append("                  AND ruleEntry.retired = FALSE)\n");
+			sql.append(" ORDER BY token_name ASC\n");
+			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql.toString());
+			qry.setString(0, ruleType);
+			qry.addEntity(Rule.class);
+			return qry.list();
+		} catch (Exception e) {
+			log.error("Error in method getUnassociatedRules ruleType = " + ruleType, e);
+			throw new DAOException(e);
+		}
+	}
 }

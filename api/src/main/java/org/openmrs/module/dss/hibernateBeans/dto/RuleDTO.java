@@ -1,8 +1,11 @@
 package org.openmrs.module.dss.hibernateBeans.dto;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.openmrs.module.dss.hibernateBeans.Rule;
+import org.openmrs.module.dss.hibernateBeans.RuleEntry;
 
 /**
  * DTO class for the Rule class
@@ -451,6 +454,26 @@ public class RuleDTO implements java.io.Serializable {
 		destination.setTitle(source.getTitle());
 		destination.setTokenName(source.getTokenName());
 		destination.setVersion(source.getVersion());
+		
+		return destination;
+	}
+	
+	/**
+	 * Converts a List of Rule objects to a list of RuleDTO objects.
+	 * 
+	 * @param source List of Rule objects
+	 * @return List of RuleDTO objects
+	 */
+	public static List<RuleDTO> convertFrom(List<Rule> source) {
+		List<RuleDTO> destination = new ArrayList<>();
+		if (source == null) {
+			return destination;
+		}
+		
+		for (Rule rule : source) {
+			RuleDTO ruleDTO = new RuleDTO(rule);
+			destination.add(ruleDTO);
+		}
 		
 		return destination;
 	}

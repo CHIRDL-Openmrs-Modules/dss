@@ -10,8 +10,10 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.dss.hibernateBeans.Rule;
 import org.openmrs.module.dss.hibernateBeans.RuleEntry;
 import org.openmrs.module.dss.hibernateBeans.RuleType;
+import org.openmrs.module.dss.hibernateBeans.dto.RuleDTO;
 import org.openmrs.module.dss.hibernateBeans.dto.RuleEntryDTO;
 import org.openmrs.module.dss.service.DssService;
 import org.springframework.stereotype.Controller;
@@ -75,5 +77,13 @@ public class RulePrioritizationController {
 		DssService dssService = Context.getService(DssService.class);
 		List<RuleEntry> ruleEntries = dssService.getNonPrioritizedRuleEntries(ruleType);
 		return RuleEntryDTO.convertFrom(ruleEntries);
+	}
+	
+	@RequestMapping(value = "getDisassociatedRules", method = RequestMethod.GET)
+	@ResponseBody
+	public List<RuleDTO> getDisassociatedRules(@RequestParam(value = "ruleType", required = true) String ruleType){
+		DssService dssService = Context.getService(DssService.class);
+		List<Rule> rules = dssService.getDisassociatedRules(ruleType);
+		return RuleDTO.convertFrom(rules);
 	}
 }

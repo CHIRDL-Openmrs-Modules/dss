@@ -247,4 +247,12 @@ public interface DssDAO {
 	 * @throws DAOException
 	 */
 	public List<RuleEntry> getRuleReferences(Rule rule) throws DAOException;
+	
+	/**
+	 * Returns rules that are currently disassociated to the specified rule type.
+	 * @param ruleType The rule type used to find disassociated rules
+	 * @return List of Rule objects not currently associated to the provided rule type
+	 * @throws DAOException
+	 */
+	public List<Rule> getDisassociatedRules(String ruleType) throws DAOException;
 }

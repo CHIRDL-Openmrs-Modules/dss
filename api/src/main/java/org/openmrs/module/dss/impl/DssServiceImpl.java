@@ -586,4 +586,11 @@ public class DssServiceImpl implements DssService
 			}
 		}
 	}
+
+	/**
+	 * @see org.openmrs.module.dss.service.DssService#getDisassociatedRules(java.lang.String)
+	 */
+	public List<Rule> getDisassociatedRules(String ruleType) throws APIException {
+		return getDssDAO().getDisassociatedRules(ruleType);
+	}
 }
