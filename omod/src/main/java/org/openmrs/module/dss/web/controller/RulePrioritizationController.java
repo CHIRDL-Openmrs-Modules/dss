@@ -1,5 +1,7 @@
 package org.openmrs.module.dss.web.controller;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +26,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Controller for configFormAttributeValue.form
@@ -51,6 +55,8 @@ public class RulePrioritizationController {
 	protected ModelAndView processSubmit(HttpServletRequest request, HttpServletResponse response, Object object) 
 			throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
+		String availableRulesJson = request.getParameter("availableRulesSave");
+		String test = request.getParameter("test");
 		return new ModelAndView(new RedirectView(SUCCESS_FORM_VIEW), map);
 	}
 
@@ -81,9 +87,37 @@ public class RulePrioritizationController {
 	
 	@RequestMapping(value = "getDisassociatedRules", method = RequestMethod.GET)
 	@ResponseBody
-	public List<RuleDTO> getDisassociatedRules(@RequestParam(value = "ruleType", required = true) String ruleType){
+	public List<RuleEntryDTO> getDisassociatedRules(@RequestParam(value = "ruleType", required = true) String ruleType){
 		DssService dssService = Context.getService(DssService.class);
 		List<Rule> rules = dssService.getDisassociatedRules(ruleType);
-		return RuleDTO.convertFrom(rules);
+		List<RuleEntryDTO> ruleEntryDTOs = new ArrayList<>();
+		for (Rule rule : rules) {
+			RuleEntryDTO ruleEntryDTO = new RuleEntryDTO();
+			ruleEntryDTO.setRule(RuleDTO.convertFrom(rule, null));
+			ruleEntryDTOs.add(ruleEntryDTO);
+		}
+		
+		return ruleEntryDTOs;
+	}
+	
+	@RequestMapping(value = "saveRules", method = RequestMethod.POST)
+	public void saveRules(@RequestParam(value = "availableRulesSave", required = true) String availableRulesSave, 
+			@RequestParam(value = "prioritizedRulesSave", required = true) String prioritizedRulesSave, 
+			@RequestParam(value = "nonPrioritizedRulesSave", required = true) String nonPrioritizedRulesSave){
+		ObjectMapper mapper = new ObjectMapper();
+		RuleEntryDTO[] availableRuleDTOs = null;
+		RuleEntryDTO[] prioritizedRuleDTOs = null;
+		RuleEntryDTO[] nonPrioritizedRuleDTOs = null;
+		try {
+			availableRuleDTOs = mapper.readValue(availableRulesSave, RuleEntryDTO[].class);
+			prioritizedRuleDTOs = mapper.readValue(prioritizedRulesSave, RuleEntryDTO[].class);
+			nonPrioritizedRuleDTOs = mapper.readValue(nonPrioritizedRulesSave, RuleEntryDTO[].class);
+		}
+		catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		DssService dssService = Context.getService(DssService.class);
 	}
 }

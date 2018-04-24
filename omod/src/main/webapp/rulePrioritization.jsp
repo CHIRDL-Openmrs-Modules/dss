@@ -19,8 +19,7 @@
 
 <div id="ruleContent">
     <div id="title"><h1>Rule Prioritization</h1></div>
-
-    <form id="rulePrioritizationForm" name="rulePrioritizationForm" action="rulePrioritization.form" method="post">
+    <form id="rulePrioritizationForm" method="POST" action="rulePrioritization.form">
         <div id="ruleTypeDiv">
 	        <fieldset>
 	            <select name="ruleTypeSelect" id="ruleTypeSelect">
@@ -71,6 +70,15 @@
                 <div id="errorMessage" style="color:#000000;">${errorMessage}</div>
             </div>
         </div>
+        <div id="submitConfirmationDialog" title="Confirm Save" class="ui-dialog-titlebar ui-widget-header" style="overflow-x: hidden;">
+            <div style="margin: 0 auto;text-align: center;">
+                <div style="color:#000000;">Are you sure you want to save the changes?</div>
+            </div>
+        </div>
+        <input id="availableRulesSave" name="availableRulesSave" type="hidden" value=""/>
+        <input id="prioritizedRulesSave" name="prioritizedRulesSave" type="hidden" value=""/>
+        <input id="nonPrioritizedRulesSave" name="nonPrioritizedRulesSave" type="hidden" value=""/>
+        <input id="test" name="test" type="hidden" value="This is my test."/>
     </form>
 </div>
 

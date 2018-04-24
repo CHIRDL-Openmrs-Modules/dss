@@ -1,6 +1,7 @@
 var dssRulePrioritizedRulesUrl = ctx + "/module/dss/getPrioritizedRuleEntries.htm?";
 var dssRuleNonPrioritizedRulesUrl = ctx + "/module/dss/getNonPrioritizedRuleEntries.htm?";
 var dssRuleDisassociatedRulesUrl = ctx + "/module/dss/getDisassociatedRules.htm?";
+var dssRuleSaveRulesUrl = ctx + "/module/dss/saveRules.htm?";
 $( function() {
     $( "#ruleTypeSelect" )
       .selectmenu({
@@ -99,9 +100,42 @@ $( function() {
     
     $( "#submitButton" ).button();
     $("#submitButton").click(function(event) {
-		//$("#submitConfirmationDialog").dialog("open");
+    	$("#submitConfirmationDialog").dialog("open");
 		event.preventDefault();
 	});
+    
+    $("#submitConfirmationDialog").dialog({
+        open: function() { 
+            $(".ui-dialog").addClass("ui-dialog-shadow"); 
+            $(".ui-dialog").addClass("no-close");
+        },
+        autoOpen: false,
+        modal: true,
+        resizable: false,
+        show: {
+          effect: "fade",
+          duration: 500
+        },
+        hide: {
+          effect: "fade",
+          duration: 500
+        },
+        buttons: [
+          {
+	          text:"Yes",
+	          click: function() {
+	        	  $(this).dialog("close");
+	        	  save();
+	          }
+          },
+          {
+	          text:"No",
+	          click: function() {
+	        	  $(this).dialog("close");
+	          }
+          }
+        ]
+    });
 } );
 
 function populatePrioritizedRules(ruleType) {
@@ -139,7 +173,7 @@ function populatePrioritizedRuleList(data) {
 		if (ruleEntryId != null) {
 			var rule = value.rule || null;
 			if (rule != null) {
-				var listItem = '<li id="' + ruleEntryId + '" class="ui-state-default">' + rule.tokenName + '</li>';
+				var listItem = '<li rule_entry_id="' + ruleEntryId + '" rule_id="' + rule.ruleId + '" class="ui-state-default">' + rule.tokenName + '</li>';
 				selectmenu.append(listItem);
 			}
 		}
@@ -188,7 +222,7 @@ function populateNonPrioritizedRuleList(data) {
 		if (ruleEntryId != null) {
 			var rule = value.rule || null;
 			if (rule != null) {
-				var listItem = '<li id="' + ruleEntryId + '" class="ui-state-default">' + rule.tokenName + '</li>';
+				var listItem = '<li rule_entry_id="' + ruleEntryId + '" rule_id="' + rule.ruleId + '" class="ui-state-default">' + rule.tokenName + '</li>';
 				selectmenu.append(listItem);
 			}
 		}
@@ -233,10 +267,11 @@ function populateAvailableRules(ruleType) {
 function populateAvailableRuleList(data) {
 	var selectmenu = $("#availableRules");
 	$.each(data, function (index, value) {
-		var ruleId = value.ruleId || null;
-		var tokenName = value.tokenName || null;
-		var listItem = '<li id="' + ruleId + '" class="ui-state-default">' + tokenName + '</li>';
-		selectmenu.append(listItem);
+		var rule = value.rule || null;
+		if (rule != null) {
+			var listItem = '<li rule_id="' + rule.ruleId + '" class="ui-state-default">' + rule.tokenName + '</li>';
+			selectmenu.append(listItem);
+		}
     });
 	
 	selectmenu.sortable('refresh');
@@ -245,4 +280,59 @@ function populateAvailableRuleList(data) {
 function handlePopulateDisassociatedRulesError(xhr, textStatus, error) {
 	$( "#errorMessage" ).html("An error occurred loading the available rules list:\n" + error);
     $( "#errorDialog" ).dialog("open");
+}
+
+function save() {
+	//run an AJAX post request to your server-side script, $this.serialize() is the data from your form being added to the request
+	var availableRules = constructJSON($("#availableRules li"));
+	var prioritizedRules = constructJSON($("#prioritizedRules li"));
+	var nonPrioritizedRules = constructJSON($("#nonPrioritizedRules li"));
+    $.ajax({
+    	beforeSend: function (xhr) {
+		    
+	    },
+	    complete: function(){
+    	    //$( "#availableRulesPB" ).hide();
+        },
+        "cache": false,
+        "data": {availableRulesSave: JSON.stringify(availableRules), prioritizedRulesSave: JSON.stringify(prioritizedRules), nonPrioritizedRulesSave: JSON.stringify(nonPrioritizedRules)},
+        "dataType": "text",
+        "type": "POST",
+        "url": dssRuleSaveRulesUrl,
+        "timeout": 30000, // optional if you want to handle timeouts (which you should)
+        "error": handleSaveError, // this sets up jQuery to give me errors
+        "success": function (xml) {
+        	//window.parent.closeIframe();
+        }
+    });
+}
+
+function handleSaveError(xhr, textStatus, error) {
+	$( "#errorMessage" ).html("An error occurred saving the changes:\n" + error);
+    $( "#errorDialog" ).dialog("open");
+}
+
+function constructJSON(availableRuleListItems) {
+	//construct JSON for current available rules
+	var rulesJson = [];
+	
+	availableRuleListItems.each(function(idx, li) {
+	    var listItem = $(li);
+	    var ruleEntryId = listItem.attr("rule_entry_id") || null;
+	    var ruleId = listItem.attr("rule_id");
+	    var ruleEntry = new RuleEntry(ruleEntryId, ruleId)
+	    rulesJson.push(ruleEntry);
+	    
+	});
+	
+	return rulesJson;
+}
+
+function RuleEntry(ruleEntryId, ruleId) {
+	this.ruleEntryId = ruleEntryId;
+	this.rule = new Rule(ruleId);
+}
+
+function Rule(ruleId) {
+	this.ruleId = ruleId;
 }
