@@ -7,9 +7,13 @@ $( function() {
       .selectmenu({
           change: function( event, data ) {
         	  var ruleType = data.item.value;
-        	  populatePrioritizedRules(ruleType);
-        	  populateNonPrioritizedRules(ruleType);
-        	  populateAvailableRules(ruleType);
+        	  clearLists();
+        	  if (ruleType !== "Create New") {
+        		  populatePrioritizedRules(ruleType);
+	        	  populateNonPrioritizedRules(ruleType);
+	        	  populateAvailableRules(ruleType);
+        	  }
+        	  
         	  event.preventDefault();
           }
          }
@@ -139,9 +143,6 @@ $( function() {
 } );
 
 function populatePrioritizedRules(ruleType) {
-	var selectmenu = $("#prioritizedRules");
-	selectmenu.find("li").remove().end();
-	selectmenu.sortable("refresh");
 	var action = "ruleType=" + ruleType;
 	$.ajax({
 	  beforeSend: function(){
@@ -188,9 +189,6 @@ function handlePopulatePrioritizedRulesError(xhr, textStatus, error) {
 }
 
 function populateNonPrioritizedRules(ruleType) {
-	var selectmenu = $("#nonPrioritizedRules");
-	selectmenu.find("li").remove().end();
-	selectmenu.sortable("refresh");
 	var action = "ruleType=" + ruleType;
 	$.ajax({
 	  beforeSend: function(){
@@ -237,9 +235,6 @@ function handlePopulateNonPrioritizedRulesError(xhr, textStatus, error) {
 }
 
 function populateAvailableRules(ruleType) {
-	var selectmenu = $("#availableRules");
-	selectmenu.find("li").remove().end();
-	selectmenu.sortable("refresh");
 	var action = "ruleType=" + ruleType;
 	$.ajax({
 	  beforeSend: function(){
@@ -284,6 +279,13 @@ function handlePopulateDisassociatedRulesError(xhr, textStatus, error) {
 
 function save() {
 	//run an AJAX post request to your server-side script, $this.serialize() is the data from your form being added to the request
+	var ruleType = $("#ruleTypeSelect option:selected").val();
+	if (ruleType === "Create New") {
+		$( "#errorMessage" ).html("Please select a valid rule type.");
+	    $( "#errorDialog" ).dialog("open");
+	    return;
+	}
+	
 	var availableRules = constructJSON($("#availableRules li"));
 	var prioritizedRules = constructJSON($("#prioritizedRules li"));
 	var nonPrioritizedRules = constructJSON($("#nonPrioritizedRules li"));
@@ -295,11 +297,11 @@ function save() {
     	    //$( "#availableRulesPB" ).hide();
         },
         "cache": false,
-        "data": {availableRulesSave: JSON.stringify(availableRules), prioritizedRulesSave: JSON.stringify(prioritizedRules), nonPrioritizedRulesSave: JSON.stringify(nonPrioritizedRules)},
+        "data": {availableRulesSave: JSON.stringify(availableRules), prioritizedRulesSave: JSON.stringify(prioritizedRules), nonPrioritizedRulesSave: JSON.stringify(nonPrioritizedRules), ruleType: ruleType},
         "dataType": "text",
         "type": "POST",
         "url": dssRuleSaveRulesUrl,
-        "timeout": 30000, // optional if you want to handle timeouts (which you should)
+        "timeout": 600000, // optional if you want to handle timeouts (which you should)
         "error": handleSaveError, // this sets up jQuery to give me errors
         "success": function (xml) {
         	//window.parent.closeIframe();
@@ -335,4 +337,18 @@ function RuleEntry(ruleEntryId, ruleId) {
 
 function Rule(ruleId) {
 	this.ruleId = ruleId;
+}
+
+function clearLists() {
+	var selectmenu = $("#prioritizedRules");
+	selectmenu.find("li").remove().end();
+	selectmenu.sortable("refresh");
+	
+	selectmenu = $("#nonPrioritizedRules");
+	selectmenu.find("li").remove().end();
+	selectmenu.sortable("refresh");
+	
+	selectmenu = $("#availableRules");
+	selectmenu.find("li").remove().end();
+	selectmenu.sortable("refresh");
 }
