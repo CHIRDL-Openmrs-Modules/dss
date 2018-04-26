@@ -482,7 +482,6 @@ public class DssServiceImpl implements DssService
 		databaseRule.setAgeMaxUnits(rule.getAgeMaxUnits());
 		
 		databaseRule = getDssDAO().addOrUpdateRule(databaseRule);
-		updateRuleReferences(rule, databaseRule);
 		return databaseRule;
 	}
 	
@@ -551,40 +550,6 @@ public class DssServiceImpl implements DssService
 	 */
 	public List<RuleEntry> getRuleReferences(Rule rule) throws APIException {
 		return getDssDAO().getRuleReferences(rule);
-	}
-	
-	/**
-	 * Updates any information referenced by rule entries.
-	 * 
-	 * @param dssRule The rule containing the new priority
-	 * @param rule The database rule being referenced.
-	 */
-	private void updateRuleReferences(DssRule dssRule, Rule rule) {
-		// See if there are currently any entries referencing this rule
-		List<RuleEntry> ruleEntries = getRuleReferences(rule);
-		if (ruleEntries != null && !ruleEntries.isEmpty()) {
-			Integer priority = dssRule.getPriority();
-			for (RuleEntry ruleEntry : ruleEntries) {
-				Integer currentPriority = ruleEntry.getPriority();
-				if ((currentPriority == null && priority != null) ||
-						(currentPriority != null && priority == null) || 
-						(currentPriority != null && !currentPriority.equals(priority))) {
-					// Retire the current row
-					Context.getService(DssService.class).retireRuleEntry(
-						ruleEntry, "Priority change from " + currentPriority + " to " + priority);
-					
-					// Only create a new row if the rule has a priority < 1000
-					if (priority == null || priority.compareTo(RuleEntry.RULE_PRIORITY_RETIRE) < 0) {
-						// Create a new rule entry
-						RuleEntry newRuleEntry = new RuleEntry();
-						newRuleEntry.setPriority(priority);
-						newRuleEntry.setRule(ruleEntry.getRule());
-						newRuleEntry.setRuleType(ruleEntry.getRuleType());
-						Context.getService(DssService.class).saveRuleEntry(newRuleEntry);
-					}
-				}
-			}
-		}
 	}
 
 	/**

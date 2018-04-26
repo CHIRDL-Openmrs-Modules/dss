@@ -36,8 +36,8 @@
     margin: 0 5px 5px 5px;
     padding: 5px;
     font-size: 1.2em;
-    width: 90%;
-    overflow: hidden;
+    width: 95%;
+    /*overflow: hidden; This helps add an ellipsis to items that are too long for the field, but causes display issues when dragging multiple items.*/
     white-space: nowrap;
     text-overflow: ellipsis;
     text-align: left;
@@ -99,6 +99,31 @@ select {
 }
 
 .submit {
-  padding-top: 20px;
-  float: right;
+    padding-top: 20px;
+    float: right;
+}
+
+textarea {
+   resize: none;
+   width: 100%;
+   overflow:hidden;
+}
+
+label, input { 
+	display:block; 
+}
+
+input.text { 
+	margin-bottom:12px; 
+	width:95%; 
+	padding: .4em; 
+}
+
+.ui-dialog .ui-state-error { 
+	padding: .3em; 
+}
+
+.validateTips { 
+	border: 1px solid transparent; 
+	padding: 0.3em; 
 }

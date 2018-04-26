@@ -23,7 +23,7 @@
         <div id="ruleTypeDiv">
 	        <fieldset>
 	            <select name="ruleTypeSelect" id="ruleTypeSelect">
-	                <option selected="selected">Please Choose a Rule Type</option>
+	                <option selected="selected" value="Please Choose a Rule Type">Please Choose a Rule Type</option>
 	                <option value="Create New">Create New...</option>
 	                <c:forEach items="${ruleTypes}" var="ruleType">
 	                    <option value="${ruleType.name}">${ruleType.name}</option>
@@ -70,6 +70,11 @@
                 <div id="errorMessage" style="color:#000000;">${errorMessage}</div>
             </div>
         </div>
+        <div id="successDialog" title="Success" class="ui-dialog-titlebar ui-widget-header" style="overflow-x: hidden;">
+            <div style="margin: 0 auto;text-align: center;">
+                <div id="successMessage" style="color:#000000;"></div>
+            </div>
+        </div>
         <div id="submitConfirmationDialog" title="Confirm Save" class="ui-dialog-titlebar ui-widget-header" style="overflow-x: hidden;">
             <div style="margin: 0 auto;text-align: center;">
                 <div style="color:#000000;">Are you sure you want to save the changes?</div>
@@ -80,6 +85,20 @@
         <input id="nonPrioritizedRulesSave" name="nonPrioritizedRulesSave" type="hidden" value=""/>
         <input id="test" name="test" type="hidden" value="This is my test."/>
     </form>
+    <div id="newRuleTypeDialog" title="Create New Rule Type">
+	  <p class="validateTips"></p>
+	  <form>
+	    <fieldset>
+	      <label for="ruleTypeName">Name</label>
+	      <input type="text" name="ruleTypeName" id="ruleTypeName" value="" class="text ui-widget-content ui-corner-all">
+	      <label for="ruleTypeDescription">Description</label>
+	      <textarea rows="9" cols="40" maxlength=255 name="ruleTypeDescription" id="ruleTypeDescription" class="text ui-widget-content ui-corner-all"></textarea>
+	 
+	      <!-- Allow form submission with keyboard without duplicating the dialog button -->
+	      <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+	    </fieldset>
+	  </form>
+	</div>
 </div>
 
 </body>

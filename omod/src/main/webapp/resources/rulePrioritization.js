@@ -1,19 +1,23 @@
-var dssRulePrioritizedRulesUrl = ctx + "/module/dss/getPrioritizedRuleEntries.htm?";
-var dssRuleNonPrioritizedRulesUrl = ctx + "/module/dss/getNonPrioritizedRuleEntries.htm?";
-var dssRuleDisassociatedRulesUrl = ctx + "/module/dss/getDisassociatedRules.htm?";
-var dssRuleSaveRulesUrl = ctx + "/module/dss/saveRules.htm?";
+var dssRulePrioritizedRulesUrl = ctx + "/module/dss/getPrioritizedRuleEntries.form?";
+var dssRuleNonPrioritizedRulesUrl = ctx + "/module/dss/getNonPrioritizedRuleEntries.form?";
+var dssRuleDisassociatedRulesUrl = ctx + "/module/dss/getDisassociatedRules.form?";
+var dssRuleSaveRulesUrl = ctx + "/module/dss/saveRules.form?";
+var dssRuleCreateRuleTypeUrl = ctx + "/module/dss/createRuleType.form?";
+var allFields;
+var ruleTypeName;
+var ruleTypeDescription;
+var tips;
+var newRuleTypeDialog;
 $( function() {
+	ruleTypeName = $( "#ruleTypeName" );
+	ruleTypeDescription = $( "#ruleTypeDescription" );
+	allFields = $( [] ).add( ruleTypeName ).add( ruleTypeDescription );
+	tips = $( ".validateTips" );
+	
     $( "#ruleTypeSelect" )
       .selectmenu({
           change: function( event, data ) {
-        	  var ruleType = data.item.value;
-        	  clearLists();
-        	  if (ruleType !== "Create New") {
-        		  populatePrioritizedRules(ruleType);
-	        	  populateNonPrioritizedRules(ruleType);
-	        	  populateAvailableRules(ruleType);
-        	  }
-        	  
+        	  loadRuleTypeSelection(data.item.value);
         	  event.preventDefault();
           }
          }
@@ -21,7 +25,7 @@ $( function() {
       .selectmenu( "menuWidget" )
         .addClass( "overflow" );
     
-    $("#availableRules, #prioritizedRules, #nonPrioritizedRules").on('click', 'li', function (e) {
+    $("#availableRules, #prioritizedRules, #nonPrioritizedRules").on("click", "li", function (e) {
         if (e.ctrlKey || e.metaKey) {
         	if ($(this).hasClass("selected")) {
         		$(this).removeClass("selected");
@@ -29,7 +33,7 @@ $( function() {
         		$(this).addClass("selected");
         	}
         } else {
-            $(this).addClass("selected").siblings().removeClass('selected');
+            $(this).addClass("selected").siblings().removeClass("selected");
         }
     }).sortable({
         connectWith: ".connectedSortable",
@@ -38,30 +42,30 @@ $( function() {
         delay: 150,
         helper: function (e, item) {
             //Basically, if you grab an unhighlighted item to drag, it will deselect (unhighlight) everything else
-            if (!item.hasClass('selected')) {
-                item.addClass('selected').siblings().removeClass('selected');
+            if (!item.hasClass("selected")) {
+                item.addClass("selected").siblings().removeClass("selected");
             }
             
             //////////////////////////////////////////////////////////////////////
             //HERE'S HOW TO PASS THE SELECTED ITEMS TO THE `stop()` FUNCTION:
             
             //Clone the selected items into an array
-            var elements = item.parent().children('.selected').clone();
+            var elements = item.parent().children(".selected").clone();
             
             //Add a property to `item` called 'multidrag` that contains the 
             //  selected items, then remove the selected items from the source list
-            item.data('multidrag', elements).siblings('.selected').remove();
+            item.data("multidrag", elements).siblings(".selected").remove();
             
             //Now the selected items exist in memory, attached to the `item`,
             //  so we can access them later when we get to the `stop()` callback
             
             //Create the helper
-            var helper = $('<li/>');
+            var helper = $("<li/>");
             return helper.append(elements);
         },
         stop: function (e, ui) {
             //Now we access those items that we stored in `item`s data!
-            var elements = ui.item.data('multidrag');
+            var elements = ui.item.data("multidrag");
             
             //`elements` now contains the originally selected items from the source list (the dragged items)!!
             
@@ -74,7 +78,7 @@ $( function() {
         }
       }).addClass( "listOverflow" );
     
-    $("#errorDialog").dialog({
+    $("#errorDialog, #successDialog").dialog({
         open: function() { 
             $(".ui-dialog").addClass("ui-dialog-shadow"); 
             $(".ui-dialog").addClass("no-close");
@@ -140,15 +144,48 @@ $( function() {
           }
         ]
     });
+    
+    newRuleTypeDialog = $( "#newRuleTypeDialog" ).dialog({
+        autoOpen: false,
+        height: 400,
+        width: 350,
+        modal: true,
+        resizable: false,
+        buttons: {
+          "Create Rule Type": function() {
+        	  addRuleType();
+          },
+          Cancel: function() {
+        	  $("#ruleTypeSelect").val("Please Choose a Rule Type");
+      		  $("#ruleTypeSelect").selectmenu("refresh");
+        	  loadRuleTypeSelection("Please Choose a Rule Type");
+        	  newRuleTypeDialog.dialog( "close" );
+          }
+        },
+        open: function() { 
+            $(".ui-dialog").addClass("ui-dialog-shadow"); 
+            $(".ui-dialog").addClass("no-close");
+        },
+        close: function() {
+        	newRuleTypeForm[ 0 ].reset();
+        	allFields.removeClass( "ui-state-error" );
+        	tips.text("");
+        }
+    });
+    
+    var newRuleTypeForm = newRuleTypeDialog.find( "form" ).on( "submit", function( event ) {
+        event.preventDefault();
+        addRuleType();
+    });
 } );
 
 function populatePrioritizedRules(ruleType) {
 	var action = "ruleType=" + ruleType;
 	$.ajax({
-	  beforeSend: function(){
+	  beforeSend: function() {
 		  $( "#prioritizedRulesPB" ).show();
       },
-      complete: function(){
+      complete: function() {
     	  $( "#prioritizedRulesPB" ).hide();
       },
       "accepts": {
@@ -180,7 +217,7 @@ function populatePrioritizedRuleList(data) {
 		}
     });
 	
-	selectmenu.sortable('refresh');
+	selectmenu.sortable("refresh");
 }
 
 function handlePopulatePrioritizedRulesError(xhr, textStatus, error) {
@@ -191,10 +228,10 @@ function handlePopulatePrioritizedRulesError(xhr, textStatus, error) {
 function populateNonPrioritizedRules(ruleType) {
 	var action = "ruleType=" + ruleType;
 	$.ajax({
-	  beforeSend: function(){
+	  beforeSend: function() {
 		  $( "#nonPrioritizedRulesPB" ).show();
       },
-      complete: function(){
+      complete: function() {
     	  $( "#nonPrioritizedRulesPB" ).hide();
       },
       "accepts": {
@@ -226,7 +263,7 @@ function populateNonPrioritizedRuleList(data) {
 		}
     });
 	
-	selectmenu.sortable('refresh');
+	selectmenu.sortable("refresh");
 }
 
 function handlePopulateNonPrioritizedRulesError(xhr, textStatus, error) {
@@ -237,10 +274,10 @@ function handlePopulateNonPrioritizedRulesError(xhr, textStatus, error) {
 function populateAvailableRules(ruleType) {
 	var action = "ruleType=" + ruleType;
 	$.ajax({
-	  beforeSend: function(){
+	  beforeSend: function() {
 		  $( "#availableRulesPB" ).show();
       },
-      complete: function(){
+      complete: function() {
     	  $( "#availableRulesPB" ).hide();
       },
       "accepts": {
@@ -269,7 +306,7 @@ function populateAvailableRuleList(data) {
 		}
     });
 	
-	selectmenu.sortable('refresh');
+	selectmenu.sortable("refresh");
 }
 
 function handlePopulateDisassociatedRulesError(xhr, textStatus, error) {
@@ -290,21 +327,25 @@ function save() {
 	var prioritizedRules = constructJSON($("#prioritizedRules li"));
 	var nonPrioritizedRules = constructJSON($("#nonPrioritizedRules li"));
     $.ajax({
-    	beforeSend: function (xhr) {
-		    
-	    },
-	    complete: function(){
-    	    //$( "#availableRulesPB" ).hide();
-        },
-        "cache": false,
-        "data": {availableRulesSave: JSON.stringify(availableRules), prioritizedRulesSave: JSON.stringify(prioritizedRules), nonPrioritizedRulesSave: JSON.stringify(nonPrioritizedRules), ruleType: ruleType},
+    	"cache": false,
+        "data": {availableRulesSave: JSON.stringify(availableRules), 
+        	prioritizedRulesSave: JSON.stringify(prioritizedRules), 
+        	nonPrioritizedRulesSave: JSON.stringify(nonPrioritizedRules), 
+        	ruleType: ruleType},
         "dataType": "text",
         "type": "POST",
         "url": dssRuleSaveRulesUrl,
-        "timeout": 600000, // optional if you want to handle timeouts (which you should)
+        "timeout": 60000, // optional if you want to handle timeouts (which you should)
         "error": handleSaveError, // this sets up jQuery to give me errors
-        "success": function (xml) {
-        	//window.parent.closeIframe();
+        "success": function (data) {
+        	if (data === "success") {
+        		$( "#successMessage" ).html("Changes were successfully saved.");
+        		$( "#successDialog" ).dialog("open");
+        	} else if (data === "error") {
+        		$( "#errorMessage" ).html("An error occurred saving the changes." +
+        				"  Please check the server logs for details.");
+        	    $( "#errorDialog" ).dialog("open");
+        	}
         }
     });
 }
@@ -351,4 +392,75 @@ function clearLists() {
 	selectmenu = $("#availableRules");
 	selectmenu.find("li").remove().end();
 	selectmenu.sortable("refresh");
+}
+
+function addRuleType() {
+	var valid = true;
+    allFields.removeClass( "ui-state-error" );
+    valid = valid && checkLength( ruleTypeName, "Name", 1, 255 );
+    valid = valid && checkLength( ruleTypeDescription, "Description", 0, 255 );
+    if (valid) {
+    	var ruleTypeNameStr = ruleTypeName.val();
+    	var action = "ruleType=" + ruleTypeNameStr + "&description=" + ruleTypeDescription.val();
+        $.ajax({
+        	"cache": false,
+            "data": action,
+            "dataType": "text",
+            "type": "POST",
+            "url": dssRuleCreateRuleTypeUrl,
+            "timeout": 30000, // optional if you want to handle timeouts (which you should)
+            "error": handleCreateRuleTypeError, // this sets up jQuery to give me errors
+            "success": function (data) {
+            	if (data === "success") {
+            		newRuleTypeDialog.dialog("close");
+            		$( "#successMessage" ).html("Rule type successfully created.");
+            		$( "#successDialog" ).dialog("open");
+            		$( '<option value="' + ruleTypeNameStr + '">' + ruleTypeNameStr + '</option>' ).appendTo($("#ruleTypeSelect"));
+            		$("#ruleTypeSelect").selectmenu("refresh");
+            		$("#ruleTypeSelect").val(ruleTypeNameStr);
+            		$("#ruleTypeSelect").selectmenu("refresh");
+            		loadRuleTypeSelection(ruleTypeNameStr);
+            	} else if (data === "duplicate") {
+            		$( "#errorMessage" ).html("The specified rule type already exists.");
+            	    $( "#errorDialog" ).dialog("open");
+            	}
+            }
+        });
+    }
+}
+
+function handleCreateRuleTypeError(xhr, textStatus, error) {
+	$( "#errorMessage" ).html("An error occurred creating the new rule type:\n" + error);
+    $( "#errorDialog" ).dialog("open");
+}
+
+function checkLength( o, n, min, max ) {
+    if ( o.val().length > max || o.val().length < min ) {
+      o.addClass( "ui-state-error" );
+      updateTips( "Length of " + n + " must be between " +
+        min + " and " + max + "." );
+      return false;
+    } else {
+      return true;
+    }
+}
+
+function updateTips( t ) {
+    tips
+      .text( t )
+      .addClass( "ui-state-highlight" );
+    setTimeout(function() {
+      tips.removeClass( "ui-state-highlight", 1500 );
+    }, 500 );
+}
+
+function loadRuleTypeSelection(ruleType) {
+	clearLists();
+	if (ruleType !== "Create New" && ruleType !== "Please Choose a Rule Type") {
+		populatePrioritizedRules(ruleType);
+  	  	populateNonPrioritizedRules(ruleType);
+  	  	populateAvailableRules(ruleType);
+	} else if (ruleType === "Create New") {
+		newRuleTypeDialog.dialog("open");
+	}
 }

@@ -10,6 +10,7 @@ import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.context.Context;
@@ -29,7 +30,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
- * Controller for configFormAttributeValue.form
+ * Controller for rulePrioritization.form
  * 
  * @author Steve McKee
  */
@@ -114,6 +115,30 @@ public class RulePrioritizationController {
 		return "success";
 	}
 	
+	@RequestMapping(value = "createRuleType", method = RequestMethod.POST)
+	@ResponseBody
+	public String createRuleType(@RequestParam(value = "ruleType", required = true) String ruleType, 
+			@RequestParam(value = "description") String description){
+		DssService dssService = Context.getService(DssService.class);
+		ruleType = ruleType.trim();
+		
+		// Make sure we don't already have this rule type
+		RuleType existingRuleType = dssService.getRuleType(ruleType);
+		if (existingRuleType != null) {
+			return "duplicate";
+		}
+		
+		// Create a new one
+		RuleType newRuleType = new RuleType();
+		newRuleType.setName(ruleType);
+		if (StringUtils.isNotBlank(description)) {
+			newRuleType.setDescription(description);
+		}
+		
+		dssService.saveRuleType(newRuleType);
+		return "success";
+	}
+	
 	/**
 	 * Retire any rule entries that are no longer associated with the provided rule type.
 	 * 
@@ -181,7 +206,7 @@ public class RulePrioritizationController {
 				// We found a rule entry, so this means it used to be a prioritized rule
 				// Retire the current rule entry and create a new one
 				dssService.retireRuleEntry(currentRuleEntry, "Entry moved from prioritized to non-prioritized: " + 
-						ruleType + ".");
+						ruleTypeName + ".");
 				RuleEntry newRuleEntry = copyRuleEntry(currentRuleEntry);
 				dssService.saveRuleEntry(newRuleEntry);
 			} else {
@@ -201,7 +226,7 @@ public class RulePrioritizationController {
 	 */
 	private void reconcilePrioritizedRules(RuleEntryDTO[] ruleEntryDTOs, String ruleTypeName, DssService dssService) {
 		List<RuleEntry> ruleEntries = dssService.getPrioritizedRuleEntries(ruleTypeName);
-		ruleEntries.addAll(dssService.getPrioritizedRuleEntries(ruleTypeName));
+		ruleEntries.addAll(dssService.getNonPrioritizedRuleEntries(ruleTypeName));
 		
 		// Populate a map of current prioritized and non-prioritized rules
 		Map<Integer, RuleEntry> rulesMap = new HashMap<>();
