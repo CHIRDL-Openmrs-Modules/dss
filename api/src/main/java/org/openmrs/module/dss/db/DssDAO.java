@@ -35,15 +35,6 @@ public interface DssDAO {
 	public Rule getRule(String tokenName) throws DAOException;
 	
 	/**
-	 * Get non-prioritized rules based on type.
-	 * 
-	 * @param type Only rules with this rule type will be returned.
-	 * @return List of non-prioritized Rule objects with the provided type.
-	 * @throws DAOException
-	 */
-	public List<Rule> getNonPrioritizedRules(String type) throws DAOException;
-	
-	/**
 	 * Get non-prioritized rule entries based on a rule type.
 	 * 
 	 * @param ruleType Only rule entries with this rule type will be returned.
@@ -84,16 +75,6 @@ public interface DssDAO {
 	 * @throws DAOException
 	 */
 	public Rule addOrUpdateRule(Rule rule) throws DAOException;
-	
-	/**
-	 * Get prioritized rules based on type and start priority
-	 * 
-	 * @param type Only rules with this rule type will be returned.
-	 * @param startPriority Only rules with a priority equal to or greater than this will be returned.
-	 * @return
-	 * @throws DAOException
-	 */
-	public List<Rule> getPrioritizedRules(String type, Integer startPriority) throws DAOException;
 	
 	/**
 	 * Get prioritized rule entries based on a rule type and start priority.

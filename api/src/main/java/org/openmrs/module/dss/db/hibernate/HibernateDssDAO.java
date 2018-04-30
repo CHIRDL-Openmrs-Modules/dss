@@ -242,59 +242,6 @@ public class HibernateDssDAO implements DssDAO
 			throw new DAOException(e);
 		}
 	}
-	
-	/**
-	 * @see org.openmrs.module.dss.db.DssDAO#getPrioritizedRules(java.lang.String, java.lang.Integer)
-	 */
-    public List<Rule> getPrioritizedRules(String type, Integer startPriority) throws DAOException
-    {
-    	try
-		{
-			AdministrationService adminService = Context
-					.getAdministrationService();
-			String sortOrder = adminService
-					.getGlobalProperty("dss.ruleSortOrder");
-			if (sortOrder == null)
-			{
-				sortOrder = "DESC";
-			}
-			
-			StringBuilder sql = new StringBuilder();
-			sql.append("SELECT *\n");
-			sql.append("  FROM dss_rule rule\n");
-			sql.append("       INNER JOIN dss_rule_entry ruleEntry\n");
-			sql.append("          ON rule.rule_id = ruleEntry.rule_id\n");
-			sql.append("       INNER JOIN dss_rule_type ruleType\n");
-			sql.append("          ON ruleEntry.rule_type_id = ruleType.rule_type_id\n");
-			sql.append(" WHERE ruleType.name = ?\n");
-			sql.append(" AND ruleType.retired = false\n");
-			sql.append(" AND ruleEntry.retired = false\n");
-			sql.append(" AND ruleEntry.priority >= ?\n");
-			sql.append(" AND ruleEntry.priority < ?\n");
-			sql.append(" ORDER BY ruleEntry.priority ");
-			sql.append(sortOrder);
-
-			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql.toString());
-			qry.setString(0, type);
-			if (startPriority != null) 
-			{
-				qry.setInteger(1, startPriority);
-			} 
-			else 
-			{
-				qry.setInteger(1, 0);
-			}
-			
-			qry.setInteger(2, RuleEntry.RULE_PRIORITY_RETIRE);
-			qry.addEntity(Rule.class);
-			return qry.list();
-		} catch (Exception e)
-		{
-			log.error("Error in method getPrioritizedRules type = " + type + 
-				" startPriority = " + startPriority, e);
-			throw new DAOException(e);
-		}
-    }
     
     /**
      * @see org.openmrs.module.dss.db.DssDAO#getPrioritizedRuleEntries(java.lang.String, java.lang.Integer)
@@ -325,36 +272,6 @@ public class HibernateDssDAO implements DssDAO
 			return crit.list();
 		} catch (Exception e) {
 			log.error("Error retrieving prioritized rule entries for ruleType = " + ruleType, e);
-			throw new DAOException(e);
-		}
-	}
-    
-    /**
-     * @see org.openmrs.module.dss.db.DssDAO#getNonPrioritizedRules(java.lang.String)
-     */
-	public List<Rule> getNonPrioritizedRules(String type) throws DAOException
-	{
-		try
-		{
-			StringBuilder sql = new StringBuilder();
-			sql.append("SELECT *\n");
-			sql.append("  FROM dss_rule rule\n");
-			sql.append("       INNER JOIN dss_rule_entry ruleEntry\n");
-			sql.append("          ON rule.rule_id = ruleEntry.rule_id\n");
-			sql.append("       INNER JOIN dss_rule_type ruleType\n");
-			sql.append("          ON ruleEntry.rule_type_id = ruleType.rule_type_id\n");
-			sql.append(" WHERE ruleType.name = ?\n");
-			sql.append(" AND ruleType.retired = false\n");
-			sql.append(" AND ruleEntry.retired = false\n");
-			sql.append(" AND ruleEntry.priority is null\n");
-
-			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql.toString());
-			qry.setString(0, type);
-			qry.addEntity(Rule.class);
-			return qry.list();
-		} catch (Exception e)
-		{
-			log.error("Error in method getNonPrioritizedRules type = " + type, e);
 			throw new DAOException(e);
 		}
 	}

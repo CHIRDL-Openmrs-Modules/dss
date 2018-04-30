@@ -18,6 +18,9 @@ $( function() {
       .selectmenu({
           change: function( event, data ) {
         	  loadRuleTypeSelection(data.item.value);
+        	  $("#availableRuleSearch").val("");
+        	  $("#prioritizedRuleSearch").val("");
+        	  $("#nonPrioritizedRuleSearch").val("");
         	  event.preventDefault();
           }
          }
@@ -105,6 +108,7 @@ $( function() {
     });
     
     $( ".progressBarDiv" ).hide();
+    $( "#mainPB" ).hide();
     
     $( "#submitButton" ).button();
     $("#submitButton").click(function(event) {
@@ -327,6 +331,12 @@ function save() {
 	var prioritizedRules = constructJSON($("#prioritizedRules li"));
 	var nonPrioritizedRules = constructJSON($("#nonPrioritizedRules li"));
     $.ajax({
+    	beforeSend: function() {
+    		$( "#mainPB" ).show();
+        },
+        complete: function() {
+        	$( "#mainPB" ).hide();
+        },
     	"cache": false,
         "data": {availableRulesSave: JSON.stringify(availableRules), 
         	prioritizedRulesSave: JSON.stringify(prioritizedRules), 
@@ -403,6 +413,12 @@ function addRuleType() {
     	var ruleTypeNameStr = ruleTypeName.val();
     	var action = "ruleType=" + ruleTypeNameStr + "&description=" + ruleTypeDescription.val();
         $.ajax({
+        	beforeSend: function() {
+      		  $( "#mainPB" ).show();
+            },
+            complete: function() {
+          	  $( "#mainPB" ).hide();
+            },
         	"cache": false,
             "data": action,
             "dataType": "text",
@@ -462,5 +478,30 @@ function loadRuleTypeSelection(ruleType) {
   	  	populateAvailableRules(ruleType);
 	} else if (ruleType === "Create New") {
 		newRuleTypeDialog.dialog("open");
+	}
+}
+
+function filterAvailableRules() {
+	filterResults($("#availableRuleSearch"), document.getElementById("availableRules"));
+}
+
+function filterNonPrioritizedRules() {
+	filterResults($("#nonPrioritizedRuleSearch"), document.getElementById("nonPrioritizedRules"));
+}
+
+function filterPrioritizedRules() {
+	filterResults($("#prioritizedRuleSearch"), document.getElementById("prioritizedRules"));
+}
+
+function filterResults(searchField, list) {
+	var li = list.getElementsByTagName("li");
+	var filter = searchField.val().toUpperCase();
+	for ( i = 0; i < li.length; i++) {
+		var rule = li[i].innerHTML.toUpperCase();
+		if (rule.indexOf(filter) > -1) {
+            li[i].style.display = "";
+        } else {
+            li[i].style.display = "none";
+        }
 	}
 }

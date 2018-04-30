@@ -317,14 +317,6 @@ public class DssServiceImpl implements DssService
 	{
 		return getDssDAO().getRule(tokenName);
 	}
-
-	/**
-	 * @see org.openmrs.module.dss.service.DssService#getPrioritizedRules(java.lang.String)
-	 */
-	public List<Rule> getPrioritizedRules(String type) throws APIException
-	{
-		return getDssDAO().getPrioritizedRules(type, 0);
-	}
 	
 	/**
      * @see org.openmrs.module.dss.service.DssService#getPrioritizedRuleEntries(java.lang.String)
@@ -384,27 +376,12 @@ public class DssServiceImpl implements DssService
 
 		return getDssDAO().saveRuleAttributeValue(value);
 	}
-	
-	/**
-	 * @see org.openmrs.module.dss.service.DssService#getPrioritizedRules(java.lang.String, java.lang.Integer)
-	 */
-    public List<Rule> getPrioritizedRules(String type, Integer startPriority) throws APIException {
-	    return getDssDAO().getPrioritizedRules(type, startPriority);
-    }
     
     /**
 	 * @see org.openmrs.module.dss.service.DssService#getPrioritizedRuleEntries(java.lang.String, java.lang.Integer)
 	 */
 	public List<RuleEntry> getPrioritizedRuleEntries(String ruleType, Integer startPriority) throws APIException {
 		return getDssDAO().getPrioritizedRuleEntries(ruleType, startPriority);
-	}
-    
-	/**
-	 * @see org.openmrs.module.dss.service.DssService#getNonPrioritizedRules(java.lang.String)
-	 */
-	public List<Rule> getNonPrioritizedRules(String type) throws APIException
-	{
-		return getDssDAO().getNonPrioritizedRules(type);
 	}
 	
 	/**

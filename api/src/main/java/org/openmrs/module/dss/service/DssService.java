@@ -86,17 +86,6 @@ public interface DssService
 	 */
 	@Authorized()
 	public Rule addRule(String classFilename, DssRule rule) throws APIException;
-
-	/**
-	 * Get prioritized rules based on type and start priority
-	 * 
-	 * @param type Only rules with this rule type will be returned.
-	 * @param startPriority Only rules with a priority equal to or greater than this will be returned.
-	 * @return
-	 * @throws APIException
-	 */
-	@Authorized()
-	public List<Rule> getPrioritizedRules(String type) throws APIException;
 	
 	/**
 	 * Get prioritized rule entries based on a rule type and start priority.
@@ -120,16 +109,6 @@ public interface DssService
 	 */
 	@Authorized()
 	public List<RuleEntry> getPrioritizedRuleEntries(String ruleType, Integer startPriority) throws APIException;
-
-	/**
-	 * Get non prioritized rules based on type.
-	 * 
-	 * @param type Only rules with this rule type will be returned.
-	 * @return List of Rule objects with the provided type.
-	 * @throws APIException
-	 */
-	@Authorized()
-	public List<Rule> getNonPrioritizedRules(String type) throws APIException;
 	
 	/**
 	 * Get non-prioritized rule entries based on a rule type.
@@ -178,18 +157,6 @@ public interface DssService
 	 */
 	@Authorized()
 	public org.openmrs.logic.Rule loadRule(String rule, boolean updateRule) throws APIException;
-	
-	/**
-	 * Get prioritized rules based on type and start priority
-	 * 
-	 * @param type Only rules with this rule type will be returned.
-	 * @param startPriority Only rules with a priority equal to or greater than this will be returned.
-	 * @return List of Rule objects with the provided type and that start at the prvoided priority 
-	 * (or 0 if not stated).
-	 * @throws APIException
-	 */
-	@Authorized()
-	public List<Rule> getPrioritizedRules(String type, Integer startPriority) throws APIException;
 
 	/**
 	 * 

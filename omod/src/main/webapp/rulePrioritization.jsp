@@ -48,6 +48,17 @@
             <div id="prioritizedRulesPB" class="progressBarDiv"><img src="${pageContext.request.contextPath}/moduleResources/dss/images/ajax-progress.gif"></div>
             <div id="nonPrioritizedRulesPB" class="progressBarDiv"><img src="${pageContext.request.contextPath}/moduleResources/dss/images/ajax-progress.gif"></div>
         </div>
+        <div id="searchFieldsDiv">
+            <div class="searchFieldDiv">
+                <input type="text" name="availableRuleSearch" id="availableRuleSearch" value="" class="text ui-widget-content ui-corner-all" onkeyup="filterAvailableRules()" placeholder="Search for available rules..." title="Type in a rule name">
+            </div>
+            <div class="searchFieldDiv">
+                <input type="text" name="prioritizedRuleSearch" id="prioritizedRuleSearch" value="" class="text ui-widget-content ui-corner-all" onkeyup="filterPrioritizedRules()" placeholder="Search for prioritized rules..." title="Type in a rule name">
+            </div>
+            <div class="searchFieldDiv">
+                <input type="text" name="nonPrioritizedRuleSearch" id="nonPrioritizedRuleSearch" value="" class="text ui-widget-content ui-corner-all" onkeyup="filterNonPrioritizedRules()" placeholder="Search for non-prioritized rules..." title="Type in a rule name">
+            </div>
+        </div>
         <div id="ruleListsDiv">
             <div class="ruleListDiv">
                 <ul id="availableRules" class="connectedSortable">
@@ -61,6 +72,9 @@
                 <ul id="nonPrioritizedRules" class="connectedSortable">
                 </ul>
             </div>
+        </div>
+        <div id="progressBarsDiv">
+            <div id="mainPB" class="fullWidthProgressBarDiv"><img id="mainProgressImage" src="${pageContext.request.contextPath}/moduleResources/dss/images/ajax-progress.gif"></div>
         </div>
         <div class="submit">
            <input type="button" id="submitButton" value="Save"/>
@@ -83,7 +97,6 @@
         <input id="availableRulesSave" name="availableRulesSave" type="hidden" value=""/>
         <input id="prioritizedRulesSave" name="prioritizedRulesSave" type="hidden" value=""/>
         <input id="nonPrioritizedRulesSave" name="nonPrioritizedRulesSave" type="hidden" value=""/>
-        <input id="test" name="test" type="hidden" value="This is my test."/>
     </form>
     <div id="newRuleTypeDialog" title="Create New Rule Type">
 	  <p class="validateTips"></p>
