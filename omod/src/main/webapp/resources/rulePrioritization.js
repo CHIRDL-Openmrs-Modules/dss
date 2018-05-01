@@ -8,6 +8,7 @@ var ruleTypeName;
 var ruleTypeDescription;
 var tips;
 var newRuleTypeDialog;
+var prevAvailableChecked = null;
 $( function() {
 	ruleTypeName = $( "#ruleTypeName" );
 	ruleTypeDescription = $( "#ruleTypeDescription" );
@@ -28,17 +29,30 @@ $( function() {
       .selectmenu( "menuWidget" )
         .addClass( "overflow" );
     
-    $("#availableRules, #prioritizedRules, #nonPrioritizedRules").on("click", "li", function (e) {
-        if (e.ctrlKey || e.metaKey) {
+    $("#availableRules").on("click", "li", function (e) {
+    	if (!prevAvailableChecked) {
+			prevAvailableChecked = this;
+			$(this).addClass("selected");
+			return;
+		}
+    	
+    	if (e.shiftKey) {
+			var startIndex = $(this).index();
+			var endIndex = $(prevAvailableChecked).index();
+			$(this).parent().children().slice(Math.min(startIndex,endIndex), 1 + Math.max(startIndex,endIndex)).addClass("selected");
+		} else if (e.ctrlKey || e.metaKey) {
         	if ($(this).hasClass("selected")) {
         		$(this).removeClass("selected");
+        		prevAvailableChecked = null;
         	} else {
         		$(this).addClass("selected");
         	}
         } else {
+        	prevAvailableChecked = this;
             $(this).addClass("selected").siblings().removeClass("selected");
         }
-    }).sortable({
+    });
+    $("#availableRules, #prioritizedRules, #nonPrioritizedRules").sortable({
         connectWith: ".connectedSortable",
         revert: true,
         scroll: true,
@@ -78,6 +92,8 @@ $( function() {
             
             //Remove the selection class
             $(".selected").removeClass("selected");
+            
+            locatePrioritizedRules(false);
         }
       }).addClass( "listOverflow" );
     
@@ -321,7 +337,7 @@ function handlePopulateDisassociatedRulesError(xhr, textStatus, error) {
 function save() {
 	//run an AJAX post request to your server-side script, $this.serialize() is the data from your form being added to the request
 	var ruleType = $("#ruleTypeSelect option:selected").val();
-	if (ruleType === "Create New") {
+	if (ruleType === "Create New" || ruleType === "Please Choose a Rule Type") {
 		$( "#errorMessage" ).html("Please select a valid rule type.");
 	    $( "#errorDialog" ).dialog("open");
 	    return;
@@ -489,8 +505,29 @@ function filterNonPrioritizedRules() {
 	filterResults($("#nonPrioritizedRuleSearch"), document.getElementById("nonPrioritizedRules"));
 }
 
-function filterPrioritizedRules() {
-	filterResults($("#prioritizedRuleSearch"), document.getElementById("prioritizedRules"));
+function locatePrioritizedRules(reposition) {
+	var filter = $("#prioritizedRuleSearch").val().toUpperCase();
+	var found = false;
+	$("#prioritizedRules li").each(function(idx, li) {
+	    var listItem = $(li);
+	    var rule = listItem.text().toUpperCase();
+	    if (filter === "") {
+	    	listItem.removeClass("selected");
+	    } else if (rule.indexOf(filter) > -1) {
+	    	if (!found) {
+	    		listItem.addClass("selected");
+	    		if (reposition) {
+	    			listItem[0].scrollIntoView();
+	    		}
+	    	} else {
+	    		listItem.removeClass("selected");
+	    	}
+	    	
+	    	found = true;
+        } else {
+        	listItem.removeClass("selected");
+        }
+	});
 }
 
 function filterResults(searchField, list) {

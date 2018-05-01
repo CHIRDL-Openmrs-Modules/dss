@@ -50,13 +50,13 @@
         </div>
         <div id="searchFieldsDiv">
             <div class="searchFieldDiv">
-                <input type="text" name="availableRuleSearch" id="availableRuleSearch" value="" class="text ui-widget-content ui-corner-all" onkeyup="filterAvailableRules()" placeholder="Search for available rules..." title="Type in a rule name">
+                <input type="text" name="availableRuleSearch" id="availableRuleSearch" value="" class="text ui-widget-content ui-corner-all" onkeyup="filterAvailableRules()" placeholder="Filter available rules..." title="Type in a rule name">
             </div>
             <div class="searchFieldDiv">
-                <input type="text" name="prioritizedRuleSearch" id="prioritizedRuleSearch" value="" class="text ui-widget-content ui-corner-all" onkeyup="filterPrioritizedRules()" placeholder="Search for prioritized rules..." title="Type in a rule name">
+                <input type="text" name="prioritizedRuleSearch" id="prioritizedRuleSearch" value="" class="text ui-widget-content ui-corner-all" onkeyup="locatePrioritizedRules(true)" placeholder="Locate prioritized rules..." title="Type in a rule name">
             </div>
             <div class="searchFieldDiv">
-                <input type="text" name="nonPrioritizedRuleSearch" id="nonPrioritizedRuleSearch" value="" class="text ui-widget-content ui-corner-all" onkeyup="filterNonPrioritizedRules()" placeholder="Search for non-prioritized rules..." title="Type in a rule name">
+                <input type="text" name="nonPrioritizedRuleSearch" id="nonPrioritizedRuleSearch" value="" class="text ui-widget-content ui-corner-all" onkeyup="filterNonPrioritizedRules()" placeholder="Filter non-prioritized rules..." title="Type in a rule name">
             </div>
         </div>
         <div id="ruleListsDiv">
@@ -72,6 +72,9 @@
                 <ul id="nonPrioritizedRules" class="connectedSortable">
                 </ul>
             </div>
+        </div>
+        <div id="hrDiv">
+            <hr>
         </div>
         <div id="progressBarsDiv">
             <div id="mainPB" class="fullWidthProgressBarDiv"><img id="mainProgressImage" src="${pageContext.request.contextPath}/moduleResources/dss/images/ajax-progress.gif"></div>

@@ -5,17 +5,17 @@
 
 #ruleListsDiv {
 	width: 100%;
-	height: 400px;
+	height: 320px;
 	padding-top: 20px;
 }
 
 #ruleListTitlesDiv {
     width: 100%;
     height: 35px;
-    padding-top: 5px;
+    padding-top: 20px;
 }
 
-#progressBarsDiv {
+#progressBarsDiv, #mainPB {
     width: 100%;
     height: 10px;
 }
@@ -23,11 +23,13 @@
 #searchFieldsDiv {
     width: 100%;
     height: 20px;
+    padding-top: 10px;
+    padding-bottom: 5px;
 }
 
 #availableRules, #prioritizedRules, #nonPrioritizedRules {
     border: 1px solid #eee;
-    height: 400px;
+    height: 320px;
     width: 100%;
     min-height: 20px;
     list-style-type: none;
@@ -49,12 +51,12 @@
 }
 
 #ruleContent {
-	height: 700px;
+	height: 600px;
 	width: 100%;
 }
 
 #rulePrioritizationForm {
-	height: 100%;
+	height: 80%;
 	width: 100%:
 }
 
@@ -79,7 +81,7 @@ select {
 }
 
 .ruleListDiv, .ruleListTitleDiv, .progressBarDiv, .searchFieldDiv {
-	height: 400px;
+	height: 320px;
     width: 33%;
     margin: auto;
     text-align: center;
@@ -146,4 +148,33 @@ input.text {
 .validateTips { 
 	border: 1px solid transparent; 
 	padding: 0.3em; 
+}
+
+#availableRuleSearch, #prioritizedRuleSearch, #nonPrioritizedRuleSearch  {
+	background-image: url('images/searchicon.png');
+	background-position: 5px 8px;
+	background-repeat: no-repeat;
+	padding: 10px 0px 12px 30px;
+	width: 90%;
+}
+
+#hrDiv {
+	padding-top: 20px;
+	padding-bottom: 10px;
+}
+
+hr {
+    border: none;
+    height: 3px;
+    background-color: #333;
+}
+
+@media screen and (min-height: 900px) {
+    #ruleContent {
+        height: 700px;
+    }
+    
+    .ruleListDiv, .ruleListTitleDiv, .progressBarDiv, .searchFieldDiv, #ruleListsDiv, #availableRules, #prioritizedRules, #nonPrioritizedRules {
+        height: 500px;
+    }
 }
