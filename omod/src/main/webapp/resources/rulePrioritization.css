@@ -178,3 +178,13 @@ hr {
         height: 500px;
     }
 }
+
+@-moz-document url-prefix() { 
+    #ruleListTitlesDiv {
+        padding-bottom: 40px;
+    }
+    
+    #searchFieldsDiv {
+	    padding-bottom: 25px;
+	}
+}

@@ -475,6 +475,10 @@ function addRuleType() {
             	} else if (data === "duplicate") {
             		$( "#errorMessage" ).html("The specified rule type already exists.");
             	    $( "#errorDialog" ).dialog("open");
+            	} else if (data === "error") {
+            		$( "#errorMessage" ).html("An error occurred saving the rule type." +
+    					"  Please check the server logs for details.");
+            		$( "#errorDialog" ).dialog("open");
             	}
             }
         });

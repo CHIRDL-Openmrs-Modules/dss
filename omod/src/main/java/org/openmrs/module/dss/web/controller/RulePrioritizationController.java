@@ -119,23 +119,29 @@ public class RulePrioritizationController {
 	@ResponseBody
 	public String createRuleType(@RequestParam(value = "ruleType", required = true) String ruleType, 
 			@RequestParam(value = "description") String description) throws Exception {
-		DssService dssService = Context.getService(DssService.class);
-		ruleType = ruleType.trim();
-		
-		// Make sure we don't already have this rule type
-		RuleType existingRuleType = dssService.getRuleType(ruleType);
-		if (existingRuleType != null) {
-			return "duplicate";
+		try {
+			DssService dssService = Context.getService(DssService.class);
+			ruleType = ruleType.trim();
+			
+			// Make sure we don't already have this rule type
+			RuleType existingRuleType = dssService.getRuleType(ruleType);
+			if (existingRuleType != null) {
+				return "duplicate";
+			}
+			
+			// Create a new one
+			RuleType newRuleType = new RuleType();
+			newRuleType.setName(ruleType);
+			if (StringUtils.isNotBlank(description)) {
+				newRuleType.setDescription(description);
+			}
+			
+			dssService.saveRuleType(newRuleType);
+		} catch (Exception e) {
+			log.error("Error saving rule type.", e);
+			return "error";
 		}
 		
-		// Create a new one
-		RuleType newRuleType = new RuleType();
-		newRuleType.setName(ruleType);
-		if (StringUtils.isNotBlank(description)) {
-			newRuleType.setDescription(description);
-		}
-		
-		dssService.saveRuleType(newRuleType);
 		return "success";
 	}
 	
