@@ -58,7 +58,8 @@ public class RulePrioritizationController {
 	
 	@RequestMapping(value = "getPrioritizedRuleEntries", method = RequestMethod.GET)
 	@ResponseBody
-	public List<RuleEntryDTO> getPrioritizedRules(@RequestParam(value = "ruleType", required = true) String ruleType){
+	public List<RuleEntryDTO> getPrioritizedRules(@RequestParam(value = "ruleType", required = true) String ruleType) 
+			throws Exception {
 		DssService dssService = Context.getService(DssService.class);
 		List<RuleEntry> ruleEntries = dssService.getPrioritizedRuleEntries(ruleType);
 		return RuleEntryDTO.convertFrom(ruleEntries);
@@ -66,7 +67,8 @@ public class RulePrioritizationController {
 	
 	@RequestMapping(value = "getNonPrioritizedRuleEntries", method = RequestMethod.GET)
 	@ResponseBody
-	public List<RuleEntryDTO> getNonPrioritizedRuleEntries(@RequestParam(value = "ruleType", required = true) String ruleType){
+	public List<RuleEntryDTO> getNonPrioritizedRuleEntries(@RequestParam(value = "ruleType", required = true) String ruleType) 
+			throws Exception {
 		DssService dssService = Context.getService(DssService.class);
 		List<RuleEntry> ruleEntries = dssService.getNonPrioritizedRuleEntries(ruleType);
 		return RuleEntryDTO.convertFrom(ruleEntries);
@@ -74,7 +76,8 @@ public class RulePrioritizationController {
 	
 	@RequestMapping(value = "getDisassociatedRules", method = RequestMethod.GET)
 	@ResponseBody
-	public List<RuleEntryDTO> getDisassociatedRules(@RequestParam(value = "ruleType", required = true) String ruleType){
+	public List<RuleEntryDTO> getDisassociatedRules(@RequestParam(value = "ruleType", required = true) String ruleType) 
+			throws Exception {
 		DssService dssService = Context.getService(DssService.class);
 		List<Rule> rules = dssService.getDisassociatedRules(ruleType);
 		List<RuleEntryDTO> ruleEntryDTOs = new ArrayList<>();
@@ -92,22 +95,19 @@ public class RulePrioritizationController {
 	public String saveRules(@RequestParam(value = "availableRulesSave", required = true) String availableRulesSave, 
 			@RequestParam(value = "prioritizedRulesSave", required = true) String prioritizedRulesSave, 
 			@RequestParam(value = "nonPrioritizedRulesSave", required = true) String nonPrioritizedRulesSave,
-			@RequestParam(value = "ruleType", required = true) String ruleType){
+			@RequestParam(value = "ruleType", required = true) String ruleType) throws Exception {
 		DssService dssService = Context.getService(DssService.class);
 		ObjectMapper mapper = new ObjectMapper();
-		RuleEntryDTO[] availableRuleDTOs = null;
-		RuleEntryDTO[] prioritizedRuleDTOs = null;
-		RuleEntryDTO[] nonPrioritizedRuleDTOs = null;
 		try {
-			availableRuleDTOs = mapper.readValue(availableRulesSave, RuleEntryDTO[].class);
-			prioritizedRuleDTOs = mapper.readValue(prioritizedRulesSave, RuleEntryDTO[].class);
-			nonPrioritizedRuleDTOs = mapper.readValue(nonPrioritizedRulesSave, RuleEntryDTO[].class);
+			RuleEntryDTO[] availableRuleDTOs = mapper.readValue(availableRulesSave, RuleEntryDTO[].class);
+			RuleEntryDTO[] prioritizedRuleDTOs = mapper.readValue(prioritizedRulesSave, RuleEntryDTO[].class);
+			RuleEntryDTO[] nonPrioritizedRuleDTOs = mapper.readValue(nonPrioritizedRulesSave, RuleEntryDTO[].class);
 			
 			reconcileAvailableRules(availableRuleDTOs, ruleType, dssService);
 			reconcileNonPrioritizedRules(nonPrioritizedRuleDTOs, ruleType, dssService);
 			reconcilePrioritizedRules(prioritizedRuleDTOs, ruleType, dssService);
 		}
-		catch (IOException e) {
+		catch (Exception e) {
 			log.error("Error updating rule entries.", e);
 			return "error";
 		}
@@ -118,7 +118,7 @@ public class RulePrioritizationController {
 	@RequestMapping(value = "createRuleType", method = RequestMethod.POST)
 	@ResponseBody
 	public String createRuleType(@RequestParam(value = "ruleType", required = true) String ruleType, 
-			@RequestParam(value = "description") String description){
+			@RequestParam(value = "description") String description) throws Exception {
 		DssService dssService = Context.getService(DssService.class);
 		ruleType = ruleType.trim();
 		
@@ -145,8 +145,10 @@ public class RulePrioritizationController {
 	 * @param ruleEntryDTOs List of RuleEntryDTO objects from the client
 	 * @param ruleType The rule type from the client
 	 * @param dssService The service used to access and save rule entry information
+	 * @throws Exception
 	 */
-	private void reconcileAvailableRules(RuleEntryDTO[] ruleEntryDTOs, String ruleType, DssService dssService) {
+	private void reconcileAvailableRules(RuleEntryDTO[] ruleEntryDTOs, String ruleType, DssService dssService) 
+			throws Exception {
 		List<Rule> rules = dssService.getDisassociatedRules(ruleType);
 		
 		// Populate a map of available rules from the client
@@ -178,8 +180,10 @@ public class RulePrioritizationController {
 	 * @param ruleEntryDTOs List of RuleEntryDTO objects from the client
 	 * @param ruleTypeName The rule type name from the client
 	 * @param dssService The service used to access and save rule entry information
+	 * @throws Exception
 	 */
-	private void reconcileNonPrioritizedRules(RuleEntryDTO[] ruleEntryDTOs, String ruleTypeName, DssService dssService) {
+	private void reconcileNonPrioritizedRules(RuleEntryDTO[] ruleEntryDTOs, String ruleTypeName, DssService dssService) 
+			throws Exception {
 		List<RuleEntry> rules = dssService.getNonPrioritizedRuleEntries(ruleTypeName);
 		
 		// Populate a map of non-prioritized rules from the client
@@ -223,8 +227,10 @@ public class RulePrioritizationController {
 	 * @param ruleEntryDTOs List of RuleEntryDTO objects from the client
 	 * @param ruleTypeName The rule type name from the client
 	 * @param dssService The service used to access and save rule entry information
+	 * @throws Exception
 	 */
-	private void reconcilePrioritizedRules(RuleEntryDTO[] ruleEntryDTOs, String ruleTypeName, DssService dssService) {
+	private void reconcilePrioritizedRules(RuleEntryDTO[] ruleEntryDTOs, String ruleTypeName, DssService dssService) 
+			throws Exception {
 		List<RuleEntry> ruleEntries = dssService.getPrioritizedRuleEntries(ruleTypeName);
 		ruleEntries.addAll(dssService.getNonPrioritizedRuleEntries(ruleTypeName));
 		

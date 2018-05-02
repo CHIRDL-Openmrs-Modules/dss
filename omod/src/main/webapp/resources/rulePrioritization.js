@@ -9,6 +9,8 @@ var ruleTypeDescription;
 var tips;
 var newRuleTypeDialog;
 var prevAvailableChecked = null;
+// position 0 is available rule selection, 1 is prioritized, and 2 is non-prioritized
+var prevCheckedArray = [null, null, null];
 $( function() {
 	ruleTypeName = $( "#ruleTypeName" );
 	ruleTypeDescription = $( "#ruleTypeDescription" );
@@ -18,11 +20,11 @@ $( function() {
     $( "#ruleTypeSelect" )
       .selectmenu({
           change: function( event, data ) {
+        	  event.preventDefault();
         	  loadRuleTypeSelection(data.item.value);
         	  $("#availableRuleSearch").val("");
         	  $("#prioritizedRuleSearch").val("");
         	  $("#nonPrioritizedRuleSearch").val("");
-        	  event.preventDefault();
           }
          }
       )
@@ -30,34 +32,26 @@ $( function() {
         .addClass( "overflow" );
     
     $("#availableRules").on("click", "li", function (e) {
-    	if (!prevAvailableChecked) {
-			prevAvailableChecked = this;
-			$(this).addClass("selected");
-			return;
-		}
-    	
-    	if (e.shiftKey) {
-			var startIndex = $(this).index();
-			var endIndex = $(prevAvailableChecked).index();
-			$(this).parent().children().slice(Math.min(startIndex,endIndex), 1 + Math.max(startIndex,endIndex)).addClass("selected");
-		} else if (e.ctrlKey || e.metaKey) {
-        	if ($(this).hasClass("selected")) {
-        		$(this).removeClass("selected");
-        		prevAvailableChecked = null;
-        	} else {
-        		$(this).addClass("selected");
-        	}
-        } else {
-        	prevAvailableChecked = this;
-            $(this).addClass("selected").siblings().removeClass("selected");
-        }
+    	handleListClick(0, this, e);
     });
+    
+    $("#prioritizedRules").on("click", "li", function (e) {
+    	handleListClick(1, this, e);
+    });
+    
+    $("#nonPrioritizedRules").on("click", "li", function (e) {
+    	handleListClick(2, this, e);
+    });
+    
     $("#availableRules, #prioritizedRules, #nonPrioritizedRules").sortable({
         connectWith: ".connectedSortable",
         revert: true,
         scroll: true,
         delay: 150,
         helper: function (e, item) {
+        	//Disable the scroll of the list being copied from.  Weird behavior
+        	//can occur when dragging downward.
+        	$( this ).sortable( "option", "scroll", false );
             //Basically, if you grab an unhighlighted item to drag, it will deselect (unhighlight) everything else
             if (!item.hasClass("selected")) {
                 item.addClass("selected").siblings().removeClass("selected");
@@ -90,9 +84,14 @@ $( function() {
             //  item is a duplicate of one of the selected items.
             ui.item.after(elements).remove();
             
-            //Remove the selection class
+            //Remove the selection class because this indexes get messed up 
+            //when copying across lists.
             $(".selected").removeClass("selected");
             
+            //Re-enable the sorting of the list
+            $( this ).sortable( "option", "scroll", true );
+            
+            //Highlight the first item that matches what's in the search field
             locatePrioritizedRules(false);
         }
       }).addClass( "listOverflow" );
@@ -225,6 +224,13 @@ function populatePrioritizedRules(ruleType) {
 }
 
 function populatePrioritizedRuleList(data) {
+	var message = data.message;
+	if (message) {
+		$( "#errorMessage" ).html("An error occurred loading the prioritized rules list:\n" + message);
+	    $( "#errorDialog" ).dialog("open");
+	    return false;
+	}
+	
 	var selectmenu = $("#prioritizedRules");
 	$.each(data, function (index, value) {
 		var ruleEntryId = value.ruleEntryId || null;
@@ -271,6 +277,13 @@ function populateNonPrioritizedRules(ruleType) {
 }
 
 function populateNonPrioritizedRuleList(data) {
+	var message = data.message;
+	if (message) {
+		$( "#errorMessage" ).html("An error occurred loading the prioritized rules list:\n" + message);
+	    $( "#errorDialog" ).dialog("open");
+	    return false;
+	}
+	
 	var selectmenu = $("#nonPrioritizedRules");
 	$.each(data, function (index, value) {
 		var ruleEntryId = value.ruleEntryId || null;
@@ -317,6 +330,13 @@ function populateAvailableRules(ruleType) {
 }
 
 function populateAvailableRuleList(data) {
+	var message = data.message;
+	if (message) {
+		$( "#errorMessage" ).html("An error occurred loading the prioritized rules list:\n" + message);
+	    $( "#errorDialog" ).dialog("open");
+	    return false;
+	}
+	
 	var selectmenu = $("#availableRules");
 	$.each(data, function (index, value) {
 		var rule = value.rule || null;
@@ -541,4 +561,32 @@ function filterResults(searchField, list) {
             li[i].style.display = "none";
         }
 	}
+}
+
+function handleListClick(prevCheckedArrayPosition, listItem, event) {
+	var prevChecked = prevCheckedArray[prevCheckedArrayPosition];
+	if (!prevChecked) {
+		prevChecked = listItem;
+		prevCheckedArray[prevCheckedArrayPosition] = prevChecked;
+		$(listItem).addClass("selected");
+		//return;
+	}
+	
+	if (event.shiftKey) {
+		var startIndex = $(listItem).index();
+		var endIndex = $(prevChecked).index();
+		$(listItem).parent().children().slice(Math.min(startIndex,endIndex), 1 + Math.max(startIndex,endIndex)).addClass("selected");
+	} else if (event.ctrlKey || event.metaKey) {
+    	if ($(listItem).hasClass("selected")) {
+    		$(listItem).removeClass("selected");
+    		prevChecked = null;
+    		prevCheckedArray[prevCheckedArrayPosition] = prevChecked;
+    	} else {
+    		$(listItem).addClass("selected");
+    	}
+    } else {
+    	prevChecked = listItem;
+    	prevCheckedArray[prevCheckedArrayPosition] = prevChecked;
+        $(listItem).addClass("selected").siblings().removeClass("selected");
+    }
 }
