@@ -264,6 +264,19 @@ public class DssServiceTest extends BaseModuleContextSensitiveTest{
 		Assert.assertEquals(4, rules.size());
 	}
 	
+	@Test
+	public void testGetDisassociatedRules() throws Exception {
+		DssService dssService = Context.getService(DssService.class);
+		List<Rule> rules = dssService.getDisassociatedRules("PWS");
+		Assert.assertEquals(5, rules.size());
+		
+		rules = dssService.getDisassociatedRules("PWS_2");
+		Assert.assertEquals(5, rules.size());
+		
+		rules = dssService.getDisassociatedRules("PrioritizedTest");
+		Assert.assertEquals(2, rules.size());
+	}
+	
 	/**
 	 * Test to make sure that all service methods have the Authorized annotation
 	 * @throws Exception
