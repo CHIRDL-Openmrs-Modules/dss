@@ -468,6 +468,7 @@ function addRuleType() {
             		$( "#successMessage" ).html("Rule type successfully created.");
             		$( "#successDialog" ).dialog("open");
             		$( '<option value="' + ruleTypeNameStr + '">' + ruleTypeNameStr + '</option>' ).appendTo($("#ruleTypeSelect"));
+            		sortRuleTypeSelect();
             		$("#ruleTypeSelect").selectmenu("refresh");
             		$("#ruleTypeSelect").val(ruleTypeNameStr);
             		$("#ruleTypeSelect").selectmenu("refresh");
@@ -593,4 +594,12 @@ function handleListClick(prevCheckedArrayPosition, listItem, event) {
     	prevCheckedArray[prevCheckedArrayPosition] = prevChecked;
         $(listItem).addClass("selected").siblings().removeClass("selected");
     }
+}
+
+function sortRuleTypeSelect() {
+	$( "#ruleTypeSelect" ).html($( "#ruleTypeSelect" ).children("option").sort(function (x, y) {
+        return $(x).text().toUpperCase() < $(y).text().toUpperCase() ? -1 : 1;
+    }));
+	
+	$( "#ruleTypeSelect" ).get(0).selectedIndex = 0;
 }
