@@ -507,7 +507,7 @@ public class HibernateDssDAO implements DssDAO
 			qry.addEntity(Rule.class);
 			return qry.list();
 		} catch (Exception e) {
-			log.error("Error in method getUnassociatedRules ruleType = " + ruleType, e);
+			log.error("Error in method getDisassociatedRules ruleType = " + ruleType, e);
 			throw new DAOException(e);
 		}
 	}

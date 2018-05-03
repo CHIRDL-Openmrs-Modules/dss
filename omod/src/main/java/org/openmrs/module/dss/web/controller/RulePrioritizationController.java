@@ -1,6 +1,5 @@
 package org.openmrs.module.dss.web.controller;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
