@@ -133,6 +133,17 @@ public class DssServiceTest extends BaseModuleContextSensitiveTest{
 	}
 	
 	@Test
+	public void testGetRuleTypes() throws Exception {
+		DssService dssService = Context.getService(DssService.class);
+		List<RuleType> ruleTypes = dssService.getRuleTypes(false);
+		Assert.assertNotNull(ruleTypes);
+		Assert.assertTrue(ruleTypes.size() == 3);
+		ruleTypes = dssService.getRuleTypes(true);
+		Assert.assertNotNull(ruleTypes);
+		Assert.assertTrue(ruleTypes.size() == 4);
+	}
+	
+	@Test
 	public void testGetRuleEntry() throws Exception {
 		DateFormat dt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		DssService dssService = Context.getService(DssService.class);
@@ -214,29 +225,30 @@ public class DssServiceTest extends BaseModuleContextSensitiveTest{
 	}
 	
 	@Test
-	public void testGetPrioritizedRules() throws Exception {
+	public void testGetPrioritizedRuleEntries() throws Exception {
 		DssService dssService = Context.getService(DssService.class);
-		List<Rule> rules = dssService.getPrioritizedRules("PrioritizedTest");
-		Assert.assertTrue(rules.size() == 3);
+		List<RuleEntry> ruleEntries = dssService.getPrioritizedRuleEntries("PrioritizedTest");
+		Assert.assertTrue(ruleEntries.size() == 3);
 		
 		// Verify the ordering
-		Rule rule1 = rules.get(0);
+		Rule rule1 = ruleEntries.get(0).getRule();
 		Assert.assertEquals(new Integer(5), rule1.getRuleId());
-		Rule rule2 = rules.get(1);
+		Rule rule2 = ruleEntries.get(1).getRule();
 		Assert.assertEquals(new Integer(4), rule2.getRuleId());
-		Rule rule3 = rules.get(2);
+		Rule rule3 = ruleEntries.get(2).getRule();
 		Assert.assertEquals(new Integer(7), rule3.getRuleId());
 	}
 	
 	@Test
-	public void testGetNonPrioritizedRules() throws Exception {
+	public void testGetNonPrioritizedRuleEntries() throws Exception {
 		DssService dssService = Context.getService(DssService.class);
-		List<Rule> rules = dssService.getNonPrioritizedRules("PrioritizedTest");
-		Assert.assertTrue(rules.size() == 1);
+		List<RuleEntry> ruleEntries = dssService.getNonPrioritizedRuleEntries("PrioritizedTest");
+		Assert.assertTrue(ruleEntries.size() == 1);
 		
 		// Verify the rule
-		Rule rule1 = rules.get(0);
-		Assert.assertEquals(new Integer(6), rule1.getRuleId());
+		RuleEntry ruleEntry = ruleEntries.get(0);
+		Rule rule = ruleEntry.getRule();
+		Assert.assertEquals(new Integer(6), rule.getRuleId());
 	}
 	
 	@Test
@@ -250,6 +262,19 @@ public class DssServiceTest extends BaseModuleContextSensitiveTest{
 		
 		rules = dssService.getRulesByType("PrioritizedTest");
 		Assert.assertEquals(4, rules.size());
+	}
+	
+	@Test
+	public void testGetDisassociatedRules() throws Exception {
+		DssService dssService = Context.getService(DssService.class);
+		List<Rule> rules = dssService.getDisassociatedRules("PWS");
+		Assert.assertEquals(5, rules.size());
+		
+		rules = dssService.getDisassociatedRules("PWS_2");
+		Assert.assertEquals(5, rules.size());
+		
+		rules = dssService.getDisassociatedRules("PrioritizedTest");
+		Assert.assertEquals(2, rules.size());
 	}
 	
 	/**

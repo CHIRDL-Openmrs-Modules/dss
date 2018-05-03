@@ -86,27 +86,39 @@ public interface DssService
 	 */
 	@Authorized()
 	public Rule addRule(String classFilename, DssRule rule) throws APIException;
-
+	
 	/**
-	 * Get prioritized rules based on type and start priority
+	 * Get prioritized rule entries based on a rule type and start priority.
 	 * 
-	 * @param type Only rules with this rule type will be returned.
-	 * @param startPriority Only rules with a priority equal to or greater than this will be returned.
-	 * @return
+	 * @param ruleType Only rule entries with this rule type will be returned.
+	 * @return List of prioritized RuleEntry objects with the provided rule type and and a priority equal to or greater
+	 * than the one provided.
 	 * @throws APIException
 	 */
 	@Authorized()
-	public List<Rule> getPrioritizedRules(String type) throws APIException;
-
+	public List<RuleEntry> getPrioritizedRuleEntries(String ruleType) throws APIException;
+	
 	/**
-	 * Get non prioritized rules based on type.
+	 * Get prioritized rule entries based on a rule type and start priority.
 	 * 
-	 * @param type Only rules with this rule type will be returned.
-	 * @return List of Rule objects with the provided type.
+	 * @param ruleType Only rule entries with this rule type will be returned.
+	 * @param startPriority Only rule entries with rules with a priority equal to or greater than this will be returned.
+	 * @return List of prioritized RuleEntry objects with the provided rule type and and a priority equal to or greater
+	 * than the one provided.
 	 * @throws APIException
 	 */
 	@Authorized()
-	public List<Rule> getNonPrioritizedRules(String type) throws APIException;
+	public List<RuleEntry> getPrioritizedRuleEntries(String ruleType, Integer startPriority) throws APIException;
+	
+	/**
+	 * Get non-prioritized rule entries based on a rule type.
+	 * 
+	 * @param ruleType Only rule entries with this rule type will be returned.
+	 * @return List of non-prioritized RuleEntry objects with the provided rule type.
+	 * @throws APIException
+	 */
+	@Authorized()
+	public List<RuleEntry> getNonPrioritizedRuleEntries(String ruleType) throws APIException;
 		
 	/**
 	 * Returns a list of rules from the dss_rule table that match the criteria
@@ -145,18 +157,6 @@ public interface DssService
 	 */
 	@Authorized()
 	public org.openmrs.logic.Rule loadRule(String rule, boolean updateRule) throws APIException;
-	
-	/**
-	 * Get prioritized rules based on type and start priority
-	 * 
-	 * @param type Only rules with this rule type will be returned.
-	 * @param startPriority Only rules with a priority equal to or greater than this will be returned.
-	 * @return List of Rule objects with the provided type and that start at the prvoided priority 
-	 * (or 0 if not stated).
-	 * @throws APIException
-	 */
-	@Authorized()
-	public List<Rule> getPrioritizedRules(String type, Integer startPriority) throws APIException;
 
 	/**
 	 * 
@@ -273,6 +273,16 @@ public interface DssService
 	public RuleType getRuleType(String type) throws APIException;
 	
 	/**
+	 * Returns a list of rule types.
+	 * 
+	 * @param includeRetired whether or not to include retired rule types in the list
+	 * @return List of RuleType objects
+	 * @throws APIException
+	 */
+	@Authorized()
+	public List<RuleType> getRuleTypes(boolean includeRetired) throws APIException;
+	
+	/**
 	 * Adds or updates a rule entry.
 	 * 
 	 * @param ruleEntry The rule entry to add or update.
@@ -323,4 +333,13 @@ public interface DssService
 	 */
 	@Authorized()
 	public List<RuleEntry> getRuleReferences(Rule rule) throws APIException;
+	
+	/**
+	 * Returns rules that are currently disassociated to the specified rule type.
+	 * @param ruleType The rule type used to find disassociated rules
+	 * @return List of Rule objects not currently associated to the provided rule type
+	 * @throws APIException
+	 */
+	@Authorized()
+	public List<Rule> getDisassociatedRules(String ruleType) throws APIException;
 }

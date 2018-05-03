@@ -35,13 +35,13 @@ public interface DssDAO {
 	public Rule getRule(String tokenName) throws DAOException;
 	
 	/**
-	 * Get non-prioritized rules based on type.
+	 * Get non-prioritized rule entries based on a rule type.
 	 * 
-	 * @param type Only rules with this rule type will be returned.
-	 * @return List of non-prioritized Rule objects with the provided type.
+	 * @param ruleType Only rule entries with this rule type will be returned.
+	 * @return List of non-prioritized RuleEntry objects with the provided rule type.
 	 * @throws DAOException
 	 */
-	public List<Rule> getNonPrioritizedRules(String type) throws DAOException;
+	public List<RuleEntry> getNonPrioritizedRuleEntries(String ruleType) throws DAOException;
 		
 	/**
 	 * Returns a list of rules from the dss_rule table that match the criteria
@@ -77,14 +77,15 @@ public interface DssDAO {
 	public Rule addOrUpdateRule(Rule rule) throws DAOException;
 	
 	/**
-	 * Get prioritized rules based on type and start priority
+	 * Get prioritized rule entries based on a rule type and start priority.
 	 * 
-	 * @param type Only rules with this rule type will be returned.
-	 * @param startPriority Only rules with a priority equal to or greater than this will be returned.
-	 * @return
+	 * @param ruleType Only rule entries with this rule type will be returned.
+	 * @param startPriority Only rule entries with rules with a priority equal to or greater than this will be returned.
+	 * @return List of prioritized RuleEntry objects with the provided rule type and and a priority equal to or greater
+	 * than the one provided.
 	 * @throws DAOException
 	 */
-	public List<Rule> getPrioritizedRules(String type, Integer startPriority) throws DAOException;
+	public List<RuleEntry> getPrioritizedRuleEntries(String ruleType, Integer startPriority) throws DAOException;
 
 	/**
 	 * 
@@ -182,6 +183,15 @@ public interface DssDAO {
 	public RuleType getRuleType(String type) throws DAOException;
 	
 	/**
+	 * Returns a list of rule types.
+	 * 
+	 * @param includeRetired whether or not to include retired rule types in the list
+	 * @return List of RuleType objects
+	 * @throws DAOException
+	 */
+	public List<RuleType> getRuleTypes(boolean includeRetired) throws DAOException;
+	
+	/**
 	 * Adds or updates a rule entry.
 	 * 
 	 * @param ruleEntry The rule entry to add or update.
@@ -218,4 +228,12 @@ public interface DssDAO {
 	 * @throws DAOException
 	 */
 	public List<RuleEntry> getRuleReferences(Rule rule) throws DAOException;
+	
+	/**
+	 * Returns rules that are currently disassociated to the specified rule type.
+	 * @param ruleType The rule type used to find disassociated rules
+	 * @return List of Rule objects not currently associated to the provided rule type
+	 * @throws DAOException
+	 */
+	public List<Rule> getDisassociatedRules(String ruleType) throws DAOException;
 }
