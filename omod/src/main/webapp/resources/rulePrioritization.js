@@ -31,15 +31,15 @@ $( function() {
       .selectmenu( "menuWidget" )
         .addClass( "overflow" );
     
-    $("#availableRules").on("mousedown", "li", function (e) {
+    $("#availableRules").on("click", "li", function (e) {
     	handleListClick(0, this, e);
     });
     
-    $("#prioritizedRules").on("mousedown", "li", function (e) {
+    $("#prioritizedRules").on("click", "li", function (e) {
     	handleListClick(1, this, e);
     });
     
-    $("#nonPrioritizedRules").on("mousedown", "li", function (e) {
+    $("#nonPrioritizedRules").on("click", "li", function (e) {
     	handleListClick(2, this, e);
     });
     
