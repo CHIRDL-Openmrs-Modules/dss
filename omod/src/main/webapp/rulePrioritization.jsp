@@ -50,13 +50,13 @@
         </div>
         <div id="searchFieldsDiv">
             <div class="searchFieldDiv">
-                <input type="text" name="availableRuleSearch" id="availableRuleSearch" value="" class="text ui-widget-content ui-corner-all" onkeyup="filterAvailableRules()" placeholder="Filter available rules..." title="Type in a rule name">
+                <input type="text" name="availableRuleSearch" id="availableRuleSearch" value="" class="text ui-widget-content ui-corner-all" oninput="filterAvailableRules()" placeholder="Filter available rules..." title="Type in a rule name">
             </div>
             <div class="searchFieldDiv">
-                <input type="text" name="prioritizedRuleSearch" id="prioritizedRuleSearch" value="" class="text ui-widget-content ui-corner-all" onkeyup="locatePrioritizedRules(true)" placeholder="Locate prioritized rules..." title="Type in a rule name">
+                <input type="text" name="prioritizedRuleSearch" id="prioritizedRuleSearch" value="" class="text ui-widget-content ui-corner-all" oninput="locatePrioritizedRules(true)" placeholder="Locate prioritized rules..." title="Type in a rule name">
             </div>
             <div class="searchFieldDiv">
-                <input type="text" name="nonPrioritizedRuleSearch" id="nonPrioritizedRuleSearch" value="" class="text ui-widget-content ui-corner-all" onkeyup="filterNonPrioritizedRules()" placeholder="Filter non-prioritized rules..." title="Type in a rule name">
+                <input type="text" name="nonPrioritizedRuleSearch" id="nonPrioritizedRuleSearch" value="" class="text ui-widget-content ui-corner-all" oninput="filterNonPrioritizedRules()" placeholder="Filter non-prioritized rules..." title="Type in a rule name">
             </div>
         </div>
         <div id="ruleListsDiv">
@@ -80,7 +80,7 @@
             <div id="mainPB" class="fullWidthProgressBarDiv"><img id="mainProgressImage" src="${pageContext.request.contextPath}/moduleResources/dss/images/ajax-progress.gif"></div>
         </div>
         <div class="submit">
-           <input type="button" id="submitButton" value="Save"/>
+           <input type="button" id="submitButton" value="Save Changes"/>
         </div>
         <div id="errorDialog" title="Error" class="ui-dialog-titlebar ui-widget-header" style="overflow-x: hidden;">
             <div style="margin: 0 auto;text-align: center;">
@@ -97,9 +97,6 @@
                 <div style="color:#000000;">Are you sure you want to save the changes?</div>
             </div>
         </div>
-        <input id="availableRulesSave" name="availableRulesSave" type="hidden" value=""/>
-        <input id="prioritizedRulesSave" name="prioritizedRulesSave" type="hidden" value=""/>
-        <input id="nonPrioritizedRulesSave" name="nonPrioritizedRulesSave" type="hidden" value=""/>
     </form>
     <div id="newRuleTypeDialog" title="Create New Rule Type">
 	  <p class="validateTips"></p>

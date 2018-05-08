@@ -31,15 +31,15 @@ $( function() {
       .selectmenu( "menuWidget" )
         .addClass( "overflow" );
     
-    $("#availableRules").on("click", "li", function (e) {
+    $("#availableRules").on("mousedown", "li", function (e) {
     	handleListClick(0, this, e);
     });
     
-    $("#prioritizedRules").on("click", "li", function (e) {
+    $("#prioritizedRules").on("mousedown", "li", function (e) {
     	handleListClick(1, this, e);
     });
     
-    $("#nonPrioritizedRules").on("click", "li", function (e) {
+    $("#nonPrioritizedRules").on("mousedown", "li", function (e) {
     	handleListClick(2, this, e);
     });
     
@@ -574,7 +574,6 @@ function handleListClick(prevCheckedArrayPosition, listItem, event) {
 		prevChecked = listItem;
 		prevCheckedArray[prevCheckedArrayPosition] = prevChecked;
 		$(listItem).addClass("selected");
-		//return;
 	}
 	
 	if (event.shiftKey) {

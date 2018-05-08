@@ -157,7 +157,8 @@ hr {
 
 .submit {
     padding-top: 20px;
-    float: right;
+    text-align: center;
+    margin: auto;
 }
 
 .ui-dialog .ui-state-error { 
