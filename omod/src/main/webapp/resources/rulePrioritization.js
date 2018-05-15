@@ -596,9 +596,17 @@ function handleListClick(prevCheckedArrayPosition, listItem, event) {
 }
 
 function sortRuleTypeSelect() {
-	$( "#ruleTypeSelect" ).html($( "#ruleTypeSelect" ).children("option").sort(function (x, y) {
+    // Remove the "Please Choose a Rule Type" and "Create new" options
+    $('#ruleTypeSelect option:first').remove();
+    $('#ruleTypeSelect option:first').remove();
+    
+    $( "#ruleTypeSelect" ).html($( "#ruleTypeSelect" ).children("option").sort(function (x, y) {
         return $(x).text().toUpperCase() < $(y).text().toUpperCase() ? -1 : 1;
     }));
+    
+    // Add back the "Please Choose a Rule Type" and "Create new" options
+    $( "#ruleTypeSelect" ).prepend('<option value="Create New">Create New...</option>');
+    $( "#ruleTypeSelect" ).prepend('<option value="Please Choose a Rule Type">Please Choose a Rule Type</option>');
 	
-	$( "#ruleTypeSelect" ).get(0).selectedIndex = 0;
+    $( "#ruleTypeSelect" ).get(0).selectedIndex = 0;
 }
