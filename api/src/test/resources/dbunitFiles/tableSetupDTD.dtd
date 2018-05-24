@@ -16,7 +16,7 @@
     dead CDATA #REQUIRED
     death_date CDATA #IMPLIED
     cause_of_death CDATA #IMPLIED
-    creator CDATA #REQUIRED
+    creator CDATA #IMPLIED
     date_created CDATA #REQUIRED
     changed_by CDATA #IMPLIED
     date_changed CDATA #IMPLIED
