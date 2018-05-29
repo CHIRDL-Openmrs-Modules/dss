@@ -42,7 +42,7 @@ public class Util {
 	private static final Log LOG = LogFactory.getLog(Util.class);
 	
 	public Util(){
-		
+		//empty constructor
 	}
 	
 	/**
