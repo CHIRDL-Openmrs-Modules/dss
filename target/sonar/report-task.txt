@@ -1,6 +1,0 @@
-projectKey=org.openmrs.module:dss
-serverUrl=http://localhost:9000
-serverVersion=6.7.3.38370
-dashboardUrl=http://localhost:9000/dashboard/index/org.openmrs.module:dss
-ceTaskId=AWPMD0qq_gTYAXDjHrZc
-ceTaskUrl=http://localhost:9000/api/ce/task?id=AWPMD0qq_gTYAXDjHrZc
