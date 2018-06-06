@@ -490,12 +490,15 @@ public class CompilingClassLoader extends URLClassLoader // CHICA-965 Extend URL
 					// load class filename into rule table
 					try
 					{
-						Object obj = clas.newInstance();
-						if (obj instanceof DssRule)
-						{
-							DssService dssService = Context
-									.getService(DssService.class);
-							dssService.addRule(classFilename, (DssRule) obj);
+					    if(clas != null){
+					        Object obj = clas.newInstance();
+					        if (obj instanceof DssRule){
+					            DssService dssService = Context
+					                    .getService(DssService.class);
+					            dssService.addRule(classFilename, (DssRule) obj);
+					        }
+					    }else{
+						    throw new Exception("class is null");
 						}
 					} catch (Exception e)
 					{

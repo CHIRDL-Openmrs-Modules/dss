@@ -21,7 +21,7 @@ package org.openmrs.module.dss.xmlBeans.physiciannote;
  */
 public class PhysicianNoteConfig {
 
-	HeadingOrder headingOrder;
+	private HeadingOrder headingOrder;
 	
     /**
      * @return the headingOrder

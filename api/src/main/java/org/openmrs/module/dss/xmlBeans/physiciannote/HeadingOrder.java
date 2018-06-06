@@ -21,7 +21,7 @@ package org.openmrs.module.dss.xmlBeans.physiciannote;
  */
 public class HeadingOrder {
 
-	public String[] headings = new String[0];
+	private String[] headings = new String[0];
 	
     /**
      * @return the headings
