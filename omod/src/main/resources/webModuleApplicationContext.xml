@@ -30,7 +30,6 @@
             <props>
 				<prop key="/module/@MODULE_ID@/searchRules.form">searchRules</prop>
 				<prop key="/module/@MODULE_ID@/ruleTester.form">ruleTester</prop>
-				<prop key="/module/@MODULE_ID@/dssOperationSuccess.form">dssOperationSuccess</prop>			    
 			</props>
 		</property>
 	</bean>
@@ -44,11 +43,5 @@
 		<property name="commandName"><value>ruleTesterObject</value></property>
 		<property name="formView"><value>/module/@MODULE_ID@/ruleTester</value></property>
 		<property name="successView"><value>ruleTester.form</value></property>
-	</bean>
-	
-    <bean id="dssOperationSuccess" class="@MODULE_PACKAGE@.web.OperationSuccessController">
-        <property name="commandName"><value>dssOperationSuccessObject</value></property>
-        <property name="formView"><value>/module/@MODULE_ID@/dssOperationSuccess</value></property> 
-        <property name="successView"><value>/openmrs/admin/index.htm</value></property>
 	</bean>
 </beans>
