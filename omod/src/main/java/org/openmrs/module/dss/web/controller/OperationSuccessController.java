@@ -18,6 +18,9 @@ import org.springframework.web.servlet.view.RedirectView;
 @RequestMapping(value = "module/dss/dssOperationSuccess.form")
 public class OperationSuccessController {
 
+    /** Parameters */
+    private static final String PARAMETER_OPERATION_TYPE = "operationType";
+
     /** Form view */
     private static final String FORM_VIEW = "/module/dss/dssOperationSuccess";
     
@@ -31,8 +34,8 @@ public class OperationSuccessController {
 
 	@RequestMapping(method = RequestMethod.GET)
     protected String initForm(HttpServletRequest request, ModelMap map) {
-		String operationType = request.getParameter("operationType");
-		map.put("operationType", operationType);
+		String operationType = request.getParameter(PARAMETER_OPERATION_TYPE);
+		map.put(PARAMETER_OPERATION_TYPE, operationType);
 		return FORM_VIEW;
 	}
 	
