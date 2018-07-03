@@ -33,23 +33,30 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class RuleTesterController
 {
 
+    /** Log */
 	protected final Log log = LogFactory.getLog(getClass());
 	
 	/** Form view */
     private static final String FORM_VIEW = "/module/dss/ruleTester";
+    
+    /** Parameters */
+    private static final String PARAMETER_RULE_NAME = "ruleName";
+    private static final String PARAMETER_LAST_MRN = "lastMRN";
+    private static final String PARAMETER_LAST_RULE_NAME = "lastRuleName";
+    private static final String PARAMETER_RUN_RESULT = "runResult";
+    private static final String PARAMETER_TOKEN_NAME = "tokenName";
+    private static final String PARAMETER_RULES = "rules";
 
 	@RequestMapping(method = RequestMethod.GET)
     protected String initForm(HttpServletRequest request, ModelMap map)
 	{
 		DssService dssService = Context.getService(DssService.class);
 
-		String mode = "PRODUCE";
+		String ruleName = request.getParameter(PARAMETER_RULE_NAME);
+		String mrn = request.getParameter(ChirdlUtilConstants.PARAMETER_MRN);
 
-		String ruleName = request.getParameter("ruleName");
-		String mrn = request.getParameter("mrn");
-
-		map.put("lastMRN", mrn);
-		map.put("lastRuleName", ruleName);
+		map.put(PARAMETER_LAST_MRN, mrn);
+		map.put(PARAMETER_LAST_RULE_NAME, ruleName);
 
 		if (mrn != null)
 		{
@@ -69,7 +76,7 @@ public class RuleTesterController
 				{
 				    Patient patient = patients.get(0);
 					HashMap<String, Object> parameters = new HashMap<>();
-					parameters.put("mode", mode);
+					parameters.put(ChirdlUtilConstants.PARAMETER_MODE, ChirdlUtilConstants.PARAMETER_VALUE_PRODUCE);
 					Rule rule = new Rule();
 					rule.setTokenName(ruleName);
 					Rule currRule = dssService.getRule(ruleName);
@@ -83,7 +90,7 @@ public class RuleTesterController
                             resultString.append(currResult.toString());
                             resultString.append("<br/><br/>");
                         }
-                        map.put("runResult", resultString.toString());
+                        map.put(PARAMETER_RUN_RESULT, resultString.toString());
 					}
 				}
 			} catch (Exception e)
@@ -93,9 +100,9 @@ public class RuleTesterController
 			}
 		}
 
-		List<Rule> rules = dssService.getRules(new Rule(), true, true, "tokenName");
+		List<Rule> rules = dssService.getRules(new Rule(), true, true, PARAMETER_TOKEN_NAME);
 
-		map.put("rules", rules);
+		map.put(PARAMETER_RULES, rules);
 
 		return FORM_VIEW;
 	}
