@@ -25,16 +25,4 @@
 	
 	<context:component-scan base-package="org.openmrs.module.dss.web.controller" />
 	
-	<bean id="dssUrlMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
-        <property name="mappings">
-            <props>
-				<prop key="/module/@MODULE_ID@/ruleTester.form">ruleTester</prop>
-			</props>
-		</property>
-	</bean>
-	<bean id="ruleTester" class="org.openmrs.module.dss.web.RuleTesterController">
-		<property name="commandName"><value>ruleTesterObject</value></property>
-		<property name="formView"><value>/module/@MODULE_ID@/ruleTester</value></property>
-		<property name="successView"><value>ruleTester.form</value></property>
-	</bean>
 </beans>
