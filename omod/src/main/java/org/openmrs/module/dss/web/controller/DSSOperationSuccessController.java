@@ -16,7 +16,7 @@ import org.springframework.web.servlet.view.RedirectView;
  */
 @Controller
 @RequestMapping(value = "module/dss/dssOperationSuccess.form")
-public class OperationSuccessController {
+public class DSSOperationSuccessController {
 
     /** Parameters */
     private static final String PARAMETER_OPERATION_TYPE = "operationType";
