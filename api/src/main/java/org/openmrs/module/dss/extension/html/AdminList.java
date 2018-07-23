@@ -30,7 +30,7 @@ public class AdminList extends AdministrationSectionExt {
 		
 		Map<String, String> map = new HashMap<String, String>();
 		
-		map.put("module/dss/manage_rules.htm", "Manage Rules");
+		map.put("module/dss/manage_rules.form", "Manage Rules");
 		map.put("module/dss/ruleTester.form", "Rule Tester");
 		map.put("module/dss/importRuleAttributeValues.form", "Import Rule Attribute Values From File");
 

@@ -9,8 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.dss.service.DssService;
 import org.openmrs.module.dss.hibernateBeans.Rule;
+import org.openmrs.module.dss.service.DssService;
 import org.springframework.web.servlet.mvc.SimpleFormController;
 
 public class SearchRulesController extends SimpleFormController
@@ -67,16 +67,6 @@ public class SearchRulesController extends SimpleFormController
 			rule.setKeywords(keywords);
 		}
 		map.put("keywords", keywords);
-
-		String ruleType = request.getParameter("ruleType");
-		if (ruleType == null || ruleType.length() == 0)
-		{
-			ruleType = "";
-		} else
-		{
-			rule.setRuleType(ruleType);
-		}
-		map.put("ruleType", ruleType);
 		
 		String action = request.getParameter("action");
 		if (action == null || action.length() == 0)
@@ -190,7 +180,7 @@ public class SearchRulesController extends SimpleFormController
 		{
 			DssService dssService = Context
 					.getService(DssService.class);
-			List<Rule> rules = dssService.getRules(rule,true,true,null);
+			List<Rule> rules = dssService.getRules(rule, true, true, null);
 			map.put("rules", rules);
 		}
 		map.put("runSearch", runSearch);

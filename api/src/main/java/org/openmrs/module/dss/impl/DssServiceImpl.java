@@ -12,7 +12,6 @@ import org.openmrs.api.APIAuthenticationException;
 import org.openmrs.api.APIException;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.context.Context;
-import org.openmrs.api.db.DAOException;
 import org.openmrs.logic.LogicService;
 import org.openmrs.logic.impl.LogicCriteriaImpl;
 import org.openmrs.logic.result.Result;
@@ -26,6 +25,8 @@ import org.openmrs.module.dss.db.DssDAO;
 import org.openmrs.module.dss.hibernateBeans.Rule;
 import org.openmrs.module.dss.hibernateBeans.RuleAttribute;
 import org.openmrs.module.dss.hibernateBeans.RuleAttributeValue;
+import org.openmrs.module.dss.hibernateBeans.RuleEntry;
+import org.openmrs.module.dss.hibernateBeans.RuleType;
 import org.openmrs.module.dss.service.DssService;
 
 /**
@@ -68,7 +69,11 @@ public class DssServiceImpl implements DssService
 		this.dao = dao;
 	}
 	
-	public String runRulesAsString(Patient p, List<Rule> ruleList)
+	/**
+	 * @see org.openmrs.module.dss.service.DssService#runRulesAsString(org.openmrs.Patient, 
+	 * java.util.List)
+	 */
+	public String runRulesAsString(Patient p, List<Rule> ruleList) throws APIException
 	{
 		ArrayList<Result> results = this.runRules(p, ruleList);
 		String reply = "";
@@ -88,7 +93,11 @@ public class DssServiceImpl implements DssService
 		return reply;
 	}
 	
-	public Result runRule(Patient p, Rule rule)
+	/**
+	 * @see org.openmrs.module.dss.service.DssService#runRule(org.openmrs.Patient, 
+	 * org.openmrs.module.dss.hibernateBeans.Rule)
+	 */
+	public Result runRule(Patient p, Rule rule) throws APIException
 	{
 		ArrayList<Rule> ruleList = new ArrayList<Rule>();
 		ruleList.add(rule);
@@ -108,7 +117,11 @@ public class DssServiceImpl implements DssService
 		return Result.emptyResult();
 	}
 		
-	public ArrayList<Result> runRules(Patient p, List<Rule> ruleList)
+	/**
+	 * @see org.openmrs.module.dss.service.DssService#runRules(org.openmrs.Patient, 
+	 * java.util.List)
+	 */
+	public ArrayList<Result> runRules(Patient p, List<Rule> ruleList) throws APIException
 	{
 		ArrayList<Result> results = new ArrayList<Result>();
 		Map<String,Object> parameters = null;
@@ -179,7 +192,10 @@ public class DssServiceImpl implements DssService
 		} 
 	}
 
-	public org.openmrs.logic.Rule loadRule(String rule, boolean updateRule) throws Exception
+	/**
+	 * @see org.openmrs.module.dss.service.DssService#loadRule(java.lang.String, boolean)
+	 */
+	public org.openmrs.logic.Rule loadRule(String rule, boolean updateRule) throws APIException
 	{ 
 		org.openmrs.logic.Rule loadedRule = loadedRuleMap.get(rule);
 		if (loadedRule != null && !updateRule) {
@@ -256,7 +272,7 @@ public class DssServiceImpl implements DssService
 
 		if (clas == null)
 		{
-			throw new Exception("Could not load class for rule: " + rule);
+			throw new APIException("Could not load class for rule: " + rule);
 		}
 
 		Object obj = null;
@@ -269,7 +285,7 @@ public class DssServiceImpl implements DssService
 
 		if (!(obj instanceof org.openmrs.logic.Rule))
 		{
-			throw new Exception("Could not load class for rule: " + rule
+			throw new APIException("Could not load class for rule: " + rule
 					+ ". The rule must implement the Rule interface.");
 		}
 		
@@ -286,26 +302,34 @@ public class DssServiceImpl implements DssService
         return loadedRule;
 	}
 
+	/**
+	 * @see org.openmrs.module.dss.service.DssService#getRule(int)
+	 */
 	public Rule getRule(int ruleId) throws APIException
 	{
 		return getDssDAO().getRule(ruleId);
 	}
 	
+	/**
+	 * @see org.openmrs.module.dss.service.DssService#getRule(java.lang.String)
+	 */
 	public Rule getRule(String tokenName) throws APIException
 	{
 		return getDssDAO().getRule(tokenName);
 	}
-
-	public List<Rule> getPrioritizedRules(String type) throws DAOException
-	{
-		return getDssDAO().getPrioritizedRules(type, 0);
+	
+	/**
+     * @see org.openmrs.module.dss.service.DssService#getPrioritizedRuleEntries(java.lang.String)
+     */
+	public List<RuleEntry> getPrioritizedRuleEntries(String ruleType) throws APIException {
+		return getDssDAO().getPrioritizedRuleEntries(ruleType, 0);
 	}
 	
 	/**
 	 * Looks up a rule attribute by name
 	 * @see org.openmrs.module.dss.service.DssService#getRuleAttribute(java.lang.String)
 	 */
-	public RuleAttribute getRuleAttribute(String ruleAttributeName){
+	public RuleAttribute getRuleAttribute(String ruleAttributeName) throws APIException {
    		return getDssDAO().getRuleAttribute(ruleAttributeName);
     }
 	
@@ -313,7 +337,7 @@ public class DssServiceImpl implements DssService
 	 * Looks up a rule attribute by primary key
 	 * @see org.openmrs.module.dss.service.DssService#getRuleAttribute(java.lang.Integer)
 	 */
-	public RuleAttribute getRuleAttribute(Integer ruleAttributeId){
+	public RuleAttribute getRuleAttribute(Integer ruleAttributeId) throws APIException {
    		return getDssDAO().getRuleAttribute(ruleAttributeId);
     }
 	
@@ -321,7 +345,7 @@ public class DssServiceImpl implements DssService
 	 * returns the first rule attribute value matched by rule id and rule attribute name
 	 * @see org.openmrs.module.dss.service.DssService#getRuleAttributeValue(java.lang.Integer, java.lang.String)
 	 */
-	public RuleAttributeValue getRuleAttributeValue(Integer ruleId, String ruleAttributeName){
+	public RuleAttributeValue getRuleAttributeValue(Integer ruleId, String ruleAttributeName) throws APIException{
 		return getDssDAO().getRuleAttributeValue(ruleId, ruleAttributeName);
 	}
 	
@@ -329,7 +353,8 @@ public class DssServiceImpl implements DssService
 	 * returns all rule attribute values for a given rule id and rule attribute name
 	 * @see org.openmrs.module.dss.service.DssService#getRuleAttributeValues(java.lang.Integer, java.lang.String)
 	 */
-	public List<RuleAttributeValue> getRuleAttributeValues(Integer ruleId, String ruleAttributeName){
+	public List<RuleAttributeValue> getRuleAttributeValues(Integer ruleId, String ruleAttributeName)
+			 throws APIException{
 		return getDssDAO().getRuleAttributeValues(ruleId, ruleAttributeName);
 	}
 	
@@ -337,40 +362,50 @@ public class DssServiceImpl implements DssService
 	 * Returns list of rule attribute values for a given rule id and rule attribute id
 	 * @see org.openmrs.module.dss.service.DssService#getRuleAttributeValues(java.lang.Integer, java.lang.Integer)
 	 */
-	public List<RuleAttributeValue> getRuleAttributeValues(Integer ruleId, Integer ruleAttributeId){
+	public List<RuleAttributeValue> getRuleAttributeValues(Integer ruleId, Integer ruleAttributeId)
+			 throws APIException{
 		return getDssDAO().getRuleAttributeValues(ruleId, ruleAttributeId);
 	}
 	
 	/**
 	 * Saves or updates rule attribute value changes to the database
-	 * @see org.openmrs.module.dss.service.DssService#saveRuleAttributeValue(org.openmrs.module.dss.hibernateBeans.RuleAttributeValue)
+	 * @see org.openmrs.module.dss.service.DssService#saveRuleAttributeValue(
+	 * org.openmrs.module.dss.hibernateBeans.RuleAttributeValue)
 	 */
-	public RuleAttributeValue saveRuleAttributeValue(RuleAttributeValue value){
+	public RuleAttributeValue saveRuleAttributeValue(RuleAttributeValue value) throws APIException {
 
 		return getDssDAO().saveRuleAttributeValue(value);
 	}
-	
-	/**
-	 * @see org.openmrs.module.dss.service.DssService#getPrioritizedRules(java.lang.String, java.lang.Integer)
+    
+    /**
+	 * @see org.openmrs.module.dss.service.DssService#getPrioritizedRuleEntries(java.lang.String, java.lang.Integer)
 	 */
-    public List<Rule> getPrioritizedRules(String type, Integer startPriority) {
-	    return getDssDAO().getPrioritizedRules(type, startPriority);
-    }
-	
-	
-	public List<Rule> getNonPrioritizedRules(String type) throws DAOException
-	{
-		return getDssDAO().getNonPrioritizedRules(type);
+	public List<RuleEntry> getPrioritizedRuleEntries(String ruleType, Integer startPriority) throws APIException {
+		return getDssDAO().getPrioritizedRuleEntries(ruleType, startPriority);
 	}
 	
-	public List<Rule> getRules(Rule rule, boolean ignoreCase, boolean enableLike, String sortColumn)
+	/**
+	 * @see org.openmrs.module.dss.service.DssService#getNonPrioritizedRuleEntries(java.lang.String)
+	 */
+	public List<RuleEntry> getNonPrioritizedRuleEntries(String ruleType) throws APIException {
+		return getDssDAO().getNonPrioritizedRuleEntries(ruleType);
+	}
+	
+	/**
+	 * @see org.openmrs.module.dss.service.DssService#getRules(org.openmrs.module.dss.hibernateBeans.Rule, 
+	 * boolean, boolean, java.lang.String)
+	 */
+	public List<Rule> getRules(Rule rule, boolean ignoreCase, boolean enableLike, String sortColumn) 
+			throws APIException
 	{
 		return getDssDAO().getRules(rule, ignoreCase, enableLike, sortColumn);
 	}
 	
-	public void deleteRule(int ruleId)
-	{
-		getDssDAO().deleteRule(ruleId);
+	/**
+	 * @see org.openmrs.module.dss.service.DssService#getRules(java.lang.String)
+	 */
+	public List<Rule> getRulesByType(String type) throws APIException {
+		return getDssDAO().getRulesByType(type);
 	}
 	
 	/**
@@ -381,10 +416,13 @@ public class DssServiceImpl implements DssService
 	 * @param value
 	 * @return
 	 */
-	public List<RuleAttributeValue> getRuleAttributesByValue(Integer ruleAttributeId,String value){
+	public List<RuleAttributeValue> getRuleAttributesByValue(Integer ruleAttributeId,String value) throws APIException {
 		return getDssDAO().getRuleAttributesByValue(ruleAttributeId, value);
 	}
 	
+	/**
+	 * @see org.openmrs.module.dss.service.DssService#addRule(java.lang.String, org.openmrs.module.dss.DssRule)
+	 */
 	public Rule addRule(String classFilename,DssRule rule) throws APIException
 	{
 		String tokenName = IOUtil.getFilenameWithoutExtension(classFilename);
@@ -400,7 +438,6 @@ public class DssServiceImpl implements DssService
 		}
 		
 		databaseRule.setClassFilename(classFilename);
-		databaseRule.setPriority(rule.getPriority());
 		databaseRule.setAction(rule.getAction());
 		databaseRule.setAuthor(rule.getAuthor());
 		databaseRule.setCitations(rule.getCitations());
@@ -415,16 +452,87 @@ public class DssServiceImpl implements DssService
 		databaseRule.setSpecialist(rule.getSpecialist());
 		databaseRule.setTitle(rule.getTitle());
 		databaseRule.setVersion(rule.getVersion());
-		if(rule.getType() != null){
-			databaseRule.setRuleType(rule.getType());
-		}
 		databaseRule.setTokenName(tokenName);
 		databaseRule.setAgeMax(rule.getAgeMax());
 		databaseRule.setAgeMin(rule.getAgeMin());
 		databaseRule.setAgeMinUnits(rule.getAgeMinUnits());
 		databaseRule.setAgeMaxUnits(rule.getAgeMaxUnits());
 		
-		return getDssDAO().addOrUpdateRule(databaseRule);
-		
+		databaseRule = getDssDAO().addOrUpdateRule(databaseRule);
+		return databaseRule;
+	}
+	
+	/**
+	 * @see org.openmrs.module.dss.service.DssService#saveRuleType(org.openmrs.module.dss.hibernateBeans.RuleType)
+	 */
+	public RuleType saveRuleType(RuleType ruleType) throws APIException {
+		return getDssDAO().saveRuleType(ruleType);
+	}
+	
+	/**
+	 * @see org.openmrs.module.dss.service.DssService#retireRuleType(org.openmrs.module.dss.hibernateBeans.RuleType, 
+	 * java.lang.String)
+	 */
+	public void retireRuleType(RuleType ruleType, String reason) throws APIException {
+		getDssDAO().saveRuleType(ruleType);
+	}
+	
+	/**
+	 * @see org.openmrs.module.dss.service.DssService#getRuleType(java.lang.String)
+	 */
+	public RuleType getRuleType(String type) throws APIException {
+		return getDssDAO().getRuleType(type);
+	}
+	
+	/**
+	 * @see org.openmrs.module.dss.service.DssService#getRuleTypes(boolean)
+	 */
+	public List<RuleType> getRuleTypes(boolean includeRetired) throws APIException {
+		return getDssDAO().getRuleTypes(includeRetired);
+	}
+	
+	/**
+	 * @see org.openmrs.module.dss.service.DssService#saveRuleEntry(org.openmrs.module.dss.hibernateBeans.RuleEntry)
+	 */
+	public RuleEntry saveRuleEntry(RuleEntry ruleEntry) throws APIException {
+		return getDssDAO().saveRuleEntry(ruleEntry);
+	}
+	
+	/**
+	 * @see org.openmrs.module.dss.service.DssService#retireRuleEntry(org.openmrs.module.dss.hibernateBeans.RuleEntry, 
+	 * java.lang.String)
+	 */
+	public void retireRuleEntry(RuleEntry ruleEntry, String reason) throws APIException {
+		Context.getService(DssService.class).saveRuleEntry(ruleEntry);
+	}
+
+	/**
+	 * @see org.openmrs.module.dss.service.DssService#getRuleEntry(org.openmrs.module.dss.hibernateBeans.Rule, 
+	 * org.openmrs.module.dss.hibernateBeans.RuleType)
+	 */
+	public RuleEntry getRuleEntry(Rule rule, RuleType ruleType) throws APIException {
+		return getDssDAO().getRuleEntry(rule, ruleType);
+	}
+	
+	/**
+	 * @see org.openmrs.module.dss.service.DssService#getRuleEntry(java.lang.Integer, java.lang.String)
+	 */
+	public RuleEntry getRuleEntry(Integer ruleId, String ruleType) throws APIException {
+		return getDssDAO().getRuleEntry(ruleId, ruleType);
+	}
+	
+	
+	/**
+	 * @see org.openmrs.module.dss.service.DssService#getRuleReferences(org.openmrs.module.dss.hibernateBeans.Rule)
+	 */
+	public List<RuleEntry> getRuleReferences(Rule rule) throws APIException {
+		return getDssDAO().getRuleReferences(rule);
+	}
+
+	/**
+	 * @see org.openmrs.module.dss.service.DssService#getDisassociatedRules(java.lang.String)
+	 */
+	public List<Rule> getDisassociatedRules(String ruleType) throws APIException {
+		return getDssDAO().getDisassociatedRules(ruleType);
 	}
 }

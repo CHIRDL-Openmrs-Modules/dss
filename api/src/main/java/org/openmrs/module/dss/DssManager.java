@@ -13,6 +13,7 @@ import org.openmrs.Patient;
 import org.openmrs.api.context.Context;
 import org.openmrs.logic.result.Result;
 import org.openmrs.module.dss.hibernateBeans.Rule;
+import org.openmrs.module.dss.hibernateBeans.RuleEntry;
 import org.openmrs.module.dss.service.DssService;
 
 /**
@@ -91,20 +92,21 @@ public class DssManager
 		this.dssElementsByType.put(type, dssElements);
 		DssService dssService = Context
 				.getService(DssService.class);
-		List<Rule> rules = null;
+		List<RuleEntry> ruleEntries = null;
 		if(type == null)
 		{
-			rules = dssService.getPrioritizedRules("", startPriority);
+			ruleEntries = dssService.getPrioritizedRuleEntries("", startPriority);
 		} else
 		{
-			rules = dssService.getPrioritizedRules(type, startPriority);
+			ruleEntries = dssService.getPrioritizedRuleEntries(type, startPriority);
 		}
 		
-		Iterator<Rule> iter = rules.iterator();
+		Iterator<RuleEntry> iter = ruleEntries.iterator();
 		
 		//Run rules until there are maxDssElements non-null results
 		while (dssElements.size() < maxElements && iter.hasNext()) {
-			Rule currRule = iter.next();
+			RuleEntry ruleEntry = iter.next();
+			Rule currRule = ruleEntry.getRule();
 			ArrayList<Rule> ruleList = new ArrayList<Rule>();
 			
 			//get rules that meet the age restrictions

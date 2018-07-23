@@ -9,7 +9,7 @@
 <tr><td>Restrict on <b>title:</b></td><td> <input type="text" name="title" value="${title}" size="20"></td>
 <td>Restrict on <b>author:</b></td><td> <input type="text" name="author" value="${author}" size="20"></td></tr>
 <tr><td>Restrict on <b>keywords:</b></td><td> <input type="text" name="keywords" value="${keywords}" size="20"></td>
-<td>Restrict on <b>rule type:</b></td><td> <input type="text" name="ruleType" value="${ruleType}" size="20"></td></tr>
+<td>Restrict on <b>class file name:</b></td><td><input type="text" name="classFilename" value="${classFilename}" size="20"></td></tr>
 <tr><td>Restrict on <b>action:</b></td><td> <input type="text" name="action" value="${action}" size="20"></td>
 <td>Restrict on <b>logic:</b></td><td> <input type="text" name="logic" value="${logic}" size="20"></td></tr>
 <tr><td>Restrict on <b>data:</b></td><td><input type="text" name="data" value="${data}" size="20"></td>
@@ -18,8 +18,7 @@
 <td>Restrict on <b>explanation:</b></td><td> <input type="text" name="explanation" value="${explanation}" size="20"></td></tr>
 <tr><td>Restrict on <b>purpose:</b></td><td> <input type="text" name="purpose" value="${purpose}" size="20"></td>
 <td>Restrict on <b>specialist:</b></td><td><input type="text" name="specialist" value="${specialist}" size="20"></td></tr>
-<tr><td>Restrict on <b>institution:</b></td><td><input type="text" name="institution" value="${institution}" size="20"></td>
-<td>Restrict on <b>class file name:</b></td><td><input type="text" name="classFilename" value="${classFilename}" size="20"></td></tr>
+<tr><td>Restrict on <b>institution:</b></td><td><input type="text" name="institution" value="${institution}" size="20"></td></tr>
 <tr><td colspan="4" style="text-align:right"><input type="submit" value="OK"></td></tr>
 </table>
 <input type="hidden" name="runSearch" value="true"/>
@@ -43,10 +42,6 @@
 		<tr>
 		<td><b>Creation&nbsp;time:</b></td>
 		<td>${databaseRule.creationTime}</td>
-		</tr>
-		<tr>
-		<td><b>Priority:</b></td>
-		<td>${databaseRule.priority}</td>
 		</tr>
 		<tr>
 		<td><b>Version:</b></td>
@@ -99,10 +94,6 @@
 		<tr>
 		<td><b>Action:</b></td>
 		<td>${databaseRule.action}</td>
-		</tr>
-		<tr>
-		<td><b>Rule&nbsp;Type:</b></td>
-		<td>${databaseRule.ruleType}</td>
 		</tr>
 		<tr>
 		<td><b>Last&nbsp;Modified:</b></td>

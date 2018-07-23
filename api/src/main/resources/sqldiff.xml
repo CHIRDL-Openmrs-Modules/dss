@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqldiff PUBLIC "-//OpenMRS//DTD OpenMRS SQL Diff Config 1.0//EN" "http://resources.openmrs.org/doctype/sqldiff-1.0.dtd">
+
+<sqldiff version="1.0">
+	<help>
+		USE:
+			The diffs are ordered by datamodel version number.
+			The script can be run in a top down fashion and is
+			expected to not failor overwrite old data
+		
+		EXPECT:
+			- "use business-database-name;" was called prior to
+			   calling this script
+	</help>
+	
+	<diff>
+		<version>1.0.2</version>
+		<author>Tammy Dugan</author>
+		<date>Jan 6th 2009</date>
+		<description>
+			Initial database setup.
+		</description>
+		<sql>
+		CREATE TABLE dss_rule (
+  rule_id int(11) NOT NULL auto_increment,
+  class_filename varchar(500) NOT NULL,
+  creation_time datetime NOT NULL,
+  priority int(11) default NULL,
+  title varchar(500) default NULL,
+  version double default NULL,
+  institution varchar(500) default NULL,
+  author varchar(500) default NULL,
+  specialist varchar(500) default NULL,
+  ruleCreationDate varchar(500) default NULL,
+  purpose varchar(500) default NULL,
+  explanation varchar(500) default NULL,
+  keywords varchar(500) default NULL,
+  citations varchar(500) default NULL,
+  links varchar(500) default NULL,
+  data varchar(500) default NULL,
+  logic varchar(500) default NULL,
+  action varchar(500) default NULL,
+  last_modified datetime default NULL,
+  rule_type varchar(500) default NULL,
+  token_name varchar(100) NOT NULL,
+  age_min_units varchar(20) default NULL,
+  age_max_units varchar(20) default NULL,
+  age_min int(11) default NULL,
+  age_max int(11) default NULL,
+  PRIMARY KEY  (rule_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO scheduler_task_config
+   (`name`, `schedulable_class`, `start_time`, `start_time_pattern`, `repeat_interval`, `start_on_startup`, `started`, `created_by`, `date_created`, `uuid`)
+select 'ClassLoaderTask','org.openmrs.module.dss.ClassLoaderTask',
+ NOW(), 'MM/dd/yyyy HH:mm:ss', 300, 1, 0, 1, NOW(), UUID()
+ from 
+(select count(*) as cnt from scheduler_task_config where name='ClassLoaderTask') a
+where a.cnt=0;
+
+		</sql>
+	</diff>
+	<diff>
+        <version>1.0.3</version>
+        <author>Steve McKee</author>
+        <date>Sept 2nd 2011</date>
+        <description>
+            Convert the logic column of the dss_rule table to medium text.
+        </description>
+        <sql>
+            alter table dss_rule 
+            change logic logic mediumtext
+        </sql>
+    </diff>
+    <diff>
+        <version>1.0.4</version>
+        <author>Tammy Dugan</author>
+        <date>July 8th 2015</date>
+        <description>
+            Add dss_rule_attribute and dss_rule_attribute_value tables.
+            Create associated_answer attribute and module attributes.
+        </description>
+        <sql>
+CREATE TABLE `dss_rule_attribute` (
+  `rule_attribute_id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`rule_attribute_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+CREATE TABLE `dss_rule_attribute_value` (
+  `rule_attribute_value_id` int(11) NOT NULL AUTO_INCREMENT,
+  `rule_id` int(11) NOT NULL,
+  `value` varchar(255) NOT NULL,
+  `rule_attribute_id` int(11) NOT NULL,
+   creation_time datetime NOT NULL,
+   last_modified datetime default NULL,
+  PRIMARY KEY (`rule_attribute_value_id`),
+  KEY `rule_value_fk_rule` (`rule_id`),
+  KEY `rule_value_fk_attr` (`rule_attribute_id`),
+  CONSTRAINT `rule_value_fk_attr` FOREIGN KEY (`rule_attribute_id`) REFERENCES `dss_rule_attribute` (`rule_attribute_id`),
+  CONSTRAINT `rule_value_fk_rule` FOREIGN KEY (`rule_id`) REFERENCES `dss_rule` (`rule_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+insert into `dss_rule_attribute`(`name`,`description`) 
+values ('associated_answer','Associates rule with answer written by rule');
+
+insert into `dss_rule_attribute`(`name`,`description`) 
+values ('module','Indicates which module rule is part of');
+        </sql>
+    </diff>
+    <diff>
+        <version>1.0.5</version>
+        <author>David Ely</author>
+        <date>March 14, 2018</date>
+        <description>
+            CHICA-1209 Create new privilege for dss module
+        </description>
+        <sql>
+            Insert Into privilege(privilege, description, uuid)
+            Values('Manage DSS', 'DSS Module privilege', UUID());
+        </sql>
+    </diff>
+    <diff>
+        <version>1.0.6</version>
+        <author>Steve McKee</author>
+        <date>February 6th 2018</date>
+        <description>
+            Create dss_rule_type and dss_rule_entry tables.  Also populate them with data from dss_rule and drop the priority column from dss_rule.
+        </description>
+        <sql>
+            CREATE TABLE `dss_rule_type` (
+              `rule_type_id` int(11) NOT NULL AUTO_INCREMENT,
+              `name` varchar(255) NOT NULL,
+              `description` varchar(255) DEFAULT NULL,
+              `creator` int(11) NOT NULL default 0,
+              `date_created` datetime NOT NULL default '0000-00-00 00:00:00',
+              `changed_by` int(11) default NULL,
+              `date_changed` datetime default NULL,
+              `retired` tinyint(1) NOT NULL default 0,
+              `retired_by` int(11) default NULL,
+              `date_retired` datetime default NULL,
+              `retire_reason` varchar(255) default NULL,
+              `uuid` char(38) NOT NULL,
+              PRIMARY KEY (`rule_type_id`),
+              KEY `dss_rule_type_user_created_fk` (`creator`),
+              KEY `dss_rule_type_user_changed_by_fk` (`changed_by`),
+              KEY `dss_rule_type_user_voided_by_fk` (`retired_by`),
+              INDEX `name_of_rule_type` (`name`),
+              CONSTRAINT `dss_rule_type_user_created_fk` FOREIGN KEY (`creator`) REFERENCES `users` (`user_id`),
+              CONSTRAINT `dss_rule_type_user_changed_by_fk` FOREIGN KEY (`changed_by`) REFERENCES `users` (`user_id`),
+              CONSTRAINT `dss_rule_type_user_voided_by_fk` FOREIGN KEY (`retired_by`) REFERENCES `users` (`user_id`)
+              ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+              
+              
+			CREATE TABLE `dss_rule_entry`(
+			  `rule_entry_id` int(11) NOT NULL AUTO_INCREMENT,
+			  `rule_type_id` int(11) NOT NULL,
+			  `rule_id` int(11) NOT NULL,
+			  `priority` int(11) default NULL,
+              `creator` int(11) NOT NULL default 0,
+              `date_created` datetime NOT NULL default '0000-00-00 00:00:00',
+              `changed_by` int(11) default NULL,
+              `date_changed` datetime default NULL,
+              `retired` tinyint(1) NOT NULL default 0,
+              `retired_by` int(11) default NULL,
+              `date_retired` datetime default NULL,
+              `retire_reason` varchar(255) default NULL,
+              `uuid` char(38) NOT NULL,
+              PRIMARY KEY (`rule_entry_id`),
+              KEY `dss_rule_type_fk` (`rule_type_id`),
+              KEY `dss_rule_fk` (`rule_id`),
+              KEY `dss_rule_entry_user_created_fk` (`creator`),
+			  KEY `dss_rule_entry_user_changed_by_fk` (`changed_by`),
+			  KEY `dss_rule_entry_user_voided_by_fk` (`retired_by`),
+			  CONSTRAINT `dss_rule_type_fk` FOREIGN KEY (`rule_type_id`) REFERENCES `dss_rule_type` (`rule_type_id`),
+			  CONSTRAINT `dss_rule_fk` FOREIGN KEY (`rule_id`) REFERENCES dss_rule(`rule_id`),
+			  CONSTRAINT `dss_rule_entry_user_created_fk` FOREIGN KEY (`creator`) REFERENCES `users` (`user_id`),
+			  CONSTRAINT `dss_rule_entry_user_changed_by_fk` FOREIGN KEY (`changed_by`) REFERENCES `users` (`user_id`),
+			  CONSTRAINT `dss_rule_entry_user_voided_by_fk` FOREIGN KEY (`retired_by`) REFERENCES `users` (`user_id`)
+			  ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+			
+			  insert into dss_rule_type (name, creator, date_created, uuid)
+			  select a.rule_type, 1, NOW(), UUID() from (select distinct rule_type from dss_rule where (priority is null or priority &lt; 1000))a
+			
+			  insert into dss_rule_entry (rule_type_id, rule_id, priority, creator, date_created, uuid)
+			  select b.rule_type_id, a.rule_id, a.priority, 1, NOW(), UUID() from dss_rule a, dss_rule_type b
+			  where (a.priority is null or a.priority &lt; 1000)
+			  and b.name = a.rule_type;
+			
+			  alter table dss_rule drop column priority;
+			  alter table dss_rule drop column rule_type;
+              alter table `dss_rule` add index `rule_token_name` (`token_name`);
+        </sql>
+    </diff>
+</sqldiff>
