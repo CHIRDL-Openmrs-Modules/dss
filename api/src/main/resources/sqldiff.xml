@@ -181,7 +181,7 @@ values ('module','Indicates which module rule is part of');
 			  ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 			
 			  insert into dss_rule_type (name, creator, date_created, uuid)
-			  select a.rule_type, 1, NOW(), UUID() from (select distinct rule_type from dss_rule where (priority is null or priority &lt; 1000))a
+			  select a.rule_type, 1, NOW(), UUID() from (select distinct rule_type from dss_rule where (priority is null or priority &lt; 1000))a;
 			
 			  insert into dss_rule_entry (rule_type_id, rule_id, priority, creator, date_created, uuid)
 			  select b.rule_type_id, a.rule_id, a.priority, 1, NOW(), UUID() from dss_rule a, dss_rule_type b
