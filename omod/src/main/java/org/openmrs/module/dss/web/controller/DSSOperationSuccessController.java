@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -25,11 +26,11 @@ public class DSSOperationSuccessController {
     private static final String FORM_VIEW = "/module/dss/dssOperationSuccess";
     
     /** Success view */
-    private static final String SUCCESS_VIEW = "/openmrs/admin/index.htm";
+    private static final String SUCCESS_VIEW = "/admin/index.htm";
     
     @RequestMapping(method = RequestMethod.POST)
-    protected ModelAndView processSubmit() {
-		return new ModelAndView(new RedirectView(SUCCESS_VIEW));
+    protected ModelAndView processSubmit(@RequestParam(value="context", required=true) String context) {
+		return new ModelAndView(new RedirectView(context + SUCCESS_VIEW));
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
