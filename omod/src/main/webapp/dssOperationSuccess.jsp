@@ -22,6 +22,7 @@
                </td>
             </tr>
         </table>
+        <input type="hidden" id="context" name="context" value="${pageContext.request.contextPath}" style="width:70px">
         </form>
 </body>
 </html>
