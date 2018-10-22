@@ -25,36 +25,4 @@
 	
 	<context:component-scan base-package="org.openmrs.module.dss.web.controller" />
 	
-	<bean id="dssUrlMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
-        <property name="mappings">
-            <props>
-				<prop key="/module/@MODULE_ID@/searchRules.form">searchRules</prop>
-				<prop key="/module/@MODULE_ID@/ruleTester.form">ruleTester</prop>
-				<prop key="/module/@MODULE_ID@/importRuleAttributeValues.form">importRuleAttributeValues</prop>	
-				<prop key="/module/@MODULE_ID@/dssOperationSuccess.form">dssOperationSuccess</prop>			    
-			</props>
-		</property>
-	</bean>
-
-	<bean id="searchRules" class="@MODULE_PACKAGE@.web.SearchRulesController">
-		<property name="commandName"><value>searchRulesObject</value></property>
-		<property name="formView"><value>/module/@MODULE_ID@/searchRules</value></property>
-		<property name="successView"><value>searchRules.form</value></property>
-	</bean>
-	<bean id="ruleTester" class="org.openmrs.module.dss.web.RuleTesterController">
-		<property name="commandName"><value>ruleTesterObject</value></property>
-		<property name="formView"><value>/module/@MODULE_ID@/ruleTester</value></property>
-		<property name="successView"><value>ruleTester.form</value></property>
-	</bean>
-	
-	<bean id="importRuleAttributeValues" class="org.openmrs.module.dss.web.ImportRuleAttributeValuesController">
-        <property name="commandName"><value>importRuleAttributeValuesObject</value></property>
-        <property name="formView"><value>/module/@MODULE_ID@/importRuleAttributeValues</value></property>
-        <property name="successView"><value>dssOperationSuccess.form</value></property>
-    </bean>
-    <bean id="dssOperationSuccess" class="@MODULE_PACKAGE@.web.OperationSuccessController">
-        <property name="commandName"><value>dssOperationSuccessObject</value></property>
-        <property name="formView"><value>/module/@MODULE_ID@/dssOperationSuccess</value></property> 
-        <property name="successView"><value>/openmrs/admin/index.htm</value></property>
-	</bean>
 </beans>

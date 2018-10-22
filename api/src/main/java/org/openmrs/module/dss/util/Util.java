@@ -39,7 +39,11 @@ import au.com.bytecode.opencsv.bean.HeaderColumnNameTranslateMappingStrategy;
  */
 public class Util {
 	
-	private static Log log = LogFactory.getLog(Util.class);
+	private static final Log LOG = LogFactory.getLog(Util.class);
+	
+	public Util(){
+		//empty constructor
+	}
 	
 	/**
 	 * read csv input stream and create RuleAttributeValue objects according to it.
@@ -63,10 +67,8 @@ public class Util {
 			strat.setColumnMapping(map);
 			CsvToBean<RuleAttributeValueDescriptor> csv = new CsvToBean<RuleAttributeValueDescriptor>();
 			ruleAttributeValuedList = csv.parse(strat, reader);
-		}
-		catch(Exception e){
-			log.error(e);
-			e.printStackTrace();
+		}catch(Exception e){
+			LOG.error(e.getMessage(),e);
 			throw e;
 		}finally{
 			if(inStreamReader != null){
@@ -90,9 +92,8 @@ public class Util {
 		List<RuleAttributeValueDescriptor> ruleAttributeValueDescriptors = null;
         try {
 	        ruleAttributeValueDescriptors = getRuleAttributeValueDescriptorFromCSV(input);
-        }
-        catch (Exception e) {
-	        log.error("Could not parse rule attribute descriptors", e);
+        }catch (Exception e) {
+        	LOG.error("Could not parse rule attribute descriptors", e);
         }
 		if (ruleAttributeValueDescriptors != null) {
 			for (RuleAttributeValueDescriptor ruleAttributeValueDescriptor : ruleAttributeValueDescriptors) {
@@ -102,10 +103,14 @@ public class Util {
 				 */
 				RuleAttributeValue ruleAttributeValue = new RuleAttributeValue();
 				Rule rule = dssService.getRule(ruleAttributeValueDescriptor.getRuleName());
-				if(rule==null) continue;
+				if(rule==null){
+					continue;
+				}
 				Integer ruleId = rule.getRuleId();
 				RuleAttribute ruleAttribute = dssService.getRuleAttribute(ruleAttributeValueDescriptor.getAttributeName());
-				if(ruleAttribute==null) continue;
+				if(ruleAttribute==null){
+					continue;
+				}
 				Integer ruleAttributeId = ruleAttribute.getRuleAttributeId();
 				ruleAttributeValue.setRuleId(ruleId);
 				ruleAttributeValue.setRuleAttributeId(ruleAttributeId);
