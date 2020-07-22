@@ -26,7 +26,7 @@
     void_reason CDATA #IMPLIED
     uuid CDATA #REQUIRED
     deathdate_estimated CDATA #REQUIRED
-    birthtime CDATE #IMPLIED
+    birthtime CDATA #IMPLIED
 >
 
 <!ELEMENT role EMPTY>
