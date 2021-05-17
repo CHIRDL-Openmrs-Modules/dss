@@ -66,18 +66,24 @@ public class getReverseNumericResultElement implements Rule {
 		
 		if (parameters != null) {
 			Object param1Obj = parameters.get("param1");
-			if (param1Obj != null) {
+			if (param1Obj instanceof String) {
 				try {
 					index = Integer.valueOf((String) param1Obj);
 				} catch (NumberFormatException e) {
 					this.log.error("Error parsing value " + param1Obj + " into an integer", e);
+					return Result.emptyResult();
 				}
 			}
 			
-			results = (List<Result>) parameters.get("param2");
+			Object paramResults = parameters.get("param2");
+			if (paramResults instanceof List<?>) {
+				results = (List<Result>)paramResults;
+			} else {
+				return Result.emptyResult();
+			}
 		}
 		
-		if (index != null && results != null && index.intValue() < results.toArray().length) {
+		if (index != null && index.intValue() < results.toArray().length) {
 			// Sort the results by date
 			Collections.sort(results, new ResultDateComparator());
 			// Reverse the list
@@ -86,7 +92,7 @@ public class getReverseNumericResultElement implements Rule {
 		}
 		
 		if (distinctResult == null) {
-			distinctResult = new Result();
+			return Result.emptyResult();
 		}
 		
 		if (distinctResult.toString() == null) {
