@@ -8,6 +8,8 @@ import org.openmrs.GlobalProperty;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.BaseModuleActivator;
+import org.openmrs.module.DaemonToken;
+import org.openmrs.module.DaemonTokenAware;
 import org.openmrs.module.chirdlutil.util.Util;
 
 /**
@@ -16,7 +18,7 @@ import org.openmrs.module.chirdlutil.util.Util;
  * @author Tammy Dugan
  *
  */
-public class DssActivator extends BaseModuleActivator {
+public class DssActivator extends BaseModuleActivator implements DaemonTokenAware {
 
 	private Log log = LogFactory.getLog(this.getClass());
 
@@ -70,6 +72,14 @@ public class DssActivator extends BaseModuleActivator {
 	 */
 	public void stopped() {
 		this.log.info("Shutting down Dss Module");
+	}
+	
+	/**
+	 * @see org.openmrs.module.DaemonTokenAware#setDaemonToken(org.openmrs.module.DaemonToken)
+	 */
+	@Override
+	public void setDaemonToken(DaemonToken token) {
+		org.openmrs.module.dss.util.Util.setDaemonToken(token);
 	}
 
 }

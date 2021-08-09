@@ -9,6 +9,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.openmrs.Patient;
 import org.openmrs.api.context.Context;
 import org.openmrs.logic.result.Result;
@@ -24,6 +26,7 @@ import org.openmrs.module.dss.service.DssService;
  */
 public class DssManager
 {
+	private Log log = LogFactory.getLog(this.getClass());
 	private HashMap<String,ArrayList<DssElement>> dssElementsByType = null;
 	private Patient patient = null;
 	private HashMap<String, Integer> maxDssElementsByType = null;
@@ -102,9 +105,42 @@ public class DssManager
 		}
 		
 		Iterator<RuleEntry> iter = ruleEntries.iterator();
+		RuleExecutor ruleExecutor = new RuleExecutor(this.patient.getPatientId());
+		while (dssElements.size() < maxElements && iter.hasNext()) {
+			List<RuleExecution> futureResults = executeNextRules(
+				ruleExecutor, dssElements.size(), maxElements, iter, parameters);
+			for (RuleExecution futureResult : futureResults) {
+				try {
+					Thread thread = futureResult.getThread();
+					thread.join(10000);
+					RuleRunnable ruleRunnable = futureResult.getRuleRunnable();
+					if (ruleRunnable == null || ruleRunnable.getResults() == null 
+							|| ruleRunnable.getResults().isEmpty()) {
+						continue;
+					}
+					
+					List<Result> results = ruleRunnable.getResults();
+					Rule rule = ruleRunnable.getRule();
+					
+					//only add results that are non-null
+					Result currResult = results.get(0);
+					if (currResult != null && !currResult.isNull()) {
+						DssElement currDssElement = new DssElement(currResult, rule.getRuleId().intValue());
+						dssElements.add(currDssElement);
+					}
+				}
+				catch (InterruptedException e) {
+					Thread.currentThread().interrupt();
+					this.log.error("Interruption exception executing rule", e);
+				}
+				catch (Exception e) {
+					this.log.error("Error executing rule", e);
+				}
+			}
+		}
 		
 		//Run rules until there are maxDssElements non-null results
-		while (dssElements.size() < maxElements && iter.hasNext()) {
+		/*while (dssElements.size() < maxElements && iter.hasNext()) {
 			RuleEntry ruleEntry = iter.next();
 			Rule currRule = ruleEntry.getRule();
 			ArrayList<Rule> ruleList = new ArrayList<Rule>();
@@ -129,7 +165,25 @@ public class DssManager
 				DssElement currDssElement = new DssElement(currResult, currRule.getRuleId());
 				dssElements.add(currDssElement);
 			}
+		}*/
+	}
+	
+	private List<RuleExecution> executeNextRules(RuleExecutor ruleExecutor, int currentNumElements, int maxElements, 
+			Iterator<RuleEntry> iter, Map<String, Object> parameters) {
+		List<RuleExecution> resultList = new ArrayList<>();
+		while (iter.hasNext() && (resultList.size() < (maxElements - currentNumElements))) {
+			RuleEntry ruleEntry = iter.next();
+			Rule currRule = ruleEntry.getRule();
+			if (!currRule.checkAgeRestrictions(this.patient)) {
+				continue;//skip to the beginning of the loop if the age restrictions are not met
+			}
+			
+			parameters.put("promptPosition", Integer.toString(currentNumElements + 1));
+			currRule.setParameters(parameters);
+			resultList.add(ruleExecutor.executeRule(currRule));
 		}
+		
+		return resultList;
 	}
 
 	/**

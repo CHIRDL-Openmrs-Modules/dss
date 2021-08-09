@@ -116,12 +116,20 @@ public class DssServiceImpl implements DssService
 		
 		return Result.emptyResult();
 	}
+	
+	/**
+	 * @see org.openmrs.module.dss.service.DssService#runRules(org.openmrs.Patient, 
+	 * java.util.List)
+	 */
+	public ArrayList<Result> runRules(Patient p, List<Rule> ruleList) throws APIException {
+		return runRules(p.getPatientId(), ruleList);
+	}
 		
 	/**
 	 * @see org.openmrs.module.dss.service.DssService#runRules(org.openmrs.Patient, 
 	 * java.util.List)
 	 */
-	public ArrayList<Result> runRules(Patient p, List<Rule> ruleList) throws APIException
+	public ArrayList<Result> runRules(Integer patientId, List<Rule> ruleList) throws APIException
 	{
 		ArrayList<Result> results = new ArrayList<Result>();
 		Map<String,Object> parameters = null;
@@ -160,7 +168,7 @@ public class DssServiceImpl implements DssService
 				Result result;
 				try
 				{
-					result = logicSvc.eval(p.getPatientId(), new LogicCriteriaImpl(ruleName),parameters);
+					result = logicSvc.eval(patientId, new LogicCriteriaImpl(ruleName),parameters);
 					results.add(result);
 
 				} catch(APIAuthenticationException e){

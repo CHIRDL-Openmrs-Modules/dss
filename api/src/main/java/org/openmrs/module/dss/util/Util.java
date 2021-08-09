@@ -24,6 +24,7 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.DaemonToken;
 import org.openmrs.module.dss.hibernateBeans.Rule;
 import org.openmrs.module.dss.hibernateBeans.RuleAttribute;
 import org.openmrs.module.dss.hibernateBeans.RuleAttributeValue;
@@ -41,7 +42,9 @@ public class Util {
 	
 	private static final Log LOG = LogFactory.getLog(Util.class);
 	
-	public Util(){
+	private static DaemonToken daemonToken;
+	
+	private Util(){
 		//empty constructor
 	}
 	
@@ -121,6 +124,20 @@ public class Util {
 		}
 
 		return ruleAttributeValueList;
+	}
+	
+	/**
+	 * @return the daemonToken
+	 */
+	public static DaemonToken getDaemonToken() {
+		return daemonToken;
+	}
+	
+	/**
+	 * @param daemonToken the daemonToken to set
+	 */
+	public static void setDaemonToken(DaemonToken daemonToken) {
+		Util.daemonToken = daemonToken;
 	}
 
 }

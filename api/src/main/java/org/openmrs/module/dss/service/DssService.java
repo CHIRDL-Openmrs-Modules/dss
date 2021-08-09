@@ -43,6 +43,17 @@ public interface DssService
 	 */
 	@Authorized()
 	public Result runRule(Patient p, Rule rule) throws APIException;
+	
+	/**
+	 * Runs a list of rules and returns an arraylist of openmrs Result objects
+	 * 
+	 * @param patientId Identifier of the patient to run the rules for
+	 * @param ruleList list of rules to evaluate
+	 * @return ArrayList of openmrs Result objects
+	 * @throws APIException
+	 */
+	@Authorized()
+	public ArrayList<Result> runRules(Integer patientId, List<Rule> ruleList) throws APIException;
 
 	/**
 	 * Runs a list of rules and returns an arraylist of openmrs Result objects
