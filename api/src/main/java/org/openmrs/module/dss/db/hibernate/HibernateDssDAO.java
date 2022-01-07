@@ -361,12 +361,12 @@ public class HibernateDssDAO implements DssDAO
 			sql.append("          ON rule.rule_id = ruleEntry.rule_id\n");
 			sql.append("       INNER JOIN dss_rule_type ruleType\n");
 			sql.append("          ON ruleEntry.rule_type_id = ruleType.rule_type_id\n");
-			sql.append(" WHERE ruleType.name = ?\n");
+			sql.append(" WHERE ruleType.name = :ruleName\n");
 			sql.append(" AND ruleType.retired = false\n");
 			sql.append(" AND ruleEntry.retired = false\n");
 
 			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql.toString());
-			qry.setString(0, type);
+			qry.setString("ruleName", type);
 			qry.addEntity(Rule.class);
 			return qry.list();
 		} catch (Exception e) {
@@ -498,12 +498,12 @@ public class HibernateDssDAO implements DssDAO
 			sql.append("                     ON rule.rule_id = ruleEntry.rule_id\n");
 			sql.append("                  INNER JOIN dss_rule_type ruleType\n");
 			sql.append("                     ON ruleEntry.rule_type_id = ruleType.rule_type_id\n");
-			sql.append("            WHERE ruleType.name = ?\n");
+			sql.append("            WHERE ruleType.name = :ruleName\n");
 			sql.append("                  AND ruleType.retired = FALSE\n");
 			sql.append("                  AND ruleEntry.retired = FALSE)\n");
 			sql.append(" ORDER BY token_name ASC\n");
 			SQLQuery qry = this.sessionFactory.getCurrentSession().createSQLQuery(sql.toString());
-			qry.setString(0, ruleType);
+			qry.setString("ruleName", ruleType);
 			qry.addEntity(Rule.class);
 			return qry.list();
 		} catch (Exception e) {
