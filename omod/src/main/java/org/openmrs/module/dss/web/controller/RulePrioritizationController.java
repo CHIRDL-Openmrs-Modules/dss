@@ -10,8 +10,8 @@ import java.util.Map.Entry;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.dss.hibernateBeans.Rule;
 import org.openmrs.module.dss.hibernateBeans.RuleEntry;
@@ -38,7 +38,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class RulePrioritizationController {
 
 	/** Logger for this class and subclasses */
-	protected final Log log = LogFactory.getLog(getClass());
+	private static final Logger log = LoggerFactory.getLogger(RulePrioritizationController.class);
 	
 	/** Form view */
 	private static final String FORM_VIEW = "/module/dss/rulePrioritization";

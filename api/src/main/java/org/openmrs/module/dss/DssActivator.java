@@ -2,8 +2,8 @@ package org.openmrs.module.dss;
 
 import java.util.Iterator;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.openmrs.GlobalProperty;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.context.Context;
@@ -18,7 +18,7 @@ import org.openmrs.module.chirdlutil.util.Util;
  */
 public class DssActivator extends BaseModuleActivator {
 
-	private Log log = LogFactory.getLog(this.getClass());
+	private static final Logger log = LoggerFactory.getLogger(DssActivator.class);
 
 	/**
 	 * @see org.openmrs.module.BaseModuleActivator#started()

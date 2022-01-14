@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.openmrs.Patient;
 import org.openmrs.api.APIAuthenticationException;
 import org.openmrs.api.APIException;
@@ -38,7 +38,7 @@ import org.openmrs.module.dss.service.DssService;
 public class DssServiceImpl implements DssService
 {
 
-	private Log log = LogFactory.getLog( this.getClass() );
+	private static final Logger log = LoggerFactory.getLogger(DssServiceImpl.class);
 	
 	private DssDAO dao;
 	

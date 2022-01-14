@@ -20,8 +20,8 @@ import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.ModuleClassLoader;
@@ -41,7 +41,7 @@ import org.openmrs.util.OpenmrsClassLoader;
  */
 public class CompilingClassLoader extends URLClassLoader // CHICA-965 Extend URLClassLoader instead of OpenmrsClassLoader
 {
-	private Log log = LogFactory.getLog( this.getClass() );
+	private static final Logger log = LoggerFactory.getLogger( CompilingClassLoader.class );
 	
 	private String rulePackagePrefix = null;
 	private String javaRuleDirectory = null;
