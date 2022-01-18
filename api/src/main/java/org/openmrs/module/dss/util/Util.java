@@ -21,8 +21,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.dss.hibernateBeans.Rule;
 import org.openmrs.module.dss.hibernateBeans.RuleAttribute;
@@ -39,7 +39,7 @@ import au.com.bytecode.opencsv.bean.HeaderColumnNameTranslateMappingStrategy;
  */
 public class Util {
 	
-	private static final Log LOG = LogFactory.getLog(Util.class);
+	private static final Logger log = LoggerFactory.getLogger(Util.class);
 	
 	public Util(){
 		//empty constructor
@@ -68,7 +68,7 @@ public class Util {
 			CsvToBean<RuleAttributeValueDescriptor> csv = new CsvToBean<RuleAttributeValueDescriptor>();
 			ruleAttributeValuedList = csv.parse(strat, reader);
 		}catch(Exception e){
-			LOG.error(e.getMessage(),e);
+			log.error("Error getting rule attribute value descriptor from csv", e);
 			throw e;
 		}finally{
 			if(inStreamReader != null){
@@ -93,7 +93,7 @@ public class Util {
         try {
 	        ruleAttributeValueDescriptors = getRuleAttributeValueDescriptorFromCSV(input);
         }catch (Exception e) {
-        	LOG.error("Could not parse rule attribute descriptors", e);
+        	log.error("Could not parse rule attribute descriptors", e);
         }
 		if (ruleAttributeValueDescriptors != null) {
 			for (RuleAttributeValueDescriptor ruleAttributeValueDescriptor : ruleAttributeValueDescriptors) {

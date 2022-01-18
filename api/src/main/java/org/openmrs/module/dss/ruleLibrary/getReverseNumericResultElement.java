@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.openmrs.logic.LogicContext;
 import org.openmrs.logic.LogicException;
 import org.openmrs.logic.Rule;
@@ -20,7 +20,7 @@ import org.openmrs.module.chirdlutil.util.ResultDateComparator;
  */
 public class getReverseNumericResultElement implements Rule {
 	
-	private Log log = LogFactory.getLog(this.getClass());
+	private static final Logger log = LoggerFactory.getLogger(getReverseNumericResultElement.class);
 	
 	/**
 	 * @see org.openmrs.logic.Rule#getParameterList()
