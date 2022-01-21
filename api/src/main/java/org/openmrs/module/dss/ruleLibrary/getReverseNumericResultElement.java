@@ -70,7 +70,7 @@ public class getReverseNumericResultElement implements Rule {
 				try {
 					index = Integer.valueOf((String) param1Obj);
 				} catch (NumberFormatException e) {
-					this.log.error("Error parsing value " + param1Obj + " into an integer", e);
+					log.error("Error parsing value {} into an integer", param1Obj, e);
 					return Result.emptyResult();
 				}
 			}

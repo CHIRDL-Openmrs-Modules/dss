@@ -66,10 +66,10 @@ public class ClassLoaderTask extends AbstractTask
 	@Override
 	public void initialize(TaskDefinition config)
 	{
-		this.log.info("Initializing class loader task...");
+		log.info("Initializing class loader task...");
 		super.initialize(config);
 		initialLoad = true;
-		this.log.info("Finished initializing class loader task.");
+		log.info("Finished initializing class loader task.");
 	}
 
 	@Override

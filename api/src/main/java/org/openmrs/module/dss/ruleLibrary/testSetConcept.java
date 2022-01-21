@@ -118,8 +118,8 @@ public class testSetConcept implements Rule
 			}
 		} catch (Exception e)
 		{
-			this.log.error(e.getMessage());
-			this.log.error(Util.getStackTrace(e));
+			log.error(e.getMessage());
+			log.error(Util.getStackTrace(e));
 		}
 		return Result.emptyResult();
 	}
