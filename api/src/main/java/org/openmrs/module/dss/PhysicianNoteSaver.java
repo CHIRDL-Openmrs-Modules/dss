@@ -54,7 +54,7 @@ public class PhysicianNoteSaver {
 		AdministrationService adminService = Context.getAdministrationService();
 		String noteDirStr = adminService.getGlobalProperty("dss.physicianNoteDirectory");
 		if (noteDirStr == null) {
-			log.error("Physician note cannot be saved disk. The global property dss.physicianNoteDirectory does not contain a valid value.");
+			log.error("Physician note cannot be saved to disk. The global property dss.physicianNoteDirectory does not contain a valid value.");
 			return;
 		}
 		
