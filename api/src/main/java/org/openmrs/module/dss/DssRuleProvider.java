@@ -38,7 +38,7 @@ public class DssRuleProvider extends AbstractRuleProvider {
 	        return Context.getService(DssService.class).loadRule(token, false);
         }
         catch (Exception e) {
-	        log.error("Error finding rule: " + token, e);
+	        log.error("Error finding rule: {}", token, e);
         }
         
         return null;

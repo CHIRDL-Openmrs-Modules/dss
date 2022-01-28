@@ -146,7 +146,7 @@ public class CompilingClassLoader extends URLClassLoader // CHICA-965 Extend URL
 	// the compilation worked, false otherwise.
 	private boolean compile(String javaFile)
 	{
-		log.info("CCL: Compiling " + javaFile + "...");
+		log.info("CCL: Compiling {}...", javaFile);
 
 		String classpath = getClasspath();
 
@@ -171,13 +171,13 @@ public class CompilingClassLoader extends URLClassLoader // CHICA-965 Extend URL
 					Arrays.asList(options), null, fileObjects).call();
 
 			if(!success){
-				this.log.error(writer.toString());
+				log.error(writer.toString());
 			}
 			fileManager.close();
 			return success;
 		} catch (Exception e)
 		{
-			log.error("Error compiling java rule file: " + javaFile);
+			log.error("Error compiling java rule file: {}", javaFile);
 			log.error(e.getMessage());
 			log.error(Util.getStackTrace(e));
 		}
@@ -250,7 +250,7 @@ public class CompilingClassLoader extends URLClassLoader // CHICA-965 Extend URL
 	public boolean parse(String mlmFile) 
 	{
 		// Let the user know what's going on
-		log.info("CCL: Parsing " + mlmFile + "...");
+		log.info("CCL: Parsing {}...", mlmFile);
 		
 		int errorCode = -1;
 		try
@@ -264,7 +264,7 @@ public class CompilingClassLoader extends URLClassLoader // CHICA-965 Extend URL
 			
 		} catch (Exception e)
 		{
-			log.error("Error compiling mlm rule file: "+mlmFile);
+			log.error("Error compiling mlm rule file: {}", mlmFile);
 			log.error(e.getMessage());
 			log.error(Util.getStackTrace(e));
 		}
@@ -391,7 +391,7 @@ public class CompilingClassLoader extends URLClassLoader // CHICA-965 Extend URL
 						IOUtil.copyFile(mlmFilename, archivedMlmFile);
 					} catch (Exception e1)
 					{
-						log.error("Could not copy mlm file: "+mlmFilename+" to "+archivedMlmFile);
+						log.error("Could not copy mlm file: {} to {}", mlmFilename, archivedMlmFile);
 						log.error(e1.getMessage());
 					}
 				}
@@ -404,7 +404,7 @@ public class CompilingClassLoader extends URLClassLoader // CHICA-965 Extend URL
 							IOUtil.deleteFile(mlmFilename);
 						} catch (Exception e)
 						{
-							log.error("Could not delete mlm file: "+mlmFilename);
+							log.error("Could not delete mlm file: {}", mlmFilename);
 							log.error(e.getMessage());
 						}
 					}
@@ -441,8 +441,7 @@ public class CompilingClassLoader extends URLClassLoader // CHICA-965 Extend URL
 						IOUtil.copyFile(javaFilename, archivedJavaFile);
 					} catch (Exception e1)
 					{
-						log.error("Could not copy java file: " + javaFilename
-								+ " to " + archivedJavaFile);
+						log.error("Could not copy java file: {} to {}", javaFilename, archivedJavaFile);
 						log.error(e1.getMessage());
 					}
 				}
@@ -455,7 +454,7 @@ public class CompilingClassLoader extends URLClassLoader // CHICA-965 Extend URL
 						IOUtil.deleteFile(javaFilename);
 					} catch (Exception e)
 					{
-						log.error("Could not delete: " + javaFilename);
+						log.error("Could not delete: {}", javaFilename);
 						log.error(e.getMessage());
 					}
 				}
@@ -502,8 +501,7 @@ public class CompilingClassLoader extends URLClassLoader // CHICA-965 Extend URL
 						}
 					} catch (Exception e)
 					{
-						log.error("Error saving rule class file: "
-								+ classFilename + " to dss_rule table");
+						log.error("Error saving rule class file: {} to dss_rule table", classFilename);
 						log.error(e.getMessage());
 						log.error(Util.getStackTrace(e));
 					}

@@ -75,7 +75,7 @@ public class LocationInfoLookup implements Rule {
 		
 		Location location = Context.getLocationService().getLocation(locationStr);
 		if (location == null) {
-			log.error("No location found with ID " + locationStr);
+			log.error("No location found with ID {}", locationStr);
 			return Result.emptyResult();
 		}
 		
@@ -122,7 +122,7 @@ public class LocationInfoLookup implements Rule {
 		} else if ("townshipdivision".equalsIgnoreCase(attribute)) {
 			return new Result(location.getAddress4()); // CHICA-1151 getTownshipDivision() has been replaced by getAddress4()
 		} else {
-			log.error(attribute + " is not a supported attribute for a Location.");
+			log.error("{} is not a supported attribute for a Location.", attribute);
 			return Result.emptyResult();
 		}
 	}

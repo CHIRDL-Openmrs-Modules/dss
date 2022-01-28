@@ -149,7 +149,7 @@ public class DssServiceImpl implements DssService
 				}
 				catch (Exception e1)
 				{
-					log.error("Error loading rule: "+ruleName);
+					log.error("Error loading rule: {}", ruleName);
 					log.error(e1.getMessage());
 					log.error(Util.getStackTrace(e1));
 					results.add(null);
@@ -167,7 +167,7 @@ public class DssServiceImpl implements DssService
 					//ignore a privilege exception
 				} catch (Exception e)
 				{
-					log.error("Error evaluating rule: "+ruleName);
+					log.error("Error evaluating rule: {}", ruleName);
 					log.error(e.getMessage());
 					log.error(Util.getStackTrace(e));
 					results.add(null);

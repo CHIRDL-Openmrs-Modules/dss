@@ -24,7 +24,7 @@ public class DssActivator extends BaseModuleActivator {
 	 * @see org.openmrs.module.BaseModuleActivator#started()
 	 */
 	public void started() {
-		this.log.info("Starting Dss Module");
+		log.info("Starting Dss Module");
 		
 		//check that all the required global properties are set
 		checkGlobalProperties();
@@ -51,16 +51,15 @@ public class DssActivator extends BaseModuleActivator {
 					currValue = currProperty.getPropertyValue();
 					if (currValue == null || currValue.length() == 0)
 					{
-						this.log.error("You must set a value for global property: "
-								+ currName);
+						log.error("You must set a value for global property: {}", currName);
 					}
 				}
 			}
 		} catch (Exception e)
 		{
-			this.log.error("Error checking global properties for dss module");
-			this.log.error(e.getMessage());
-			this.log.error(Util.getStackTrace(e));
+			log.error("Error checking global properties for dss module");
+			log.error(e.getMessage());
+			log.error(Util.getStackTrace(e));
 
 		}
 	}
@@ -69,7 +68,7 @@ public class DssActivator extends BaseModuleActivator {
 	 * @see org.openmrs.module.BaseModuleActivator#stopped()
 	 */
 	public void stopped() {
-		this.log.info("Shutting down Dss Module");
+		log.info("Shutting down Dss Module");
 	}
 
 }
