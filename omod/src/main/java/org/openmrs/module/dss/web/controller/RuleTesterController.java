@@ -9,8 +9,8 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.openmrs.Patient;
 import org.openmrs.PatientIdentifierType;
 import org.openmrs.api.PatientService;
@@ -34,7 +34,7 @@ public class RuleTesterController
 {
 
     /** Log */
-	protected final Log log = LogFactory.getLog(getClass());
+	private static final Logger log = LoggerFactory.getLogger(RuleTesterController.class);
 	
 	/** Form view */
     private static final String FORM_VIEW = "/module/dss/ruleTester";
@@ -95,8 +95,8 @@ public class RuleTesterController
 				}
 			} catch (Exception e)
 			{
-				this.log.error(e.getMessage());
-				this.log.error(org.openmrs.module.chirdlutil.util.Util.getStackTrace(e));
+				log.error(e.getMessage());
+				log.error(org.openmrs.module.chirdlutil.util.Util.getStackTrace(e));
 			}
 		}
 

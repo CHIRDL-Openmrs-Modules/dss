@@ -3,8 +3,8 @@ package org.openmrs.module.dss.ruleLibrary;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.openmrs.Location;
 import org.openmrs.api.context.Context;
 import org.openmrs.logic.LogicContext;
@@ -17,7 +17,7 @@ import org.openmrs.logic.rule.RuleParameterInfo;
 public class LocationInfoLookup implements Rule {
 	
 	/** Logger for this class and subclasses */
-	protected final Log log = LogFactory.getLog(getClass());
+	private static final Logger log = LoggerFactory.getLogger(LocationInfoLookup.class);
 	
 	/**
 	 * *
@@ -75,7 +75,7 @@ public class LocationInfoLookup implements Rule {
 		
 		Location location = Context.getLocationService().getLocation(locationStr);
 		if (location == null) {
-			log.error("No location found with ID " + locationStr);
+			log.error("No location found with ID {}", locationStr);
 			return Result.emptyResult();
 		}
 		
@@ -122,7 +122,7 @@ public class LocationInfoLookup implements Rule {
 		} else if ("townshipdivision".equalsIgnoreCase(attribute)) {
 			return new Result(location.getAddress4()); // CHICA-1151 getTownshipDivision() has been replaced by getAddress4()
 		} else {
-			log.error(attribute + " is not a supported attribute for a Location.");
+			log.error("{} is not a supported attribute for a Location.", attribute);
 			return Result.emptyResult();
 		}
 	}

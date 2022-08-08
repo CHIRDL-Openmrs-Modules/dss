@@ -3,8 +3,8 @@ package org.openmrs.module.dss.ruleLibrary;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.openmrs.Patient;
 import org.openmrs.api.PatientService;
 import org.openmrs.api.context.Context;
@@ -25,7 +25,7 @@ import org.openmrs.module.chirdlutil.util.Util;
  */
 public class lastEncounter implements Rule
 {
-	private Log log = LogFactory.getLog(this.getClass());
+	private static final Logger log = LoggerFactory.getLogger(lastEncounter.class);
 	private LogicService logicService = Context.getLogicService();
 
 	public Result eval(LogicContext context, Integer patientId,
@@ -50,8 +50,8 @@ public class lastEncounter implements Rule
 			}
 		} catch (Exception e)
 		{
-			this.log.error(e.getMessage());
-			this.log.error(Util.getStackTrace(e));
+			log.error(e.getMessage());
+			log.error(Util.getStackTrace(e));
 		}
 		
 		return Result.emptyResult();

@@ -2,8 +2,8 @@ package org.openmrs.module.dss;
 
 import java.util.Iterator;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.openmrs.GlobalProperty;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.context.Context;
@@ -18,13 +18,13 @@ import org.openmrs.module.chirdlutil.util.Util;
  */
 public class DssActivator extends BaseModuleActivator {
 
-	private Log log = LogFactory.getLog(this.getClass());
+	private static final Logger log = LoggerFactory.getLogger(DssActivator.class);
 
 	/**
 	 * @see org.openmrs.module.BaseModuleActivator#started()
 	 */
 	public void started() {
-		this.log.info("Starting Dss Module");
+		log.info("Starting Dss Module");
 		
 		//check that all the required global properties are set
 		checkGlobalProperties();
@@ -51,16 +51,15 @@ public class DssActivator extends BaseModuleActivator {
 					currValue = currProperty.getPropertyValue();
 					if (currValue == null || currValue.length() == 0)
 					{
-						this.log.error("You must set a value for global property: "
-								+ currName);
+						log.error("You must set a value for global property: {}", currName);
 					}
 				}
 			}
 		} catch (Exception e)
 		{
-			this.log.error("Error checking global properties for dss module");
-			this.log.error(e.getMessage());
-			this.log.error(Util.getStackTrace(e));
+			log.error("Error checking global properties for dss module");
+			log.error(e.getMessage());
+			log.error(Util.getStackTrace(e));
 
 		}
 	}
@@ -69,7 +68,7 @@ public class DssActivator extends BaseModuleActivator {
 	 * @see org.openmrs.module.BaseModuleActivator#stopped()
 	 */
 	public void stopped() {
-		this.log.info("Shutting down Dss Module");
+		log.info("Shutting down Dss Module");
 	}
 
 }

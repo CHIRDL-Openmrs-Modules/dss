@@ -4,8 +4,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.openmrs.Patient;
 import org.openmrs.api.ConceptService;
 import org.openmrs.api.PatientService;
@@ -25,7 +25,7 @@ import org.openmrs.logic.op.Operator;
 
 public class testSetConcept implements Rule
 {
-	private Log log = LogFactory.getLog(this.getClass());
+	private static final Logger log = LoggerFactory.getLogger(testSetConcept.class);
 
 	/**
 	 * *
@@ -118,8 +118,8 @@ public class testSetConcept implements Rule
 			}
 		} catch (Exception e)
 		{
-			this.log.error(e.getMessage());
-			this.log.error(Util.getStackTrace(e));
+			log.error(e.getMessage());
+			log.error(Util.getStackTrace(e));
 		}
 		return Result.emptyResult();
 	}

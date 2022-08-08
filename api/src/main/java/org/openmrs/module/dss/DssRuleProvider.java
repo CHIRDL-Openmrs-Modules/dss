@@ -13,8 +13,8 @@
  */
 package org.openmrs.module.dss;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.openmrs.api.context.Context;
 import org.openmrs.logic.Rule;
 import org.openmrs.logic.rule.provider.AbstractRuleProvider;
@@ -27,7 +27,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class DssRuleProvider extends AbstractRuleProvider {
 	
-	private Log log = LogFactory.getLog(this.getClass());
+	private static final Logger log = LoggerFactory.getLogger(DssRuleProvider.class);
 	
 	/**
 	 * @see org.openmrs.logic.rule.provider.RuleProvider#getRule(java.lang.String)
@@ -38,7 +38,7 @@ public class DssRuleProvider extends AbstractRuleProvider {
 	        return Context.getService(DssService.class).loadRule(token, false);
         }
         catch (Exception e) {
-	        log.error("Error finding rule: " + token, e);
+	        log.error("Error finding rule: {}", token, e);
         }
         
         return null;
