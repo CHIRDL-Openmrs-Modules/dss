@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.openmrs.logic.LogicContext;
 import org.openmrs.logic.LogicException;
 import org.openmrs.logic.Rule;
@@ -18,10 +20,12 @@ import org.openmrs.module.chirdlutil.util.ResultDateComparator;
  */
 public class getReverseNumericResultElement implements Rule {
 	
+	private static final Logger log = LoggerFactory.getLogger(getReverseNumericResultElement.class);
 	
 	/**
 	 * @see org.openmrs.logic.Rule#getParameterList()
 	 */
+	@Override
 	public Set<RuleParameterInfo> getParameterList() {
 		return null;
 	}
@@ -29,6 +33,7 @@ public class getReverseNumericResultElement implements Rule {
 	/**
 	 * @see org.openmrs.logic.Rule#getDependencies()
 	 */
+	@Override
 	public String[] getDependencies() {
 		return new String[] {};
 	}
@@ -36,6 +41,7 @@ public class getReverseNumericResultElement implements Rule {
 	/**
 	 * @see org.openmrs.logic.Rule#getTTL()
 	 */
+	@Override
 	public int getTTL() {
 		return 0;
 	}
@@ -43,6 +49,7 @@ public class getReverseNumericResultElement implements Rule {
 	/**
 	 * @see org.openmrs.logic.Rule#getDefaultDatatype()
 	 */
+	@Override
 	public Datatype getDefaultDatatype() {
 		return Datatype.NUMERIC;
 	}
@@ -50,6 +57,8 @@ public class getReverseNumericResultElement implements Rule {
 	/**
 	 * @see org.openmrs.logic.Rule#eval(org.openmrs.logic.LogicContext, java.lang.Integer, java.util.Map)
 	 */
+	@SuppressWarnings("unchecked")
+	@Override
 	public Result eval(LogicContext context, Integer patientId, Map<String, Object> parameters) throws LogicException {
 		Integer index = null;
 		List<Result> results = null;
@@ -57,23 +66,33 @@ public class getReverseNumericResultElement implements Rule {
 		
 		if (parameters != null) {
 			Object param1Obj = parameters.get("param1");
-			if (param1Obj != null) {
-				index = Integer.parseInt((String) param1Obj);
+			if (param1Obj instanceof String) {
+				try {
+					index = Integer.valueOf((String) param1Obj);
+				} catch (NumberFormatException e) {
+					log.error("Error parsing value {} into an integer", param1Obj, e);
+					return Result.emptyResult();
+				}
 			}
 			
-			results = (List<Result>) parameters.get("param2");
+			Object paramResults = parameters.get("param2");
+			if (paramResults instanceof List<?>) {
+				results = (List<Result>)paramResults;
+			} else {
+				return Result.emptyResult();
+			}
 		}
 		
-		if (index != null && results != null && index < results.toArray().length) {
+		if (index != null && index.intValue() < results.toArray().length) {
 			// Sort the results by date
 			Collections.sort(results, new ResultDateComparator());
 			// Reverse the list
 			Collections.reverse(results);
-			distinctResult = (Result) results.toArray()[index];
+			distinctResult = (Result) results.toArray()[index.intValue()];
 		}
 		
 		if (distinctResult == null) {
-			distinctResult = new Result();
+			return Result.emptyResult();
 		}
 		
 		if (distinctResult.toString() == null) {

@@ -17,8 +17,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.openmrs.Patient;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.context.Context;
@@ -32,7 +32,7 @@ import org.openmrs.module.chirdlutil.util.Util;
  */
 public class PhysicianNoteSaver {
 	
-	private Log log = LogFactory.getLog(this.getClass());
+	private static final Logger log = LoggerFactory.getLogger(PhysicianNoteSaver.class);
 	private Integer patientId;
 	private String note;
 	
@@ -54,15 +54,13 @@ public class PhysicianNoteSaver {
 		AdministrationService adminService = Context.getAdministrationService();
 		String noteDirStr = adminService.getGlobalProperty("dss.physicianNoteDirectory");
 		if (noteDirStr == null) {
-			log.error("Physician note cannot be saved disk.  The global property dss.physicianNoteDirectory does not " +
-					"contain a valid value.");
+			log.error("Physician note cannot be saved to disk. The global property dss.physicianNoteDirectory does not contain a valid value.");
 			return;
 		}
 		
 		File noteDir = new File(noteDirStr);
 		if (!noteDir.exists()) {
-			log.error("The directory specified for global property dss.physicianNoteDirectory does not exist: " + 
-				noteDirStr);
+			log.error("The directory specified for global property dss.physicianNoteDirectory does not exist: {}", noteDirStr);
 			return;
 		}
 		
@@ -76,14 +74,14 @@ public class PhysicianNoteSaver {
             writer.write(note);
         }
         catch (IOException e) {
-            log.error("Error writing Physician note to " + file.getAbsolutePath(), e);
+            log.error("Error writing Physician note to {}", file.getAbsolutePath(), e);
         } finally {
         	if (writer != null) {
         		try {
                     writer.close();
                 }
                 catch (IOException e) {
-                    log.error("Error closing Physician note writer for " + file.getAbsolutePath(), e);
+                    log.error("Error closing Physician note writer for {}", file.getAbsolutePath(), e);
                 }
         	}
         }

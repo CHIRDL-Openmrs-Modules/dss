@@ -6,49 +6,54 @@ package org.openmrs.module.dss.util;
 import java.util.Calendar;
 
 import org.openmrs.module.chirdlutil.util.Util;
+import org.openmrs.test.jupiter.BaseModuleContextSensitiveTest;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-import junit.framework.TestCase;
 
 /**
  * @author tmdugan
  * 
  */
-public class TestDSSUtil extends TestCase
+public class TestDSSUtil extends BaseModuleContextSensitiveTest
 {
 	/**
 	 * 
 	 */
+	@Test
 	public void testConvertUnitsToMetric()
 	{
-		assertEquals(20.0, Util.convertUnitsToMetric(20, null));
+		Assertions.assertEquals(20.0, Util.convertUnitsToMetric(20, null));
 
-		assertEquals(50.8, Util.convertUnitsToMetric(20, "in"));
+		Assertions.assertEquals(50.8, Util.convertUnitsToMetric(20, "in"));
 
-		assertEquals(9.071847400000001, Util.convertUnitsToMetric(20, "lb"));
+		Assertions.assertEquals(9.071847400000001, Util.convertUnitsToMetric(20, "lb"));
 
-		assertEquals(20.0, Util.convertUnitsToMetric(20, "cm"));
+		Assertions.assertEquals(20.0, Util.convertUnitsToMetric(20, "cm"));
 
 	}
 	
+	@Test
 	public void testToProperCase()
 	{
 		String str = "firstname lastname";
 		
-		assertEquals("Firstname Lastname",Util.toProperCase(str));
+		Assertions.assertEquals("Firstname Lastname",Util.toProperCase(str));
 		
 		str = "lastname";
 		
-		assertEquals("Lastname",Util.toProperCase(str));
+		Assertions.assertEquals("Lastname",Util.toProperCase(str));
 		
 		str = "";
 		
-		assertEquals("",Util.toProperCase(str));
+		Assertions.assertEquals("",Util.toProperCase(str));
 		
 		str = null;
 		
-		assertEquals(null,Util.toProperCase(str));
+		Assertions.assertEquals(null,Util.toProperCase(str));
 	}
 	
+	@Test
 	public void testFractionalUnits()
 	{
 		Calendar today = Calendar.getInstance();
@@ -57,7 +62,7 @@ public class TestDSSUtil extends TestCase
 		birthdate.set(2007, Calendar.SEPTEMBER, 9);
 		double fractAge = Util.getFractionalAgeInUnits(birthdate.getTime(), 
 				today.getTime(), "mo");
-		assertEquals(fractAge,8.741935483870968);
+		Assertions.assertEquals(fractAge,8.741935483870968);
 		
 		today = Calendar.getInstance();
 		today.set(2008, Calendar.JUNE,27);
@@ -65,15 +70,16 @@ public class TestDSSUtil extends TestCase
 		birthdate.set(2007, Calendar.SEPTEMBER, 9);
 		fractAge = Util.getFractionalAgeInUnits(birthdate.getTime(), 
 				today.getTime(), "mo");
-		assertEquals(fractAge,9.6);
+		Assertions.assertEquals(fractAge,9.6);
 	}
 	
+	@Test
 	public void testRound()
 	{
-		assertEquals(Util.round(25.486546543, 1),25.5);
-		assertEquals(Util.round(.486546543, 2),.49);
-		assertEquals(Util.round(.111, 1),.1);
-		assertEquals(Util.round(.002, 1),0D);
-		assertEquals(Util.round(.002, 4),0.0020);
+		Assertions.assertEquals(Util.round(25.486546543, 1),25.5);
+		Assertions.assertEquals(Util.round(.486546543, 2),.49);
+		Assertions.assertEquals(Util.round(.111, 1),.1);
+		Assertions.assertEquals(Util.round(.002, 1),0D);
+		Assertions.assertEquals(Util.round(.002, 4),0.0020);
 	}
 }
