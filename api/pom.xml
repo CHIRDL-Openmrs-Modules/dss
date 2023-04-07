@@ -90,9 +90,6 @@
 			<resource>
 				<directory>src/main/resources</directory>
 				<filtering>true</filtering>
-				<excludes>
-                    <exclude>messages_es.properties</exclude>
-                </excludes>
 			</resource>
 		</resources>
 
