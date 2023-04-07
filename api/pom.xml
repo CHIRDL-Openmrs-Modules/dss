@@ -91,8 +91,7 @@
 				<directory>src/main/resources</directory>
 				<filtering>true</filtering>
 				<excludes>
-                    <exclude>org/openmrs/arden/include/6.mlm</exclude>
-                    <exclude>org/openmrs/arden/include/6.mlm.bad</exclude>
+                    <exclude>messages_es.properties</exclude>
                 </excludes>
 			</resource>
 		</resources>
@@ -101,10 +100,6 @@
 			<testResource>
 				<directory>src/test/resources</directory>
 				<filtering>true</filtering>
-				<excludes>
-                    <exclude>org/openmrs/arden/include/6.mlm</exclude>
-                    <exclude>org/openmrs/arden/include/6.mlm.bad</exclude>
-                </excludes>
 			</testResource>
 		</testResources>
 		<pluginManagement>
