@@ -11,9 +11,12 @@ var newRuleTypeDialog;
 var prevAvailableChecked = null;
 // position 0 is available rule selection, 1 is prioritized, and 2 is non-prioritized
 var prevCheckedArray = [null, null, null];
+
+var $ = jQuery.noConflict();
+
 $( function() {
 	ruleTypeName = $( "#ruleTypeName" );
-	ruleTypeDescription = $( "#ruleTypeDescription" );
+	ruleTypeDescription = $("#ruleTypeDescription" );
 	allFields = $( [] ).add( ruleTypeName ).add( ruleTypeDescription );
 	tips = $( ".validateTips" );
 	
@@ -355,7 +358,7 @@ function handlePopulateDisassociatedRulesError(xhr, textStatus, error) {
 }
 
 function save() {
-	//run an AJAX post request to your server-side script, $this.serialize() is the data from your form being added to the request
+	//run an AJAX post request to your server-side script, $(this).serialize() is the data from your form being added to the request
 	var ruleType = $("#ruleTypeSelect option:selected").val();
 	if (ruleType === "Create New" || ruleType === "Please Choose a Rule Type") {
 		$( "#errorMessage" ).html("Please select a valid rule type.");

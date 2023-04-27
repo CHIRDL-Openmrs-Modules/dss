@@ -2,15 +2,21 @@
 <%@ include file="/WEB-INF/template/header.jsp" %>
 <!DOCTYPE html>
 <openmrs:require allPrivileges="View Encounters, View Patients, View Concept Classes" otherwise="/login.htm" redirect="/module/dss/rulePrioritization.form" />
-<html>
+<html xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:jsp="http://java.sun.com/JSP/Page"
+    xmlns:openmrs="urn:jsptld:/WEB-INF/view/module/legacyui/taglibs/openmrs.tld"
+   >
 <head>
 <meta charset="utf-8">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/moduleResources/dss/rulePrioritization.css">
-<link rel="stylesheet" href="${pageContext.request.contextPath}/moduleResources/dss/jquery-ui-1.11.2/jquery-ui.min.css"/>
-<link rel="stylesheet" href="${pageContext.request.contextPath}/moduleResources/dss/jquery-ui-1.11.2/jquery-ui.structure.min.css"/>
-<link rel="stylesheet" href="${pageContext.request.contextPath}/moduleResources/dss/jquery-ui-1.11.2/jquery-ui.theme.min.css"/>
-<script src="${pageContext.request.contextPath}/moduleResources/dss/jquery-1.9.1.min.js"></script>
-<script src="${pageContext.request.contextPath}/moduleResources/dss/jquery-ui-1.11.2/jquery-ui.min.js"></script>
+
+<openmrs:htmlInclude file="/scripts/jquery/jquery.min.js" />
+<openmrs:htmlInclude file="/scripts/jquery-ui/jquery-ui.min.js" />
+<openmrs:htmlInclude file="/scripts/jquery-ui/jquery-ui.min.css" />
+<openmrs:htmlInclude file="/scripts/jquery-ui/jquery-ui.structure.min.css" />
+<openmrs:htmlInclude file="/scripts/jquery-ui/jquery-ui.theme.min.css" />
+
+
 <script>var ctx = "${pageContext.request.contextPath}";</script>
 <script src="${pageContext.request.contextPath}/moduleResources/dss/rulePrioritization.js"></script>
 <title>Rule Prioritization</title>
