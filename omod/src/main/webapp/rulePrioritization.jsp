@@ -2,10 +2,7 @@
 <%@ include file="/WEB-INF/template/header.jsp" %>
 <!DOCTYPE html>
 <openmrs:require allPrivileges="View Encounters, View Patients, View Concept Classes" otherwise="/login.htm" redirect="/module/dss/rulePrioritization.form" />
-<html xmlns:c="http://java.sun.com/jsp/jstl/core"
-    xmlns:jsp="http://java.sun.com/JSP/Page"
-    xmlns:openmrs="urn:jsptld:/WEB-INF/view/module/legacyui/taglibs/openmrs.tld"
-   >
+<html>
 <head>
 <meta charset="utf-8">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/moduleResources/dss/rulePrioritization.css">
