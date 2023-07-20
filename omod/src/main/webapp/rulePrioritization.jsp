@@ -6,11 +6,14 @@
 <head>
 <meta charset="utf-8">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/moduleResources/dss/rulePrioritization.css">
-<link rel="stylesheet" href="${pageContext.request.contextPath}/moduleResources/dss/jquery-ui-1.11.2/jquery-ui.min.css"/>
-<link rel="stylesheet" href="${pageContext.request.contextPath}/moduleResources/dss/jquery-ui-1.11.2/jquery-ui.structure.min.css"/>
-<link rel="stylesheet" href="${pageContext.request.contextPath}/moduleResources/dss/jquery-ui-1.11.2/jquery-ui.theme.min.css"/>
-<script src="${pageContext.request.contextPath}/moduleResources/dss/jquery-1.9.1.min.js"></script>
-<script src="${pageContext.request.contextPath}/moduleResources/dss/jquery-ui-1.11.2/jquery-ui.min.js"></script>
+
+<openmrs:htmlInclude file="/scripts/jquery/jquery.min.js" />
+<openmrs:htmlInclude file="/scripts/jquery-ui/js/jquery-ui.min.js" />
+<openmrs:htmlInclude file="/scripts/jquery-ui/css/jquery-ui.min.css" />
+<openmrs:htmlInclude file="/scripts/jquery-ui/css/jquery-ui.structure.min.css" />
+<openmrs:htmlInclude file="/scripts/jquery-ui/css/jquery-ui.theme.min.css" />
+
+
 <script>var ctx = "${pageContext.request.contextPath}";</script>
 <script src="${pageContext.request.contextPath}/moduleResources/dss/rulePrioritization.js"></script>
 <title>Rule Prioritization</title>
